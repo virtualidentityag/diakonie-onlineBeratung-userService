@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.1](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/compare/v3.0.0...v3.0.1) (2024-05-14)
+
+
+### Bug Fixes
+
+* invalid keycloak tenant id assingment issue on consultant update ([f56beb1](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/f56beb1b578e39f30ea39f189d8c6670b01bb806))
+
 ## 3.0.0 (2024-05-13)
 
 
