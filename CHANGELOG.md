@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.2](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/compare/v3.0.1...v3.0.2) (2024-06-14)
+
+
+### Bug Fixes
+
+* include main topic id in the response ([0bfb9cb](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/0bfb9cbe9412c093fab0f6acc3bcef07fba901c1))
+* include main topic id in the response ([7e94b30](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/7e94b304307f4ca110bfd8b948199eb73280d2f1))
+* include main topic id in the response ([8dab49c](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/8dab49c2023c7057d5d533840d3dd22b750a757e))
+* include main topic id in the response ([5e200c7](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/5e200c72083e26e86e6a2e6e470f965ea192af41))
+* include main topic id in the response ([2bf3972](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/2bf3972b43019d9fb29e5ba1c9dcea2af0ff6dfa))
+* include main topic id in the response ([619024f](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/619024f6e78c1a16a8857379063015e8c3c818e8))
+* include main topic id in the response ([5555de5](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/5555de5294c12611c186011a9c456919632b2aef))
+
 ### [3.0.1](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/compare/v3.0.0...v3.0.1) (2024-05-14)
 
 
