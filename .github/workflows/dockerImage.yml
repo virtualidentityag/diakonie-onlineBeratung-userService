@@ -41,9 +41,9 @@ jobs:
           path: ~/.m2/repository
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/pom.xml') }}
       - name: Maven Package
-        run: mvn -B -Pprod  clean package -DskipTests=true
+        run: mvn -B -Pprod  clean package -DskipTests
       - name: Maven Verify
-        run: mvn -B -Pprod clean verify -DskipTests=true
+        run: mvn -B -Pprod clean verify
       - uses: actions/upload-artifact@v2
         with:
           name: targetfiles
@@ -65,11 +65,10 @@ jobs:
   push_to_registry:
     strategy:
       matrix:
-        registry: [ "docker.pkg.github.com", "ghcr.io" ]
-    needs: [ test ]
+        registry: ["docker.pkg.github.com", "ghcr.io"]
+    needs: [test]
     name: Push Docker image to GitHub Packages
     runs-on: ubuntu-latest
-    timeout-minutes: 40
     env:
       IMAGE_WEBHOOK_SECRET: ${{ secrets.MS_TEAMS_IMAGE_WEBHOOK_URI }}
       FAIL_WEBHOOK_SECRET: ${{ secrets.MS_TEAMS_FAIL_WEBHOOK_URI }}
@@ -149,7 +148,7 @@ jobs:
         with:
           image-ref: '${{ env.DOCKER_REGISTRY }}/${{ env.REPO_NAME_WITHOUT_PREFIX }}:${{ env.DOCKER_IMAGE_TAG }}'
           format: 'table'
-          exit-code: '0'
+          exit-code: '1'
           vuln-type: 'os,library'
           severity: 'CRITICAL'
       - name: Microsoft Teams Fail Card
