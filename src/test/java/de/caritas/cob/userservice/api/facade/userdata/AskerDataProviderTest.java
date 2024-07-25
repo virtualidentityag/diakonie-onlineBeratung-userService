@@ -26,6 +26,7 @@ import de.caritas.cob.userservice.api.model.Session;
 import de.caritas.cob.userservice.api.model.User;
 import de.caritas.cob.userservice.api.port.out.IdentityClientConfig;
 import de.caritas.cob.userservice.api.service.agency.AgencyService;
+import de.caritas.cob.userservice.api.service.session.SessionService;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -56,6 +57,8 @@ class AskerDataProviderTest {
   @Mock IdentityClientConfig identityClientConfig;
 
   @Mock EmailNotificationMapper emailNotificationMapper;
+
+  @Mock SessionService sessionService;
 
   @Test
   void retrieveData_Should_ReturnUserDataWithAgency_When_ProvidedWithUserWithAgencyInSession() {
