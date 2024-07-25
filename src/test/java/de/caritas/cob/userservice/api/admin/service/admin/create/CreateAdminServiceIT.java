@@ -61,7 +61,7 @@ class CreateAdminServiceIT {
   void
       createNewAdminAgency_Should_returnExpectedCreatedAdmin_When_inputDataIsCorrectAndMultitenancyDisabled() {
     // given
-    TenantContext.setCurrentTenant(1L);
+    TenantContext.clear();
     ReflectionTestUtils.setField(createAdminService, "multiTenancyEnabled", false);
     when(identityClient.createKeycloakUser(any(), anyString(), any()))
         .thenReturn(easyRandom.nextObject(KeycloakCreateUserResponseDTO.class));
