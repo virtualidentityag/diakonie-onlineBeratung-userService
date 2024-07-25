@@ -74,6 +74,7 @@ public class CreateConsultantSagaTenantAwareIT {
   @Test
   public void
       createNewConsultant_Should_throwCustomValidationHttpStatusException_When_LicensesAreExceeded() {
+    TenantContext.setCurrentTenant(1L);
     assertThrows(
         CustomValidationHttpStatusException.class,
         () -> {
@@ -83,6 +84,7 @@ public class CreateConsultantSagaTenantAwareIT {
           createConsultant("username2");
           CreateConsultantDTO createConsultantDTO =
               this.easyRandom.nextObject(CreateConsultantDTO.class);
+          createConsultantDTO.setTenantId(1L);
           this.createConsultantSaga.createNewConsultant(createConsultantDTO);
           rollbackDBState();
         });
