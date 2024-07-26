@@ -92,7 +92,7 @@ class SessionServiceIT {
     assertThrows(
         ForbiddenException.class,
         () ->
-            sessionService.getSessionsByUserAndGroupOrFeedbackGroupIds(
+            sessionService.getSessionsByUserAndGroupIds(
                 "9c4057d0-05ad-4e86-a47c-dc5bdeec03b9",
                 Set.of("9faSTWZ5gurHLXy4R"),
                 Collections.emptySet()));
@@ -101,7 +101,7 @@ class SessionServiceIT {
   @Test
   void getSessionsByUserAndGroupOrFeedbackGroupIdsShouldFetchAgencyForSession() {
     var sessions =
-        sessionService.getSessionsByUserAndGroupOrFeedbackGroupIds(
+        sessionService.getSessionsByUserAndGroupIds(
             "9c4057d0-05ad-4e86-a47c-dc5bdeec03b9", Set.of("9faSTWZ5gurHLXy4R"), Set.of("user"));
 
     assertEquals(1, sessions.size());

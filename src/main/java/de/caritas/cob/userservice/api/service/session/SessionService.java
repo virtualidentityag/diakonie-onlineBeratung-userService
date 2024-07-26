@@ -394,10 +394,10 @@ public class SessionService {
    * @param roles the roles of the given user
    * @return {@link UserSessionResponseDTO}
    */
-  public List<UserSessionResponseDTO> getSessionsByUserAndGroupOrFeedbackGroupIds(
+  public List<UserSessionResponseDTO> getSessionsByUserAndGroupIds(
       String userId, Set<String> rcGroupIds, Set<String> roles) {
     checkForAskerRoles(roles);
-    var sessions = sessionRepository.findByGroupOrFeedbackGroupIds(rcGroupIds);
+    var sessions = sessionRepository.findByGroupIds(rcGroupIds);
     sessions.forEach(session -> checkAskerPermissionForSession(session, userId, roles));
     List<AgencyDTO> agencies = fetchAgencies(sessions);
     return convertToUserSessionResponseDTO(sessions, agencies);
@@ -439,11 +439,10 @@ public class SessionService {
    * @param roles the roles of the given consultant
    * @return {@link ConsultantSessionResponseDTO}
    */
-  public List<ConsultantSessionResponseDTO>
-      getAllowedSessionsByConsultantAndGroupOrFeedbackGroupIds(
-          Consultant consultant, Set<String> rcGroupIds, Set<String> roles) {
+  public List<ConsultantSessionResponseDTO> getAllowedSessionsByConsultantAndGroupIds(
+      Consultant consultant, Set<String> rcGroupIds, Set<String> roles) {
     checkForUserOrConsultantRole(roles);
-    var sessions = sessionRepository.findByGroupOrFeedbackGroupIds(rcGroupIds);
+    var sessions = sessionRepository.findByGroupIds(rcGroupIds);
 
     List<Session> allowedSessions =
         sessions.stream()

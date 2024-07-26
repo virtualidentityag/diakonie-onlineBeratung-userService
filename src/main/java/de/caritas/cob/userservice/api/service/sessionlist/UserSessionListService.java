@@ -62,8 +62,7 @@ public class UserSessionListService {
       Set<String> roles) {
 
     var groupIds = new HashSet<>(rcGroupIds);
-    var sessions =
-        sessionService.getSessionsByUserAndGroupOrFeedbackGroupIds(userId, groupIds, roles);
+    var sessions = sessionService.getSessionsByUserAndGroupIds(userId, groupIds, roles);
     var chats = chatService.getChatSessionsByGroupIds(groupIds);
 
     return mergeUserSessionsAndChats(sessions, chats, rocketChatCredentials);

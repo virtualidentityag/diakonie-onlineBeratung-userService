@@ -343,7 +343,7 @@ public class UserController implements UsersApi {
    * @return {@link ResponseEntity} of {@link UserSessionListResponseDTO}
    */
   @Override
-  public ResponseEntity<GroupSessionListResponseDTO> getSessionsForGroupOrFeedbackGroupIds(
+  public ResponseEntity<GroupSessionListResponseDTO> getSessionsForGroupIds(
       @RequestHeader String rcToken, @RequestParam(value = "rcGroupIds") List<String> rcGroupIds) {
     GroupSessionListResponseDTO groupSessionList;
     if (authenticatedUser.isConsultant()) {

@@ -45,8 +45,7 @@ public class ConsultantSessionListService {
       Consultant consultant, List<String> rcGroupIds, Set<String> roles) {
     var groupIds = new HashSet<>(rcGroupIds);
     var sessions =
-        sessionService.getAllowedSessionsByConsultantAndGroupOrFeedbackGroupIds(
-            consultant, groupIds, roles);
+        sessionService.getAllowedSessionsByConsultantAndGroupIds(consultant, groupIds, roles);
     var chats = chatService.getChatSessionsForConsultantByGroupIds(groupIds);
 
     return mergeConsultantSessionsAndChats(consultant, sessions, chats);

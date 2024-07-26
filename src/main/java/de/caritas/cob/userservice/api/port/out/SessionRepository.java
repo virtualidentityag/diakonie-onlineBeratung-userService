@@ -117,12 +117,9 @@ public interface SessionRepository extends CrudRepository<Session, Long> {
   Optional<Session> findByGroupId(String groupId);
 
   @Query(
-      value =
-          "SELECT * "
-              + "FROM session s "
-              + "WHERE s.rc_group_id IN :group_ids OR s.rc_feedback_group_id IN :group_ids",
+      value = "SELECT * " + "FROM session s " + "WHERE s.rc_group_id IN :group_ids",
       nativeQuery = true)
-  List<Session> findByGroupOrFeedbackGroupIds(@Param(value = "group_ids") Set<String> groupIds);
+  List<Session> findByGroupIds(@Param(value = "group_ids") Set<String> groupIds);
 
   /**
    * Find all {@link Session}s by an agency ID and SessionStatus where consultant is null.

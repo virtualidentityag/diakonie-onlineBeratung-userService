@@ -210,7 +210,6 @@ class SessionServiceTest {
   @Mock private AgencyService agencyService;
   @Mock private Logger logger;
   @Mock private ConsultantService consultantService;
-  @Mock private UserService userService;
   @Mock private ConsultingTypeManager consultingTypeManager;
 
   private final EasyRandom easyRandom = new EasyRandom();
@@ -784,10 +783,10 @@ class SessionServiceTest {
 
   @Test
   void
-      getAllowedSessionsByConsultantAndGroupOrFeedbackGroupIds_should_find_new_anonymous_enquiry_if_consultant_may_advise_consulting_type() {
+      getAllowedSessionsByConsultantAndGroupIds_should_find_new_anonymous_enquiry_if_consultant_may_advise_consulting_type() {
     Session anonymousEnquiry =
         createAnonymousNewEnquiryWithConsultingType(AGENCY_DTO_SUCHT.getConsultingType());
-    when(sessionRepository.findByGroupOrFeedbackGroupIds(singleton("rcGroupId")))
+    when(sessionRepository.findByGroupIds(singleton("rcGroupId")))
         .thenReturn(singletonList(anonymousEnquiry));
     when(agencyService.getAgencies(singletonList(4711L))).thenReturn(AGENCY_DTO_LIST);
     ConsultantAgency agency = new ConsultantAgency();
@@ -795,7 +794,7 @@ class SessionServiceTest {
     var consultant = createConsultantWithAgencies(agency);
 
     var sessionResponse =
-        sessionService.getAllowedSessionsByConsultantAndGroupOrFeedbackGroupIds(
+        sessionService.getAllowedSessionsByConsultantAndGroupIds(
             consultant, singleton("rcGroupId"), singleton(UserRole.CONSULTANT.getValue()));
 
     assertEquals(1, sessionResponse.size());
@@ -803,7 +802,7 @@ class SessionServiceTest {
 
   @Test
   void
-      getAllowedSessionsByConsultantAndGroupOrFeedbackGroupIds_should_only_return_the_sessions_the_consultant_can_see() {
+      getAllowedSessionsByConsultantAndGroupIds_should_only_return_the_sessions_the_consultant_can_see() {
     // given
     List<Session> sessions = new ArrayList<>();
     ConsultantAgency agency = new ConsultantAgency();
@@ -812,11 +811,10 @@ class SessionServiceTest {
     var allowedSession = giveAllowedSessionWithID(1L, consultant);
     sessions.add(giveAllowedSessionWithID(2L, null));
     sessions.add(allowedSession);
-    when(sessionRepository.findByGroupOrFeedbackGroupIds(singleton("rcGroupId")))
-        .thenReturn(sessions);
+    when(sessionRepository.findByGroupIds(singleton("rcGroupId"))).thenReturn(sessions);
     // when
     var sessionResponse =
-        sessionService.getAllowedSessionsByConsultantAndGroupOrFeedbackGroupIds(
+        sessionService.getAllowedSessionsByConsultantAndGroupIds(
             consultant, singleton("rcGroupId"), singleton(UserRole.CONSULTANT.getValue()));
     // then
     assertThat(sessionResponse).hasSize(1);
@@ -845,34 +843,31 @@ class SessionServiceTest {
   }
 
   @Test
-  void
-      getSessionsByUserAndGroupOrFeedbackGroupIds_should_find_session_for_anonymous_user_of_session() {
+  void getSessionsByUserAndGroupIds_should_find_session_for_anonymous_user_of_session() {
     Session anonymousEnquiry =
         createAnonymousNewEnquiryWithConsultingType(AGENCY_DTO_SUCHT.getConsultingType());
     anonymousEnquiry.setUser(USER);
-    when(sessionRepository.findByGroupOrFeedbackGroupIds(singleton("rcGroupId")))
+    when(sessionRepository.findByGroupIds(singleton("rcGroupId")))
         .thenReturn(singletonList(anonymousEnquiry));
 
-    var sessionResponse = getSessionsByUserAndGroupOrFeedbackGroupIds(USER_ID);
+    var sessionResponse = getSessionsByUserAndGroupIds(USER_ID);
 
     assertEquals(1, sessionResponse.size());
   }
 
   @Test
-  void getSessionsByUserAndGroupOrFeedbackGroupIds_should_fail_if_user_is_not_owner_of_session() {
+  void getSessionsByUserAndGroupIds_should_fail_if_user_is_not_owner_of_session() {
     Session anonymousEnquiry =
         createAnonymousNewEnquiryWithConsultingType(AGENCY_DTO_SUCHT.getConsultingType());
     anonymousEnquiry.setUser(USER);
-    when(sessionRepository.findByGroupOrFeedbackGroupIds(singleton("rcGroupId")))
+    when(sessionRepository.findByGroupIds(singleton("rcGroupId")))
         .thenReturn(singletonList(anonymousEnquiry));
 
-    assertThrows(
-        ForbiddenException.class, () -> getSessionsByUserAndGroupOrFeedbackGroupIds("someOtherId"));
+    assertThrows(ForbiddenException.class, () -> getSessionsByUserAndGroupIds("someOtherId"));
   }
 
-  private List<UserSessionResponseDTO> getSessionsByUserAndGroupOrFeedbackGroupIds(
-      String someOtherId) {
-    return sessionService.getSessionsByUserAndGroupOrFeedbackGroupIds(
+  private List<UserSessionResponseDTO> getSessionsByUserAndGroupIds(String someOtherId) {
+    return sessionService.getSessionsByUserAndGroupIds(
         someOtherId, singleton("rcGroupId"), singleton(UserRole.ANONYMOUS.getValue()));
   }
 

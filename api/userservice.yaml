@@ -251,7 +251,7 @@ paths:
         - user-controller
       summary: 'Returns sessions for given RocketChat group or feedback group IDs.
       [Authorization: Role: user, consultant]'
-      operationId: getSessionsForGroupOrFeedbackGroupIds
+      operationId: getSessionsForGroupIds
       parameters:
         - name: RCToken
           in: header
