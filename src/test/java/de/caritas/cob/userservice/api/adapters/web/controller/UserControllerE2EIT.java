@@ -2083,13 +2083,8 @@ class UserControllerE2EIT {
     newChatMessageToggle.setName(EmailType.NEW_CHAT_MESSAGE_FROM_ADVICE_SEEKER);
     newChatMessageToggle.setState(state);
 
-    var newFeedbackMessageToggle = new EmailToggle();
-    newFeedbackMessageToggle.setName(EmailType.NEW_FEEDBACK_MESSAGE_FROM_ADVICE_SEEKER);
-    newFeedbackMessageToggle.setState(state);
-
     var patchDtoAsMap = new HashMap<String, Object>(3);
-    patchDtoAsMap.put(
-        "emailToggles", Set.of(dailyEnquiryToggle, newChatMessageToggle, newFeedbackMessageToggle));
+    patchDtoAsMap.put("emailToggles", Set.of(dailyEnquiryToggle, newChatMessageToggle));
 
     if (!state) {
       consultantsToReset.add(consultant);
@@ -2136,11 +2131,7 @@ class UserControllerE2EIT {
     newChat.setName(EmailType.NEW_CHAT_MESSAGE_FROM_ADVICE_SEEKER);
     newChat.setState(true);
 
-    var newFeedback = new EmailToggle();
-    newFeedback.setName(EmailType.NEW_FEEDBACK_MESSAGE_FROM_ADVICE_SEEKER);
-    newFeedback.setState(true);
-
-    patchUserDTO.setEmailToggles(Set.of(dailyEnquiries, newChat, newFeedback));
+    patchUserDTO.setEmailToggles(Set.of(dailyEnquiries, newChat));
 
     patchUserDTO.setEmailNotifications(activeEmailNotifications());
   }
