@@ -109,14 +109,6 @@ public interface SessionRepository extends CrudRepository<Session, Long> {
   Page<Session> findByUserUserId(String userId, Pageable pageable);
 
   /**
-   * Find the {@link Session} by Rocket.Chat feedback group id.
-   *
-   * @param feedbackGroupId the rocket chat feedback group id
-   * @return an {@link Optional} of the session
-   */
-  Optional<Session> findByFeedbackGroupId(String feedbackGroupId);
-
-  /**
    * Find the {@link Session} by Rocket.Chat group id.
    *
    * @param groupId the rocket chat group id

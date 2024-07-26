@@ -589,16 +589,6 @@ public class SessionService {
   }
 
   /**
-   * Returns the session for the Rocket.Chat feedback group id.
-   *
-   * @param feedbackGroupId the id of the feedback group
-   * @return the session
-   */
-  public Session getSessionByFeedbackGroupId(String feedbackGroupId) {
-    return sessionRepository.findByFeedbackGroupId(feedbackGroupId).orElse(null);
-  }
-
-  /**
    * Returns a {@link ConsultantSessionDTO} for a specific session.
    *
    * @param sessionId the session ID to fetch
@@ -775,9 +765,5 @@ public class SessionService {
     }
 
     return sessions.get(0).getGroupId();
-  }
-
-  public List<Session> findAllSessions() {
-    return Lists.newArrayList(sessionRepository.findAll());
   }
 }

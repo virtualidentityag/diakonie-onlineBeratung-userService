@@ -174,8 +174,6 @@ public class UserController implements UsersApi {
 
   private final @NotNull AdminUserFacade adminUserFacade;
 
-  private final @NonNull EmailNotificationMapper emailNotificationMapper;
-
   @Value("${feature.topics.enabled}")
   private boolean featureTopicsEnabled;
 
@@ -711,26 +709,6 @@ public class UserController implements UsersApi {
     emailNotificationFacade.sendNewMessageNotification(
         newMessageNotificationDTO.getRcGroupId(),
         authenticatedUser.getRoles(),
-        authenticatedUser.getUserId(),
-        TenantContext.getCurrentTenantData());
-
-    return new ResponseEntity<>(HttpStatus.OK);
-  }
-
-  /**
-   * Sends email notifications to the user(s) if there has been a new feedback answer. Uses the
-   * provided Keycloak authorization token for user verification (user role). This means that the
-   * user that wrote the answer should also call this method.
-   *
-   * @param newMessageNotificationDTO (required)
-   * @return {@link ResponseEntity} containing {@link HttpStatus}
-   */
-  @Override
-  public ResponseEntity<Void> sendNewFeedbackMessageNotification(
-      @RequestBody NewMessageNotificationDTO newMessageNotificationDTO) {
-
-    emailNotificationFacade.sendNewFeedbackMessageNotification(
-        newMessageNotificationDTO.getRcGroupId(),
         authenticatedUser.getUserId(),
         TenantContext.getCurrentTenantData());
 

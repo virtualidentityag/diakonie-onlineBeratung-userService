@@ -877,33 +877,6 @@ paths:
           description: INTERNAL SERVER ERROR - server encountered unexpected condition
       security:
         - Bearer: [ ]
-  /users/mails/messages/feedback/new:
-    post:
-      tags:
-        - user-controller
-      summary: 'Sends a notification e-mail that a new feedback message/answer has
-        been written [Authorization: Role: consultant with authority for feedback
-        chat]'
-      operationId: sendNewFeedbackMessageNotification
-      requestBody:
-        content:
-          'application/json':
-            schema:
-              $ref: '#/components/schemas/NewMessageNotificationDTO'
-        required: true
-      responses:
-        200:
-          description: successful operation
-        400:
-          description: BAD REQUEST - invalid/incomplete request or body object
-        401:
-          description: UNAUTHORIZED - invalid token
-        409:
-          description: CONFLICT - no user e-mail address in db given
-        500:
-          description: INTERNAL SERVER ERROR - server encountered unexpected condition
-      security:
-        - Bearer: [ ]
   /users/mails/reassignment:
     post:
       tags:
