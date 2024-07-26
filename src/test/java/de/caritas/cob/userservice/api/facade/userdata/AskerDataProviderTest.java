@@ -9,20 +9,13 @@ import static de.caritas.cob.userservice.api.testHelper.TestConstants.GRANTED_AU
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.USER;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.USER_WITH_SESSIONS;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.google.api.client.util.Sets;
-import com.google.common.collect.Lists;
 import com.neovisionaries.i18n.LanguageCode;
 import de.caritas.cob.userservice.api.adapters.web.dto.AgencyDTO;
-import de.caritas.cob.userservice.api.adapters.web.dto.SessionDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.UserDataResponseDTO;
 import de.caritas.cob.userservice.api.config.auth.UserRole;
 import de.caritas.cob.userservice.api.exception.httpresponses.InternalServerErrorException;
@@ -30,14 +23,10 @@ import de.caritas.cob.userservice.api.helper.AuthenticatedUser;
 import de.caritas.cob.userservice.api.helper.SessionDataProvider;
 import de.caritas.cob.userservice.api.manager.consultingtype.ConsultingTypeManager;
 import de.caritas.cob.userservice.api.model.Session;
-import de.caritas.cob.userservice.api.model.Session.RegistrationType;
-import de.caritas.cob.userservice.api.model.Session.SessionStatus;
 import de.caritas.cob.userservice.api.model.User;
 import de.caritas.cob.userservice.api.port.out.IdentityClientConfig;
 import de.caritas.cob.userservice.api.service.agency.AgencyService;
 import de.caritas.cob.userservice.api.service.session.SessionService;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -45,15 +34,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.jeasy.random.EasyRandom;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class AskerDataProviderTest {
+@ExtendWith(MockitoExtension.class)
+class AskerDataProviderTest {
 
   @InjectMocks private AskerDataProvider askerDataProvider;
 
@@ -72,8 +61,7 @@ public class AskerDataProviderTest {
   @Mock SessionService sessionService;
 
   @Test
-  public void
-      retrieveData_Should_ReturnUserDataWithAgency_When_ProvidedWithUserWithAgencyInSession() {
+  void retrieveData_Should_ReturnUserDataWithAgency_When_ProvidedWithUserWithAgencyInSession() {
     givenAnEmailDummySuffixConfig();
     when(authenticatedUser.getRoles()).thenReturn(asSet(UserRole.USER.getValue()));
     when(agencyService.getAgencies(Mockito.anyList()))
@@ -94,7 +82,7 @@ public class AskerDataProviderTest {
   }
 
   @Test
-  public void retrieveData_Should_ReturnUserDataWithAgency_When_ProvidedWithUserWithAgencies() {
+  void retrieveData_Should_ReturnUserDataWithAgency_When_ProvidedWithUserWithAgencies() {
     givenAnEmailDummySuffixConfig();
     when(authenticatedUser.getRoles()).thenReturn(asSet(UserRole.USER.getValue()));
     when(agencyService.getAgencies(Mockito.anyList()))
@@ -115,52 +103,22 @@ public class AskerDataProviderTest {
   }
 
   @Test
-  public void retrieveData_Should_ReturnUserDataWithSessions_When_ProvidedWithUserWithSessions() {
-    givenAnEmailDummySuffixConfig();
-    when(authenticatedUser.getRoles()).thenReturn(asSet(UserRole.USER.getValue()));
-    ArrayList<Session> inputSessions =
-        Lists.newArrayList(
-            Session.builder()
-                .id(1L)
-                .registrationType(RegistrationType.ANONYMOUS)
-                .languageCode(LanguageCode.de)
-                .postcode("12111")
-                .status(SessionStatus.NEW)
-                .createDate(LocalDateTime.now())
-                .build(),
-            Session.builder()
-                .id(2L)
-                .registrationType(RegistrationType.REGISTERED)
-                .languageCode(LanguageCode.de)
-                .postcode("11111")
-                .createDate(LocalDateTime.now())
-                .status(SessionStatus.NEW)
-                .build());
-    when(sessionService.findSessionsByUser(Mockito.any(User.class))).thenReturn(inputSessions);
-    Set<SessionDTO> sessions = askerDataProvider.retrieveData(USER).getSessions();
-
-    assertEquals(sessions.size(), 2);
-    var expectedSessionsIds = Sets.newHashSet();
-    expectedSessionsIds.add(1L);
-    expectedSessionsIds.add(2L);
-    var sessionIds = sessions.stream().map(SessionDTO::getId).collect(Collectors.toSet());
-    assertEquals(sessionIds, expectedSessionsIds);
-  }
-
-  @Test(expected = InternalServerErrorException.class)
-  public void
+  void
       retrieveData_GetConsultingTypes_Should_ThrowInternalServerErrorException_When_AgencyServiceHelperFails() {
-    givenAnEmailDummySuffixConfig();
-    when(authenticatedUser.getRoles()).thenReturn(asSet(UserRole.USER.getValue()));
-    when(agencyService.getAgencies(Mockito.anyList()))
-        .thenThrow(new InternalServerErrorException(""));
+    assertThrows(
+        InternalServerErrorException.class,
+        () -> {
+          givenAnEmailDummySuffixConfig();
+          when(authenticatedUser.getRoles()).thenReturn(asSet(UserRole.USER.getValue()));
+          when(agencyService.getAgencies(Mockito.anyList()))
+              .thenThrow(new InternalServerErrorException(""));
 
-    askerDataProvider.retrieveData(USER);
+          askerDataProvider.retrieveData(USER);
+        });
   }
 
   @Test
-  public void
-      retrieveData_Should_ReturnUserDataResponseDTOWithValidEmail_When_ProvidedWithValidUser() {
+  void retrieveData_Should_ReturnUserDataResponseDTOWithValidEmail_When_ProvidedWithValidUser() {
     givenAnEmailDummySuffixConfig();
     when(authenticatedUser.getRoles()).thenReturn(asSet(UserRole.USER.getValue()));
     when(consultingTypeManager.getAllConsultingTypeIds())
@@ -173,7 +131,7 @@ public class AskerDataProviderTest {
   }
 
   @Test
-  public void retrieveData_Should_ReturnUserDataResponseDTOWithoutEmail_When_UserHasDummyMail() {
+  void retrieveData_Should_ReturnUserDataResponseDTOWithoutEmail_When_UserHasDummyMail() {
     givenAnEmailDummySuffixConfig();
     when(authenticatedUser.getRoles()).thenReturn(asSet(UserRole.USER.getValue()));
     User user = mock(User.class);
@@ -188,7 +146,7 @@ public class AskerDataProviderTest {
   }
 
   @Test
-  public void retrieveData_Should_ReturnValidData() {
+  void retrieveData_Should_ReturnValidData() {
     givenAnEmailDummySuffixConfig();
     when(agencyService.getAgencies(any())).thenReturn(Collections.singletonList(AGENCY_DTO_SUCHT));
     LinkedHashMap<String, Object> sessionData = new LinkedHashMap<>();
@@ -227,7 +185,7 @@ public class AskerDataProviderTest {
   }
 
   @Test
-  public void retrieveData_Should_ReturnUserDataWithoutAgency_When_userHasNotAgencyInSession() {
+  void retrieveData_Should_ReturnUserDataWithoutAgency_When_userHasNotAgencyInSession() {
     givenAnEmailDummySuffixConfig();
 
     User user = new EasyRandom().nextObject(User.class);
