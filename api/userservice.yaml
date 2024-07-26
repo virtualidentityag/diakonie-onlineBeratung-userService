@@ -249,7 +249,7 @@ paths:
     get:
       tags:
         - user-controller
-      summary: 'Returns sessions for given RocketChat group or feedback group IDs.
+      summary: 'Returns sessions for given RocketChat group IDs.
       [Authorization: Role: user, consultant]'
       operationId: getSessionsForGroupIds
       parameters:
