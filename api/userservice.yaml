@@ -2031,10 +2031,6 @@ components:
           type: string
           example: xGklslk2JJKK
           description: Rocket.Chat room ID
-        feedbackGroupId:
-          type: string
-          example: 8ertjlasdKJA
-          description: Rocket.Chat feedback room ID
         isPeerChat:
           type: boolean
           example: false
@@ -2055,9 +2051,6 @@ components:
         messagesRead:
           type: boolean
           example: false
-        feedbackRead:
-          type: boolean
-          example: true
         isTeamSession:
           type: boolean
           example: false
@@ -2221,10 +2214,6 @@ components:
           type: string
           example: xGklslk2JJKK
           description: Rocket.Chat room ID
-        feedbackGroupId:
-          type: string
-          example: 8ertjlasdKJA
-          description: Rocket.Chat feedback room ID
         consultantId:
           type: string
           example: 926b9777-4eef-443d-925a-4aa534797bd7
