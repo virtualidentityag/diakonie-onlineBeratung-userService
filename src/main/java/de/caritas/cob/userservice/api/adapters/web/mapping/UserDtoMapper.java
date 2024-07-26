@@ -152,9 +152,6 @@ public class UserDtoMapper {
     if (name.equals(EmailType.NEW_CHAT_MESSAGE_FROM_ADVICE_SEEKER)) {
       return "notifyNewChatMessageFromAdviceSeeker";
     }
-    if (name.equals(EmailType.NEW_FEEDBACK_MESSAGE_FROM_ADVICE_SEEKER)) {
-      return "notifyNewFeedbackMessageFromAdviceSeeker";
-    }
 
     return null;
   }
