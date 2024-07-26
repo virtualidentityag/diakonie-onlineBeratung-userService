@@ -74,32 +74,6 @@ public class RelevantUserAccountIdsBySessionProviderTest {
   }
 
   @Test
-  public void
-      collectUserIds_Should_returnAllUserIds_When_consultantIsAuthenticatedUserAndRcIdIsFeedbackGroupId() {
-    when(sessionRepository.findByFeedbackGroupId(any()))
-        .thenReturn(buildSessionWithUserAndConsultant());
-
-    List<String> userIds = this.bySessionProvider.collectUserIds("rcGroupId");
-
-    assertThat(userIds, hasSize(2));
-    assertThat(userIds.get(0), is("user"));
-    assertThat(userIds.get(1), is("consultant"));
-  }
-
-  @Test
-  public void
-      collectUserIds_Should_returnAllUserIds_When_userIsAuthenticatedUserAndRcIdIsFeedbackGroupId() {
-    when(sessionRepository.findByFeedbackGroupId(any()))
-        .thenReturn(buildSessionWithUserAndConsultant());
-
-    List<String> userIds = this.bySessionProvider.collectUserIds("rcGroupId");
-
-    assertThat(userIds, hasSize(2));
-    assertThat(userIds.get(0), is("user"));
-    assertThat(userIds.get(1), is("consultant"));
-  }
-
-  @Test
   public void collectUserIds_Should_returnAllUserIds_When_authenticatedUserIsOther() {
     when(sessionRepository.findByGroupId(any())).thenReturn(buildSessionWithUserAndConsultant());
 
@@ -108,27 +82,5 @@ public class RelevantUserAccountIdsBySessionProviderTest {
     assertThat(userIds, hasSize(2));
     assertThat(userIds.get(0), is("user"));
     assertThat(userIds.get(1), is("consultant"));
-  }
-
-  @Test
-  public void
-      collectUserIds_Should_returnAllUserIds_When_authenticatedUserIsOtherAndRcIdIsFeedbackGroupId() {
-    when(sessionRepository.findByFeedbackGroupId(any()))
-        .thenReturn(buildSessionWithUserAndConsultant());
-
-    List<String> userIds = this.bySessionProvider.collectUserIds("rcGroupId");
-
-    assertThat(userIds, hasSize(2));
-    assertThat(userIds.get(0), is("user"));
-    assertThat(userIds.get(1), is("consultant"));
-  }
-
-  @Test
-  public void collectUserIds_Should_returnEmptyList_When_sessionHasNoConsultant() {
-    when(sessionRepository.findByFeedbackGroupId(any())).thenReturn(Optional.of(new Session()));
-
-    List<String> userIds = this.bySessionProvider.collectUserIds("rcGroupId");
-
-    assertThat(userIds, hasSize(0));
   }
 }
