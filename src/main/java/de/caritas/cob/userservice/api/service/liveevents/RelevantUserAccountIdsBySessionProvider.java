@@ -31,7 +31,7 @@ public class RelevantUserAccountIdsBySessionProvider implements UserIdsProvider 
     Session session =
         this.sessionRepository
             .findByGroupId(rcGroupId)
-            .orElse(this.sessionRepository.findByFeedbackGroupId(rcGroupId).orElse(null));
+            .orElse(null);
 
     return extractDependentUserIds(session);
   }
