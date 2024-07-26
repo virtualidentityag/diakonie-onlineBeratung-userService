@@ -18,7 +18,6 @@ import static org.mockito.Mockito.when;
 import com.google.api.client.util.Sets;
 import com.neovisionaries.i18n.LanguageCode;
 import de.caritas.cob.userservice.agencyadminserivce.generated.web.model.AgencyAdminResponseDTO;
-import de.caritas.cob.userservice.api.Organizer;
 import de.caritas.cob.userservice.api.UserServiceApplication;
 import de.caritas.cob.userservice.api.adapters.web.dto.AgencyDTO;
 import de.caritas.cob.userservice.api.admin.service.consultant.create.agencyrelation.ConsultantAgencyRelationCreatorService;
@@ -68,8 +67,6 @@ public class ConsultantAgencyAdminUserServiceTenantAwareIT {
   @MockBean private AgencyService agencyService;
 
   @MockBean private AgencyAdminService agencyAdminService;
-
-  @Autowired private Organizer organizer;
 
   @MockBean private RemoveConsultantFromRocketChatService removeConsultantFromRocketChatService;
 
@@ -267,7 +264,6 @@ public class ConsultantAgencyAdminUserServiceTenantAwareIT {
     consultant.setEncourage2fa(true);
     consultant.setNotifyEnquiriesRepeating(true);
     consultant.setNotifyNewChatMessageFromAdviceSeeker(true);
-    consultant.setNotifyNewFeedbackMessageFromAdviceSeeker(true);
     consultant.setWalkThroughEnabled(true);
     consultant.setTeamConsultant(isTeamConsultant);
     consultant.setConsultantMobileTokens(Sets.newHashSet());

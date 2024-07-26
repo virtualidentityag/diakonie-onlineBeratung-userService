@@ -259,7 +259,6 @@ class UserControllerE2EIT {
           consultantToReset.setLanguages(null);
           consultantToReset.setNotifyEnquiriesRepeating(true);
           consultantToReset.setNotifyNewChatMessageFromAdviceSeeker(true);
-          consultantToReset.setNotifyNewFeedbackMessageFromAdviceSeeker(true);
           consultantRepository.save(consultantToReset);
         });
     consultantsToReset = new HashSet<>();
@@ -357,7 +356,7 @@ class UserControllerE2EIT {
         .andExpect(jsonPath("available", is(false)))
         .andExpect(jsonPath("formalLanguage", is(consultant.isLanguageFormal())))
         .andExpect(jsonPath("e2eEncryptionEnabled", is(false)))
-        .andExpect(jsonPath("emailToggles", hasSize(3)))
+        .andExpect(jsonPath("emailToggles", hasSize(2)))
         .andExpect(
             jsonPath(
                 "emailToggles[*].name",
@@ -479,7 +478,7 @@ class UserControllerE2EIT {
         .andExpect(jsonPath("available", is(true)))
         .andExpect(jsonPath("formalLanguage", is(consultant.isLanguageFormal())))
         .andExpect(jsonPath("e2eEncryptionEnabled", is(false)))
-        .andExpect(jsonPath("emailToggles", hasSize(3)))
+        .andExpect(jsonPath("emailToggles", hasSize(2)))
         .andExpect(
             jsonPath(
                 "emailToggles[*].name",
@@ -754,7 +753,7 @@ class UserControllerE2EIT {
         .andExpect(jsonPath("formalLanguage", is(consultant.isLanguageFormal())))
         .andExpect(jsonPath("preferredLanguage", is(consultant.getLanguageCode().toString())))
         .andExpect(jsonPath("e2eEncryptionEnabled", is(false)))
-        .andExpect(jsonPath("emailToggles", hasSize(3)))
+        .andExpect(jsonPath("emailToggles", hasSize(2)))
         .andExpect(
             jsonPath(
                 "emailToggles[*].name",
@@ -857,7 +856,7 @@ class UserControllerE2EIT {
                 .header(CSRF_HEADER, CSRF_VALUE)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("emailToggles", hasSize(3)))
+        .andExpect(jsonPath("emailToggles", hasSize(2)))
         .andExpect(jsonPath("emailToggles[?(@.name =~ /DAILY_ENQUIRY/)].state", is(List.of(false))))
         .andExpect(
             jsonPath(
@@ -888,7 +887,7 @@ class UserControllerE2EIT {
                 .header(CSRF_HEADER, CSRF_VALUE)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("emailToggles", hasSize(3)))
+        .andExpect(jsonPath("emailToggles", hasSize(2)))
         .andExpect(jsonPath("emailToggles[?(@.name =~ /DAILY_ENQUIRY/)].state", is(List.of(true))))
         .andExpect(
             jsonPath(
@@ -1201,7 +1200,6 @@ class UserControllerE2EIT {
     var dbConsultant = consultantRepository.findById(consultant.getId()).orElseThrow();
     assertFalse(dbConsultant.getNotifyEnquiriesRepeating());
     assertFalse(dbConsultant.getNotifyNewChatMessageFromAdviceSeeker());
-    assertFalse(dbConsultant.getNotifyNewFeedbackMessageFromAdviceSeeker());
   }
 
   @Test
@@ -2101,7 +2099,6 @@ class UserControllerE2EIT {
 
   private void givenConsultantIsNotToNotifyAboutNewFollowUps() {
     consultant.setNotifyNewChatMessageFromAdviceSeeker(false);
-    consultant.setNotifyNewFeedbackMessageFromAdviceSeeker(false);
     consultantRepository.save(consultant);
     consultantsToReset.add(consultant);
   }

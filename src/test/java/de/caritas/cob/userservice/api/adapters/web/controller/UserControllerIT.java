@@ -17,7 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.neovisionaries.i18n.LanguageCode;
-import de.caritas.cob.userservice.api.actions.registry.ActionsRegistry;
 import de.caritas.cob.userservice.api.adapters.rocketchat.RocketChatCredentials;
 import de.caritas.cob.userservice.api.adapters.rocketchat.RocketChatService;
 import de.caritas.cob.userservice.api.adapters.web.controller.interceptor.ApiResponseEntityExceptionHandler;
@@ -25,7 +24,6 @@ import de.caritas.cob.userservice.api.adapters.web.dto.*;
 import de.caritas.cob.userservice.api.adapters.web.dto.validation.MandatoryFieldsProvider;
 import de.caritas.cob.userservice.api.adapters.web.mapping.ConsultantDtoMapper;
 import de.caritas.cob.userservice.api.adapters.web.mapping.UserDtoMapper;
-import de.caritas.cob.userservice.api.admin.facade.AdminUserFacade;
 import de.caritas.cob.userservice.api.admin.service.consultant.update.ConsultantUpdateService;
 import de.caritas.cob.userservice.api.config.VideoChatConfig;
 import de.caritas.cob.userservice.api.config.auth.Authority;
@@ -113,7 +111,6 @@ public class UserControllerIT {
           null,
           null,
           null,
-          true,
           true,
           true,
           true,
@@ -297,7 +294,6 @@ public class UserControllerIT {
   @MockBean private ConsultantDataFacade consultantDataFacade;
   @MockBean private SessionDataService sessionDataService;
   @MockBean private SessionArchiveService sessionArchiveService;
-  @MockBean private ActionsRegistry actionsRegistry;
 
   @MockBean
   @SuppressWarnings("unused")
@@ -342,10 +338,6 @@ public class UserControllerIT {
   @MockBean
   @SuppressWarnings("unused")
   private VideoChatConfig videoChatConfig;
-
-  @MockBean private AdminUserFacade adminUserFacade;
-
-  @MockBean private EmailNotificationMapper emailNotificationMapper;
 
   @MockBean private SessionDeleteService sessionDeleteService;
 
@@ -1685,11 +1677,6 @@ public class UserControllerIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().is(HttpStatus.INTERNAL_SERVER_ERROR.value()));
-  }
-
-  private String giveValidCreateChatBodyWithAgency(ConsultantAgency consultantAgency) {
-    return VALID_CREATE_CHAT_BODY_WITH_AGENCY_PLACEHOLDER.replace(
-        "${AGENCY_ID}", consultantAgency.getAgencyId().toString());
   }
 
   private String giveValidCreateChatBodyWithAgencyId(Long agencyId) {

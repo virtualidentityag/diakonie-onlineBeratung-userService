@@ -59,8 +59,6 @@ public class SessionMapper {
         .status(session.getStatus().getValue())
         .postcode(session.getPostcode())
         .groupId(session.getGroupId())
-        .feedbackGroupId(
-            nonNull(session.getFeedbackGroupId()) ? session.getFeedbackGroupId() : null)
         .askerRcId(
             nonNull(session.getUser()) && nonNull(session.getUser().getRcUserId())
                 ? session.getUser().getRcUserId()

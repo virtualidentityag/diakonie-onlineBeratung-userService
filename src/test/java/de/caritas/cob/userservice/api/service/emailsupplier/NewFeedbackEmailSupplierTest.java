@@ -186,7 +186,6 @@ public class NewFeedbackEmailSupplierTest {
     when(consultant.getLanguageCode()).thenReturn(LanguageCode.de);
     when(consultant.isAbsent()).thenReturn(false);
     when(consultant.getRocketChatId()).thenReturn(RandomStringUtils.randomAlphanumeric(17));
-    when(consultant.getNotifyNewFeedbackMessageFromAdviceSeeker()).thenReturn(true);
     when(consultantService.getConsultantByRcUserId(anyString()))
         .thenReturn(Optional.of(consultant));
     when(keycloakService.userHasRole(anyString(), anyString())).thenReturn(true);
@@ -208,7 +207,6 @@ public class NewFeedbackEmailSupplierTest {
     when(consultant.getEmail()).thenReturn("a@b.com");
     when(consultant.isAbsent()).thenReturn(false);
     when(consultant.getRocketChatId()).thenReturn(RandomStringUtils.randomAlphanumeric(17));
-    when(consultant.getNotifyNewFeedbackMessageFromAdviceSeeker()).thenReturn(false);
     when(consultantService.getConsultantByRcUserId(anyString()))
         .thenReturn(Optional.of(consultant));
     when(keycloakService.userHasRole(anyString(), anyString())).thenReturn(true);
@@ -232,7 +230,6 @@ public class NewFeedbackEmailSupplierTest {
     when(consultant.getLanguageCode()).thenReturn(LanguageCode.de);
     when(consultant.isAbsent()).thenReturn(false);
     when(consultant.getRocketChatId()).thenReturn(RandomStringUtils.randomAlphanumeric(17));
-    when(consultant.getNotifyNewFeedbackMessageFromAdviceSeeker()).thenReturn(true);
     when(rocketChatService.isLoggedIn(anyString())).thenReturn(Optional.of(false));
     when(consultantService.getConsultantByRcUserId(anyString()))
         .thenReturn(Optional.of(consultant));
@@ -255,7 +252,6 @@ public class NewFeedbackEmailSupplierTest {
     when(consultant.getEmail()).thenReturn("a@b.com");
     when(consultant.isAbsent()).thenReturn(false);
     when(consultant.getRocketChatId()).thenReturn(RandomStringUtils.randomAlphanumeric(17));
-    when(consultant.getNotifyNewFeedbackMessageFromAdviceSeeker()).thenReturn(true);
     when(rocketChatService.isLoggedIn(anyString())).thenReturn(Optional.of(true));
     when(consultantService.getConsultantByRcUserId(anyString()))
         .thenReturn(Optional.of(consultant));

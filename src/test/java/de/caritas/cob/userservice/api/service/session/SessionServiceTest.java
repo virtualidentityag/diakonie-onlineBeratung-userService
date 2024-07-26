@@ -72,7 +72,6 @@ import de.caritas.cob.userservice.api.port.out.SessionRepository;
 import de.caritas.cob.userservice.api.service.ConsultantService;
 import de.caritas.cob.userservice.api.service.LogService;
 import de.caritas.cob.userservice.api.service.agency.AgencyService;
-import de.caritas.cob.userservice.api.service.user.UserService;
 import de.caritas.cob.userservice.api.testHelper.TestConstants;
 import de.caritas.cob.userservice.consultingtypeservice.generated.web.model.ExtendedConsultingTypeResponseDTO;
 import java.util.ArrayList;
@@ -119,7 +118,6 @@ class SessionServiceTest {
           nowInUtc(),
           null,
           null,
-          true,
           true,
           true,
           true,
@@ -593,7 +591,6 @@ class SessionServiceTest {
     assertEquals(session.getPostcode(), result.getPostcode());
     assertEquals(session.getStatus().getValue(), result.getStatus().intValue());
     assertEquals(session.getGroupId(), result.getGroupId());
-    assertEquals(session.getFeedbackGroupId(), result.getFeedbackGroupId());
     assertEquals(session.getConsultingTypeId(), result.getConsultingType().intValue());
     assertEquals(session.getUserAge(), result.getAge());
     assertEquals(session.getUserGender(), result.getGender());
@@ -939,7 +936,6 @@ class SessionServiceTest {
         nowInUtc(),
         null,
         null,
-        true,
         true,
         true,
         true,

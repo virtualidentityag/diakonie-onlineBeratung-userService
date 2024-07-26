@@ -81,7 +81,6 @@ public class SessionDataProviderTest {
           true,
           true,
           true,
-          true,
           null,
           null,
           ConsultantStatus.CREATED,

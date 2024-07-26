@@ -64,7 +64,7 @@ class SessionServiceIT {
   private AgencyControllerApi agencyControllerApi;
 
   @BeforeEach
-  private void setUp() {
+  public void setUp() {
     when(topicServiceApiControllerFactory.createControllerApi()).thenReturn(topicControllerApi);
     when(agencyServiceApiControllerFactory.createControllerApi()).thenReturn(agencyControllerApi);
     when(agencyControllerApi.getApiClient()).thenReturn(new ApiClient());
@@ -99,17 +99,6 @@ class SessionServiceIT {
   }
 
   @Test
-  void getSessionsByUserAndGroupOrFeedbackGroupIdsShouldFetchAgencyForSession() {
-    var sessions =
-        sessionService.getSessionsByUserAndGroupIds(
-            "9c4057d0-05ad-4e86-a47c-dc5bdeec03b9", Set.of("9faSTWZ5gurHLXy4R"), Set.of("user"));
-
-    assertEquals(1, sessions.size());
-    var userSession = sessions.get(0);
-    assertEquals("9faSTWZ5gurHLXy4R", userSession.getSession().getFeedbackGroupId());
-  }
-
-  @Test
   void
       fetchSessionForConsultant_Should_Return_ValidConsultantSessionDTO_When_ConsultantIsAssigned() {
     givenAValidTopicServiceResponse();
@@ -133,7 +122,6 @@ class SessionServiceIT {
     assertEquals(session.getPostcode(), result.getPostcode());
     assertEquals(session.getStatus().getValue(), result.getStatus().intValue());
     assertEquals(session.getGroupId(), result.getGroupId());
-    assertEquals(session.getFeedbackGroupId(), result.getFeedbackGroupId());
     assertEquals(session.getConsultingTypeId(), result.getConsultingType().intValue());
     assertEquals(session.getUserAge(), result.getAge());
     assertEquals(session.getUserGender(), result.getGender());

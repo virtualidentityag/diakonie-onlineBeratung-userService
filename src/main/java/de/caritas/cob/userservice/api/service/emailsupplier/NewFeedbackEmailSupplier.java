@@ -2,7 +2,6 @@ package de.caritas.cob.userservice.api.service.emailsupplier;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -84,16 +83,6 @@ public class NewFeedbackEmailSupplier implements EmailSupplier {
     if (areUsersEqual(userId, receivingConsultant)) {
       return buildNotificationMailsForAllOtherConsultants(sendingConsultant);
     }
-
-    if (Boolean.TRUE.equals(
-            receivingConsultant.getNotifyNewFeedbackMessageFromAdviceSeeker()
-                && didAnotherConsultantWrite())
-        && isLoggedOut(receivingConsultant)) {
-      var mail = buildMailForAssignedConsultant(sendingConsultant, receivingConsultant);
-
-      return singletonList(mail);
-    }
-
     return emptyList();
   }
 
@@ -123,7 +112,6 @@ public class NewFeedbackEmailSupplier implements EmailSupplier {
         .filter(Objects::nonNull)
         .filter(this::notHimselfAndNotAbsent)
         .filter(this::isMainConsultantOrAssignedToSession)
-        .filter(Consultant::getNotifyNewFeedbackMessageFromAdviceSeeker)
         .filter(this::isLoggedOut)
         .map(consultant -> buildMailForAssignedConsultant(sendingConsultant, consultant))
         .collect(Collectors.toList());
@@ -159,12 +147,6 @@ public class NewFeedbackEmailSupplier implements EmailSupplier {
         && !areUsersEqual(userId, consultant)
         && !areUsersEqual(session.getConsultant().getId(), consultant)
         && !consultant.isAbsent();
-  }
-
-  private boolean didAnotherConsultantWrite() {
-    return !areUsersEqual(userId, session.getConsultant())
-        && !session.getConsultant().getEmail().isEmpty()
-        && !session.getConsultant().isAbsent();
   }
 
   private boolean isLoggedOut(Consultant consultant) {

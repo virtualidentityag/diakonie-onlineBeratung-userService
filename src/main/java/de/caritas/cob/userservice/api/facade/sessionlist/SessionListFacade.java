@@ -1,9 +1,7 @@
 package de.caritas.cob.userservice.api.facade.sessionlist;
 
 import static java.util.Comparator.comparing;
-import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
-import static org.apache.commons.lang3.BooleanUtils.isTrue;
 
 import de.caritas.cob.userservice.api.adapters.rocketchat.RocketChatCredentials;
 import de.caritas.cob.userservice.api.adapters.web.dto.ConsultantSessionListResponseDTO;
@@ -14,7 +12,6 @@ import de.caritas.cob.userservice.api.adapters.web.dto.UserSessionResponseDTO;
 import de.caritas.cob.userservice.api.container.SessionListQueryParameter;
 import de.caritas.cob.userservice.api.model.Consultant;
 import de.caritas.cob.userservice.api.model.Session.SessionStatus;
-import de.caritas.cob.userservice.api.service.session.SessionFilter;
 import de.caritas.cob.userservice.api.service.session.SessionMapper;
 import de.caritas.cob.userservice.api.service.session.SessionTopicEnrichmentService;
 import de.caritas.cob.userservice.api.service.sessionlist.ConsultantSessionListService;
@@ -233,10 +230,6 @@ public class SessionListFacade {
       sortSessionsByLastMessageDateDesc(consultantSessions);
     }
 
-    if (isFeedbackFilter(sessionListQueryParameter)) {
-      removeAllChatsAndSessionsWithoutUnreadFeedback(consultantSessions);
-    }
-
     List<ConsultantSessionResponseDTO> consultantSessionsSublist = new ArrayList<>();
     if (areMoreConsultantSessionsAvailable(
         sessionListQueryParameter.getOffset(), consultantSessions)) {
@@ -257,10 +250,6 @@ public class SessionListFacade {
           .map(ConsultantSessionResponseDTO::getSession)
           .forEach(sessionTopicEnrichmentService::enrichSessionWithTopicData);
     }
-  }
-
-  private boolean isFeedbackFilter(SessionListQueryParameter sessionListQueryParameter) {
-    return sessionListQueryParameter.getSessionFilter().equals(SessionFilter.FEEDBACK);
   }
 
   private List<ConsultantSessionResponseDTO> retrieveConsultantSessionsSublist(
@@ -328,15 +317,6 @@ public class SessionListFacade {
 
   private void sortSessionsByLastMessageDateDesc(List<ConsultantSessionResponseDTO> sessions) {
     sessions.sort(comparing(ConsultantSessionResponseDTO::getLatestMessage).reversed());
-  }
-
-  private void removeAllChatsAndSessionsWithoutUnreadFeedback(
-      List<ConsultantSessionResponseDTO> sessions) {
-
-    sessions.removeIf(
-        consultantSessionResponseDTO ->
-            nonNull(consultantSessionResponseDTO.getChat())
-                || isTrue(consultantSessionResponseDTO.getSession().getFeedbackRead()));
   }
 
   private boolean areMoreConsultantSessionsAvailable(

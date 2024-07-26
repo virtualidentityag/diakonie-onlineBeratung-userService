@@ -69,7 +69,6 @@ public class ConsultantAgencyServiceTest {
           true,
           true,
           true,
-          true,
           null,
           null,
           ConsultantStatus.CREATED,
@@ -90,7 +89,6 @@ public class ConsultantAgencyServiceTest {
       new ConsultantAgency(AGENCY_ID, null, 1L, nowInUtc(), nowInUtc(), nowInUtc(), null, null);
   private final List<ConsultantAgency> CONSULTANT_NULL_AGENCY_LIST =
       Arrays.asList(CONSULTANT_NULL_AGENCY);
-  private final String ERROR = "error";
 
   @InjectMocks private ConsultantAgencyService consultantAgencyService;
   @Mock private ConsultantAgencyRepository consultantAgencyRepository;

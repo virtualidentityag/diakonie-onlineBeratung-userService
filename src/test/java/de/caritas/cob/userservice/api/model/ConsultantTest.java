@@ -38,7 +38,6 @@ public class ConsultantTest {
           true,
           true,
           true,
-          true,
           null,
           null,
           ConsultantStatus.CREATED,

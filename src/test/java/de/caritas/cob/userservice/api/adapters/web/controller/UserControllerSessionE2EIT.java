@@ -594,30 +594,8 @@ class UserControllerSessionE2EIT {
   }
 
   @Test
-  @WithMockUser(authorities = {AuthorityValue.USER_DEFAULT})
-  void getSessionsForGroupOrFeedbackGroupIdsShouldFindSessionsByGroupOrFeedbackGroup()
-      throws Exception {
-    givenAUserWithSessions();
-    givenNoRocketChatSubscriptionUpdates();
-    givenNoRocketChatRoomUpdates();
-
-    mockMvc
-        .perform(
-            get("/users/sessions/room?rcGroupIds=mzAdWzQEobJ2PkoxP,9faSTWZ5gurHLXy4R")
-                .cookie(CSRF_COOKIE)
-                .header(CSRF_HEADER, CSRF_VALUE)
-                .header(RC_TOKEN_HEADER_PARAMETER_NAME, RC_TOKEN)
-                .accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("sessions[0].session.feedbackGroupId", is("9faSTWZ5gurHLXy4R")))
-        .andExpect(jsonPath("sessions[1].session.groupId", is("mzAdWzQEobJ2PkoxP")))
-        .andExpect(jsonPath("sessions", hasSize(2)));
-  }
-
-  @Test
   @WithMockUser(authorities = {AuthorityValue.CONSULTANT_DEFAULT})
-  void getSessionsForGroupOrFeedbackGroupIdsShouldFindSessionsByGroupOrFeedbackGroupForConsultant()
-      throws Exception {
+  void getSessionsForGroupIdsShouldFindSessionsByGroupConsultant() throws Exception {
     givenAConsultantWithSessions();
     givenNoRocketChatSubscriptionUpdates();
     givenNoRocketChatRoomUpdates();
@@ -631,7 +609,6 @@ class UserControllerSessionE2EIT {
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("sessions[0].session.groupId", is("YWKxhFX5K2HPpsFbs")))
-        .andExpect(jsonPath("sessions[0].session.feedbackRead", is(true)))
         .andExpect(jsonPath("sessions[0].user.username", is("u25suchtler")))
         .andExpect(
             jsonPath("sessions[0].consultant.id", is("bad14912-cf9f-4c16-9d0e-fe8ede9b60dc")))
@@ -692,24 +669,6 @@ class UserControllerSessionE2EIT {
         .andExpect(jsonPath("sessions[0].consultant.firstName").doesNotExist())
         .andExpect(jsonPath("sessions[0].consultant.lastName").doesNotExist())
         .andExpect(jsonPath("sessions", hasSize(1)));
-  }
-
-  @Test
-  @WithMockUser(authorities = {AuthorityValue.USER_DEFAULT})
-  void getSessionsForGroupOrFeedbackGroupIdsShouldBeForbiddenIfUserDoesNotParticipateInSession()
-      throws Exception {
-    givenAUserWithSessions();
-    givenNoRocketChatSubscriptionUpdates();
-    givenNoRocketChatRoomUpdates();
-
-    mockMvc
-        .perform(
-            get("/users/sessions/room?rcGroupIds=4SPkApB8So88c7tQ3")
-                .cookie(CSRF_COOKIE)
-                .header(CSRF_HEADER, CSRF_VALUE)
-                .header(RC_TOKEN_HEADER_PARAMETER_NAME, RC_TOKEN)
-                .accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isForbidden());
   }
 
   @ParameterizedTest
@@ -794,7 +753,6 @@ class UserControllerSessionE2EIT {
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("sessions[0].session.groupId", is("YWKxhFX5K2HPpsFbs")))
-        .andExpect(jsonPath("sessions[0].session.feedbackRead", is(true)))
         .andExpect(jsonPath("sessions[0].user.username", is("u25suchtler")))
         .andExpect(
             jsonPath("sessions[0].consultant.id", is("bad14912-cf9f-4c16-9d0e-fe8ede9b60dc")))
@@ -1397,20 +1355,6 @@ class UserControllerSessionE2EIT {
 
   private void givenAUserWithSessions() {
     user = userRepository.findById("9c4057d0-05ad-4e86-a47c-dc5bdeec03b9").orElseThrow();
-    when(authenticatedUser.getUserId()).thenReturn(user.getUserId());
-    when(authenticatedUser.getRoles()).thenReturn(Set.of("user"));
-  }
-
-  private void givenADeletedUserWithSessions() throws JsonProcessingException {
-
-    user = userRepository.findById("9c4057d0-05ad-4e86-a47c-dc5bdeec03b9").orElseThrow();
-    user.setDeleteDate(LocalDateTime.now());
-    session =
-        user.getSessions().stream()
-            .filter(s -> s.getEnquiryMessageDate() != null)
-            .findFirst()
-            .orElseThrow();
-
     when(authenticatedUser.getUserId()).thenReturn(user.getUserId());
     when(authenticatedUser.getRoles()).thenReturn(Set.of("user"));
   }

@@ -630,7 +630,6 @@ public class SessionService {
             .askerId(session.getUser().getUserId())
             .askerRcId(session.getUser().getRcUserId())
             .askerUserName(session.getUser().getUsername())
-            .feedbackGroupId(session.getFeedbackGroupId())
             .groupId(session.getGroupId())
             .postcode(session.getPostcode())
             .consultantId(nonNull(session.getConsultant()) ? session.getConsultant().getId() : null)

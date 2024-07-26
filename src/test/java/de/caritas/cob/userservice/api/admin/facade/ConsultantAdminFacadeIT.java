@@ -17,7 +17,6 @@ import de.caritas.cob.userservice.api.adapters.web.dto.Sort;
 import de.caritas.cob.userservice.api.adapters.web.dto.Sort.FieldEnum;
 import de.caritas.cob.userservice.api.adapters.web.dto.Sort.OrderEnum;
 import de.caritas.cob.userservice.api.admin.service.agency.AgencyAdminService;
-import de.caritas.cob.userservice.api.config.apiclient.AgencyAdminServiceApiControllerFactory;
 import de.caritas.cob.userservice.api.config.apiclient.AgencyServiceApiControllerFactory;
 import de.caritas.cob.userservice.api.manager.consultingtype.ConsultingTypeManager;
 import de.caritas.cob.userservice.api.model.Consultant;
@@ -64,8 +63,6 @@ public class ConsultantAdminFacadeIT {
   @MockBean private AgencyAdminService agencyAdminService;
 
   @MockBean private ConsultingTypeManager consultingTypeManager;
-
-  @MockBean private AgencyAdminServiceApiControllerFactory agencyAdminServiceApiControllerFactory;
 
   @MockBean private AgencyServiceApiControllerFactory agencyServiceApiControllerFactory;
 
@@ -230,7 +227,6 @@ public class ConsultantAdminFacadeIT {
     newConsultant.setId(id);
     newConsultant.setNotifyEnquiriesRepeating(false);
     newConsultant.setNotifyNewChatMessageFromAdviceSeeker(false);
-    newConsultant.setNotifyNewFeedbackMessageFromAdviceSeeker(false);
     newConsultant.setLanguageCode(LanguageCode.de);
 
     consultantRepository.save(newConsultant);

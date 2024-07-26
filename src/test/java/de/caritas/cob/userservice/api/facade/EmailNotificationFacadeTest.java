@@ -35,7 +35,6 @@ import static org.powermock.reflect.Whitebox.setInternalState;
 import com.google.api.client.util.Lists;
 import com.neovisionaries.i18n.LanguageCode;
 import de.caritas.cob.userservice.api.adapters.keycloak.KeycloakService;
-import de.caritas.cob.userservice.api.adapters.rocketchat.dto.group.GroupMemberDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.NotificationsSettingsDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.ReassignmentNotificationDTO;
 import de.caritas.cob.userservice.api.config.auth.UserRole;
@@ -115,7 +114,6 @@ public class EmailNotificationFacadeTest {
           true,
           true,
           true,
-          true,
           null,
           null,
           ConsultantStatus.CREATED,
@@ -145,7 +143,6 @@ public class EmailNotificationFacadeTest {
           null,
           null,
           null,
-          true,
           true,
           true,
           true,
@@ -181,7 +178,6 @@ public class EmailNotificationFacadeTest {
           true,
           true,
           true,
-          true,
           null,
           null,
           ConsultantStatus.CREATED,
@@ -211,40 +207,6 @@ public class EmailNotificationFacadeTest {
           null,
           null,
           null,
-          true,
-          true,
-          true,
-          true,
-          null,
-          null,
-          ConsultantStatus.CREATED,
-          false,
-          LanguageCode.de,
-          null,
-          null,
-          false,
-          null);
-  private final Consultant ABSENT_CONSULTANT =
-      new Consultant(
-          "XXX",
-          "XXX",
-          "consultant",
-          "consultant",
-          "consultant",
-          "consultant@domain.de",
-          true,
-          false,
-          null,
-          false,
-          null,
-          1L,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          true,
           true,
           true,
           true,
@@ -337,13 +299,6 @@ public class EmailNotificationFacadeTest {
   private final String ERROR_MSG = "error";
   private final List<ConsultantAgency> CONSULTANT_LIST =
       Arrays.asList(CONSULTANT_AGENCY, CONSULTANT_AGENCY_2);
-
-  private final String GROUP_MEMBER_1_RC_ID = "yzx324sdg";
-  private final GroupMemberDTO GROUP_MEMBER_1 =
-      new GroupMemberDTO(GROUP_MEMBER_1_RC_ID, "status1", "username1", "name1", "");
-  private final String GROUP_MEMBER_2_RC_ID = "sdf33dfdsf";
-  private final GroupMemberDTO GROUP_MEMBER_2 =
-      new GroupMemberDTO(GROUP_MEMBER_2_RC_ID, "status2", "username2", "name2", "");
   private final NotificationsDTO NOTIFICATIONS_DTO_TO_ALL_TEAM_CONSULTANTS =
       new NotificationsDTO()
           .teamSessions(
