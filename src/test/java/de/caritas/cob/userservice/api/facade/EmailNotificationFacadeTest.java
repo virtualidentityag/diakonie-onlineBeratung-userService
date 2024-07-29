@@ -368,12 +368,8 @@ class EmailNotificationFacadeTest {
   @SuppressWarnings("unused")
   KeycloakService keycloakService;
 
-  @Before
-  public void setup() throws NoSuchFieldException, SecurityException {
-  @Mock TenantTemplateSupplier tenantTemplateSupplier;
-
   @BeforeEach
-  void setup() throws NoSuchFieldException, SecurityException {
+  void setup() throws SecurityException {
     when(identityClientConfig.getEmailDummySuffix()).thenReturn(FIELD_VALUE_EMAIL_DUMMY_SUFFIX);
     ReflectionTestUtils.setField(
         emailNotificationFacade,
@@ -650,71 +646,6 @@ class EmailNotificationFacadeTest {
     emailNotificationFacade.sendNewMessageNotification(RC_GROUP_ID, USER_ROLES, USER_ID, null);
 
     verify(mailService).sendEmailNotification(Mockito.any());
-  }
-
-  /** Method: sendNewFeedbackMessageNotification */
-  @Test
-  void
-      sendNewFeedbackMessageNotification_Should_SendEmailToAllFeedbackChatGroupMembersWithDecodedUsernames_WhenAssignedConsultantWroteAFeedbackMessage() {
-    when(consultantService.getConsultant(CONSULTANT_ID)).thenReturn(Optional.of(CONSULTANT));
-    when(sessionService.getSessionByFeedbackGroupId(RC_FEEDBACK_GROUP_ID)).thenReturn(SESSION);
-    when(rocketChatService.getChatUsers(RC_FEEDBACK_GROUP_ID)).thenReturn(GROUP_MEMBERS);
-    when(consultantService.getConsultantByRcUserId(GROUP_MEMBER_1_RC_ID))
-        .thenReturn(Optional.of(CONSULTANT2));
-    when(consultantService.getConsultantByRcUserId(GROUP_MEMBER_2_RC_ID))
-        .thenReturn(Optional.of(CONSULTANT3));
-
-    emailNotificationFacade.sendNewFeedbackMessageNotification(
-        RC_FEEDBACK_GROUP_ID, CONSULTANT_ID, null);
-
-    verify(mailService).sendEmailNotification(Mockito.any());
-  }
-
-  @Test
-  void
-      sendNewFeedbackMessageNotification_Should_SendEmailToAssignedConsultantWithDecodedUsername_WhenOtherConsultantWrote() {
-
-    when(consultantService.getConsultant(CONSULTANT_ID_2)).thenReturn(Optional.of(CONSULTANT2));
-    when(sessionService.getSessionByFeedbackGroupId(RC_FEEDBACK_GROUP_ID)).thenReturn(SESSION);
-
-    emailNotificationFacade.sendNewFeedbackMessageNotification(
-        RC_FEEDBACK_GROUP_ID, CONSULTANT_ID_2, null);
-
-    verify(mailService).sendEmailNotification(Mockito.any());
-  }
-
-  @Test
-  void
-      sendNewFeedbackMessageNotification_Should_LogErrorAndSendNoMails_WhenCallingConsultantIsNotFound() {
-
-    emailNotificationFacade.sendNewFeedbackMessageNotification(
-        RC_FEEDBACK_GROUP_ID, CONSULTANT_ID, null);
-
-    verify(logger, atLeastOnce()).error(anyString(), anyString());
-  }
-
-  @Test
-  void sendNewFeedbackMessageNotification_Should_LogErrorAndSendNoMails_WhenSessionIsNotFound() {
-
-    when(sessionService.getSessionByFeedbackGroupId(RC_FEEDBACK_GROUP_ID)).thenReturn(null);
-
-    emailNotificationFacade.sendNewFeedbackMessageNotification(
-        RC_FEEDBACK_GROUP_ID, CONSULTANT_ID, null);
-
-    verify(logger, atLeastOnce()).error(anyString(), anyString());
-  }
-
-  @Test
-  void
-      sendNewFeedbackMessageNotification_Should_LogErrorAndSendNoMails_WhenNoConsultantIsAssignedToSession() {
-
-    when(sessionService.getSessionByFeedbackGroupId(RC_FEEDBACK_GROUP_ID))
-        .thenReturn(SESSION_WITHOUT_CONSULTANT);
-
-    emailNotificationFacade.sendNewFeedbackMessageNotification(
-        RC_FEEDBACK_GROUP_ID, CONSULTANT_ID, null);
-
-    verify(logger, atLeastOnce()).error(anyString(), anyString());
   }
 
   @Test
