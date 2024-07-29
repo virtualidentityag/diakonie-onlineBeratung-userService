@@ -125,9 +125,8 @@ class ConversationControllerAuthorizationIT {
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
       })
-  void
-      getAnonymousEnquiries_Should_ReturnForbiddenAndCallNoMethods_When_NoConsultantAuthority()
-          throws Exception {
+  void getAnonymousEnquiries_Should_ReturnForbiddenAndCallNoMethods_When_NoConsultantAuthority()
+      throws Exception {
     this.mvc
         .perform(
             get(ConversationControllerIT.GET_ANONYMOUS_ENQUIRIES_PATH)
@@ -156,9 +155,8 @@ class ConversationControllerAuthorizationIT {
 
   @Test
   @WithMockUser(authorities = {AuthorityValue.CONSULTANT_DEFAULT})
-  void
-      getRegisteredEnquiries_Should_ReturnOK_When_ProperlyAuthorizedWithConsultantAuthority()
-          throws Exception {
+  void getRegisteredEnquiries_Should_ReturnOK_When_ProperlyAuthorizedWithConsultantAuthority()
+      throws Exception {
     this.mvc
         .perform(
             get(ConversationControllerIT.GET_REGISTERED_ENQUIRIES_PATH)
@@ -206,9 +204,8 @@ class ConversationControllerAuthorizationIT {
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
       })
-  void
-      getRegisteredEnquiries_Should_ReturnForbiddenAndCallNoMethods_When_NoConsultantAuthority()
-          throws Exception {
+  void getRegisteredEnquiries_Should_ReturnForbiddenAndCallNoMethods_When_NoConsultantAuthority()
+      throws Exception {
     this.mvc
         .perform(
             get(ConversationControllerIT.GET_REGISTERED_ENQUIRIES_PATH)
@@ -237,9 +234,8 @@ class ConversationControllerAuthorizationIT {
 
   @Test
   @WithMockUser(authorities = {AuthorityValue.CONSULTANT_DEFAULT})
-  void
-      acceptAnonymousEnquirys_Should_ReturnOK_When_ProperlyAuthorizedWithConsultantAuthority()
-          throws Exception {
+  void acceptAnonymousEnquirys_Should_ReturnOK_When_ProperlyAuthorizedWithConsultantAuthority()
+      throws Exception {
     this.mvc
         .perform(
             MockMvcRequestBuilders.put(ConversationControllerIT.ACCEPT_ANONYMOUS_ENQUIRY_PATH)
@@ -280,9 +276,8 @@ class ConversationControllerAuthorizationIT {
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
       })
-  void
-      acceptAnonymousEnquiry_Should_ReturnForbiddenAndCallNoMethods_When_NoConsultantAuthority()
-          throws Exception {
+  void acceptAnonymousEnquiry_Should_ReturnForbiddenAndCallNoMethods_When_NoConsultantAuthority()
+      throws Exception {
     this.mvc
         .perform(
             MockMvcRequestBuilders.put(ConversationControllerIT.ACCEPT_ANONYMOUS_ENQUIRY_PATH)
@@ -336,9 +331,8 @@ class ConversationControllerAuthorizationIT {
 
   @Test
   @WithMockUser(authorities = {USER_DEFAULT})
-  void
-      finishAnonymousConversation_Should_ReturnForbiddenAndCallNoMethods_When_NoValidAuthority()
-          throws Exception {
+  void finishAnonymousConversation_Should_ReturnForbiddenAndCallNoMethods_When_NoValidAuthority()
+      throws Exception {
     this.mvc
         .perform(
             MockMvcRequestBuilders.put(ConversationControllerIT.FINISH_ANONYMOUS_CONVERSATION_PATH))
@@ -422,8 +416,7 @@ class ConversationControllerAuthorizationIT {
 
   @Test
   @WithMockUser(authorities = ANONYMOUS_DEFAULT)
-  void getAnonymousEnquiryDetails_Should_ReturnForbidden_When_NoCsrfToken()
-      throws Exception {
+  void getAnonymousEnquiryDetails_Should_ReturnForbidden_When_NoCsrfToken() throws Exception {
     mvc.perform(
             get("/conversations/anonymous/1")
                 .contentType(MediaType.APPLICATION_JSON)

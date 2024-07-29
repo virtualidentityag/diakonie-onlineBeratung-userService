@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 
 import de.caritas.cob.userservice.api.adapters.keycloak.KeycloakService;
 import de.caritas.cob.userservice.api.manager.consultingtype.ConsultingTypeManager;
-import de.caritas.cob.userservice.api.model.Consultant;
 import de.caritas.cob.userservice.api.model.Session;
 import de.caritas.cob.userservice.api.model.Session.SessionStatus;
 import org.junit.jupiter.api.Test;
@@ -26,8 +25,6 @@ public class RocketChatOperationConditionProviderTest {
   @Mock private KeycloakService keycloakService;
 
   @Mock private Session session;
-
-  @Mock private Consultant consultant;
 
   @Mock private ConsultingTypeManager consultingTypeManager;
 
@@ -124,31 +121,6 @@ public class RocketChatOperationConditionProviderTest {
       canAddToRocketChatFeedbackGroup_Should_returnTrue_When_sessionHasFeedbackGroupAndIsEnquiry() {
     when(this.session.getFeedbackGroupId()).thenReturn("feedbackGroup");
     when(this.session.getStatus()).thenReturn(SessionStatus.NEW);
-
-    boolean result = this.conditionProvider.canAddToRocketChatFeedbackGroup();
-
-    assertThat(result, is(true));
-  }
-
-  @Test
-  public void
-      canAddToRocketChatFeedbackGroup_Should_returnTrue_When_sessionHasFeedbackGroupAndConsultantHasMainConsultantAuthority() {
-    when(this.session.getFeedbackGroupId()).thenReturn("feedbackGroup");
-    when(this.session.getStatus()).thenReturn(SessionStatus.IN_PROGRESS);
-    when(this.keycloakService.userHasAuthority(any(), any())).thenReturn(true);
-
-    boolean result = this.conditionProvider.canAddToRocketChatFeedbackGroup();
-
-    assertThat(result, is(true));
-  }
-
-  @Test
-  public void
-      canAddToRocketChatFeedbackGroup_Should_returnTrue_When_sessionHasFeedbackGroupAndConsultantHasMainConsultantRole() {
-    when(this.session.getFeedbackGroupId()).thenReturn("feedbackGroup");
-    when(this.session.getStatus()).thenReturn(SessionStatus.IN_PROGRESS);
-    when(this.keycloakService.userHasAuthority(any(), any())).thenReturn(false);
-    when(this.keycloakService.userHasRole(any(), any())).thenReturn(true);
 
     boolean result = this.conditionProvider.canAddToRocketChatFeedbackGroup();
 

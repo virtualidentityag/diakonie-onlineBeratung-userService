@@ -69,7 +69,7 @@ class AuthorityTest {
     assertTrue(result.contains(AuthorityValue.VIEW_ALL_PEER_SESSIONS));
     assertTrue(result.contains(AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY));
     assertTrue(result.contains(AuthorityValue.ASSIGN_CONSULTANT_TO_PEER_SESSION));
-    assertEquals(4, result.size());
+    assertEquals(3, result.size());
   }
 
   @Test
@@ -83,8 +83,7 @@ class AuthorityTest {
   }
 
   @Test
-  void
-      getAuthoritiesByRoleName_Should_ReturnCorrectRoles_ForKeycloakRoleKreuzbundConsultant() {
+  void getAuthoritiesByRoleName_Should_ReturnCorrectRoles_ForKeycloakRoleKreuzbundConsultant() {
 
     List<String> result = Authority.getAuthoritiesByUserRole(UserRole.GROUP_CHAT_CONSULTANT);
 

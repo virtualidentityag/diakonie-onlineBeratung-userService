@@ -149,7 +149,6 @@ public class SessionDataProviderTest {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_SUCHT)
               .slug(null)
-              .excludeNonMainConsultantsFromTeamSessions(false)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(false)
               .welcomeMessage(
@@ -168,7 +167,6 @@ public class SessionDataProviderTest {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_U25)
               .slug(null)
-              .excludeNonMainConsultantsFromTeamSessions(false)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(false)
               .welcomeMessage(

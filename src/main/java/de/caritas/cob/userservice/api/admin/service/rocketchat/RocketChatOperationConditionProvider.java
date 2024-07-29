@@ -2,7 +2,6 @@ package de.caritas.cob.userservice.api.admin.service.rocketchat;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static org.apache.commons.lang3.BooleanUtils.isFalse;
 
 import de.caritas.cob.userservice.api.manager.consultingtype.ConsultingTypeManager;
 import de.caritas.cob.userservice.api.model.Consultant;
@@ -43,8 +42,7 @@ class RocketChatOperationConditionProvider {
   private Boolean canAddToTeamConsultingSession() {
     var consultingTypeSettings =
         consultingTypeManager.getConsultingTypeSettings(this.session.getConsultingTypeId());
-    return (nonNull(consultingTypeSettings)
-        && isFalse(consultingTypeSettings.getExcludeNonMainConsultantsFromTeamSessions()));
+    return nonNull(consultingTypeSettings);
   }
 
   /**

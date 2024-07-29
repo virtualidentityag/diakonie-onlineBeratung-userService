@@ -1070,11 +1070,6 @@ public class TestConstants {
           .askerRcId(RC_USER_ID)
           .messageDate(MESSAGE_DATE)
           .isTeamSession(IS_TEAM_SESSION);
-  public static final UserSessionResponseDTO USER_SESSION_RESPONSE_DTO_SUCHT =
-      new UserSessionResponseDTO()
-          .session(SESSION_DTO_SUCHT)
-          .agency(AGENCY_DTO_SUCHT)
-          .consultant(SESSION_CONSULTANT_FOR_USER_DTO);
   public static final UserSessionResponseDTO USER_SESSION_RESPONSE_DTO_U25 =
       new UserSessionResponseDTO()
           .session(SESSION_DTO_U25)
@@ -1678,16 +1673,6 @@ public class TestConstants {
           add(CONSULTANT_SESSION_RESPONSE_DTO_WITH_ENCRYPTED_CHAT_MESSAGE);
         }
       };
-  public static final SessionDTO SESSION_DTO_WITHOUT_FEEDBACK_CHAT =
-      new SessionDTO()
-          .id(SESSION_ID)
-          .agencyId(AGENCY_ID)
-          .consultingType(0)
-          .status(0)
-          .groupId(RC_GROUP_ID)
-          .askerRcId(RC_USER_ID)
-          .messageDate(Helper.getUnixTimestampFromDate(NOW))
-          .isTeamSession(IS_NO_TEAM_SESSION);
 
   /** GroupMemberDTO */
   public static final GroupMemberDTO GROUP_MEMBER_DTO =
@@ -1735,7 +1720,6 @@ public class TestConstants {
       new ExtendedConsultingTypeResponseDTO()
           .id(CONSULTING_TYPE_ID_KREUZBUND)
           .slug("kb-sucht-selbsthilfe")
-          .excludeNonMainConsultantsFromTeamSessions(false)
           .groupChat(new GroupChatDTO().isGroupChat(true))
           .consultantBoundedToConsultingType(true)
           .welcomeMessage(
@@ -1761,7 +1745,6 @@ public class TestConstants {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_U25)
               .slug("u25")
-              .excludeNonMainConsultantsFromTeamSessions(false)
               .groupChat(new GroupChatDTO().isGroupChat(true))
               .consultantBoundedToConsultingType(true)
               .welcomeMessage(
@@ -1778,7 +1761,6 @@ public class TestConstants {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_U25)
               .slug("u25")
-              .excludeNonMainConsultantsFromTeamSessions(false)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(true)
               .welcomeMessage(
@@ -1803,7 +1785,6 @@ public class TestConstants {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_U25)
               .slug("u25")
-              .excludeNonMainConsultantsFromTeamSessions(false)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(true)
               .welcomeMessage(
@@ -1820,7 +1801,6 @@ public class TestConstants {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_U25)
               .slug("u25")
-              .excludeNonMainConsultantsFromTeamSessions(false)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(true)
               .welcomeMessage(
@@ -1849,7 +1829,6 @@ public class TestConstants {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_SUCHT)
               .slug("suchtberatung")
-              .excludeNonMainConsultantsFromTeamSessions(false)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(false)
               .welcomeMessage(
@@ -1866,7 +1845,6 @@ public class TestConstants {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_U25)
               .slug("u25")
-              .excludeNonMainConsultantsFromTeamSessions(true)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(true)
               .welcomeMessage(
@@ -1882,7 +1860,6 @@ public class TestConstants {
       new ExtendedConsultingTypeResponseDTO()
           .id(CONSULTING_TYPE_ID_SUCHT)
           .slug("suchtberatung")
-          .excludeNonMainConsultantsFromTeamSessions(false)
           .groupChat(new GroupChatDTO().isGroupChat(false))
           .consultantBoundedToConsultingType(false)
           .welcomeMessage(
@@ -1898,7 +1875,6 @@ public class TestConstants {
       new ExtendedConsultingTypeResponseDTO()
           .id(CONSULTING_TYPE_ID_U25)
           .slug("u25")
-          .excludeNonMainConsultantsFromTeamSessions(true)
           .groupChat(new GroupChatDTO().isGroupChat(false))
           .consultantBoundedToConsultingType(true)
           .welcomeMessage(
@@ -1915,7 +1891,6 @@ public class TestConstants {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_U25)
               .slug("u25")
-              .excludeNonMainConsultantsFromTeamSessions(true)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(true)
               .welcomeMessage(
@@ -1932,7 +1907,6 @@ public class TestConstants {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_U25)
               .slug("u25")
-              .excludeNonMainConsultantsFromTeamSessions(true)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(true)
               .welcomeMessage(
@@ -1949,7 +1923,6 @@ public class TestConstants {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_U25)
               .slug("u25")
-              .excludeNonMainConsultantsFromTeamSessions(true)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(true)
               .welcomeMessage(
@@ -1966,7 +1939,6 @@ public class TestConstants {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_SUCHT)
               .slug("suchtberatung")
-              .excludeNonMainConsultantsFromTeamSessions(false)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(false)
               .welcomeMessage(
@@ -1983,7 +1955,6 @@ public class TestConstants {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_U25)
               .slug("u25")
-              .excludeNonMainConsultantsFromTeamSessions(true)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(true)
               .welcomeMessage(

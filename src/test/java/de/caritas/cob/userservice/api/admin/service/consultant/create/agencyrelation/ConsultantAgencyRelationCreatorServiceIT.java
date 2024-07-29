@@ -81,8 +81,6 @@ public class ConsultantAgencyRelationCreatorServiceIT {
 
   @MockBean private ConsultingTypeManager consultingTypeManager;
 
-  @Autowired private RocketChatAsyncHelper rocketChatAsyncHelper;
-
   @Test
   public void
       createNewConsultantAgency_Should_addConsultantToEnquiriesRocketChatGroups_When_ParamsAreValid() {
@@ -144,7 +142,6 @@ public class ConsultantAgencyRelationCreatorServiceIT {
     when(keycloakService.userHasRole(eq(consultant.getId()), any())).thenReturn(true);
     ExtendedConsultingTypeResponseDTO extendedConsultingTypeResponseDTO =
         new ExtendedConsultingTypeResponseDTO();
-    extendedConsultingTypeResponseDTO.setExcludeNonMainConsultantsFromTeamSessions(true);
     AgencyDTO agencyDTO = new AgencyDTO();
     agencyDTO.setId(15L);
     agencyDTO.setTeamAgency(true);

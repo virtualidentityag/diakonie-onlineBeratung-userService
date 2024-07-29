@@ -316,7 +316,6 @@ class EmailNotificationFacadeTest {
           new ExtendedConsultingTypeResponseDTO()
               .id(0)
               .slug("suchtberatung")
-              .excludeNonMainConsultantsFromTeamSessions(true)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(false)
               .welcomeMessage(
@@ -333,7 +332,6 @@ class EmailNotificationFacadeTest {
           new ExtendedConsultingTypeResponseDTO()
               .id(0)
               .slug("suchtberatung")
-              .excludeNonMainConsultantsFromTeamSessions(true)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(false)
               .welcomeMessage(

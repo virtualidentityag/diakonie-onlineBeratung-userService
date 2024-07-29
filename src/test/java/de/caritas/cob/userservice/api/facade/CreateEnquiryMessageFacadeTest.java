@@ -76,8 +76,6 @@ import de.caritas.cob.userservice.api.model.Session.SessionStatus;
 import de.caritas.cob.userservice.api.model.User;
 import de.caritas.cob.userservice.api.service.ConsultantAgencyService;
 import de.caritas.cob.userservice.api.service.LogService;
-import de.caritas.cob.userservice.api.service.agency.AgencyService;
-import de.caritas.cob.userservice.api.service.liveevents.LiveEventNotificationService;
 import de.caritas.cob.userservice.api.service.message.MessageServiceProvider;
 import de.caritas.cob.userservice.api.service.message.RocketChatData;
 import de.caritas.cob.userservice.api.service.session.SessionService;
@@ -168,7 +166,6 @@ class CreateEnquiryMessageFacadeTest {
       new ExtendedConsultingTypeResponseDTO()
           .id(CONSULTING_TYPE_ID_SUCHT)
           .slug("suchtberatung")
-          .excludeNonMainConsultantsFromTeamSessions(true)
           .groupChat(new GroupChatDTO().isGroupChat(false))
           .consultantBoundedToConsultingType(false)
           .welcomeMessage(
@@ -184,7 +181,6 @@ class CreateEnquiryMessageFacadeTest {
       new ExtendedConsultingTypeResponseDTO()
           .id(CONSULTING_TYPE_ID_SUCHT)
           .slug("suchtberatung")
-          .excludeNonMainConsultantsFromTeamSessions(true)
           .groupChat(new GroupChatDTO().isGroupChat(false))
           .consultantBoundedToConsultingType(false)
           .welcomeMessage(
@@ -201,7 +197,6 @@ class CreateEnquiryMessageFacadeTest {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_SUCHT)
               .slug("suchtberatung")
-              .excludeNonMainConsultantsFromTeamSessions(true)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(false)
               .welcomeMessage(
@@ -238,12 +233,6 @@ class CreateEnquiryMessageFacadeTest {
 
   @Mock private UserService userService;
 
-  @Mock private AgencyService agencyService;
-
-  @Mock private LiveEventNotificationService liveEventNotificationService;
-
-  @Mock HttpServletRequest servletRequest;
-
   private Session session;
   private User user;
   private ExtendedConsultingTypeResponseDTO extendedConsultingTypeResponseDTO;
@@ -254,7 +243,7 @@ class CreateEnquiryMessageFacadeTest {
   private RocketChatCredentials rocketChatCredentials;
 
   @BeforeEach
-  void setUp() throws NoSuchFieldException, SecurityException {
+  void setUp() throws SecurityException {
     setField(
         createEnquiryMessageFacade,
         FIELD_NAME_ROCKET_CHAT_SYSTEM_USER_ID,
@@ -471,8 +460,7 @@ class CreateEnquiryMessageFacadeTest {
 
   @Test
   void
-      createEnquiryMessage_Should_ThrowInternalServerErrorException_When_CreationOfRocketChatGroupFailsWithAnException()
-          throws RocketChatCreateGroupException {
+      createEnquiryMessage_Should_ThrowInternalServerErrorException_When_CreationOfRocketChatGroupFailsWithAnException() {
     assertThrows(
         InternalServerErrorException.class,
         () -> {
@@ -556,8 +544,7 @@ class CreateEnquiryMessageFacadeTest {
 
   @Test
   void
-      createEnquiryMessage_Should_ThrowInternalServerErrorException_When_AddConsultantToRocketChatGroupFails()
-          throws Exception {
+      createEnquiryMessage_Should_ThrowInternalServerErrorException_When_AddConsultantToRocketChatGroupFails() {
     assertThrows(
         InternalServerErrorException.class,
         () -> {
@@ -711,8 +698,7 @@ class CreateEnquiryMessageFacadeTest {
 
   @Test
   void
-      createEnquiryMessage_Should_ThrowInternalServerErrorException_When_CreatePrivateGroupWithSystemUserFails()
-          throws RocketChatCreateGroupException {
+      createEnquiryMessage_Should_ThrowInternalServerErrorException_When_CreatePrivateGroupWithSystemUserFails() {
     assertThrows(
         InternalServerErrorException.class,
         () -> {
@@ -746,8 +732,7 @@ class CreateEnquiryMessageFacadeTest {
 
   @Test
   void
-      createEnquiryMessage_Should_ThrowInternalServerErrorException_When_UpdateRocketChatIdForUserFails()
-          throws RocketChatCreateGroupException {
+      createEnquiryMessage_Should_ThrowInternalServerErrorException_When_UpdateRocketChatIdForUserFails() {
     assertThrows(
         InternalServerErrorException.class,
         () -> {
@@ -780,8 +765,7 @@ class CreateEnquiryMessageFacadeTest {
   }
 
   @Test
-  void createEnquiryMessage_Should_ThrowInternalServerErrorException_When_UpdateOfSessionFails()
-      throws RocketChatCreateGroupException {
+  void createEnquiryMessage_Should_ThrowInternalServerErrorException_When_UpdateOfSessionFails() {
     assertThrows(
         InternalServerErrorException.class,
         () -> {
@@ -796,8 +780,6 @@ class CreateEnquiryMessageFacadeTest {
           rocketChatCredentials.setRocketChatUserId(RC_USER_ID);
           rocketChatCredentials.setRocketChatUsername(RC_USERNAME);
           extendedConsultingTypeResponseDTO.setInitializeFeedbackChat(true);
-          InternalServerErrorException internalServerErrorException =
-              new InternalServerErrorException(MESSAGE);
 
           when(sessionService.getSession(SESSION_ID)).thenReturn(Optional.of(session));
           when(consultingTypeManager.getConsultingTypeSettings(session.getConsultingTypeId()))
@@ -816,8 +798,7 @@ class CreateEnquiryMessageFacadeTest {
 
   @Test
   void
-      createEnquiryMessage_Should_ThrowInternalServerErrorException_When_PrivateGroupWithSystemUserIsNotPresent()
-          throws RocketChatCreateGroupException {
+      createEnquiryMessage_Should_ThrowInternalServerErrorException_When_PrivateGroupWithSystemUserIsNotPresent() {
     assertThrows(
         InternalServerErrorException.class,
         () -> {
