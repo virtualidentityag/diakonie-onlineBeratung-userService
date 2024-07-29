@@ -205,7 +205,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -270,7 +269,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -335,7 +333,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -399,7 +396,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -462,7 +458,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -528,7 +523,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -592,7 +586,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -655,7 +648,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -718,7 +710,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -782,7 +773,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -847,7 +837,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -911,7 +900,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -974,7 +962,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -1037,7 +1024,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -1114,7 +1100,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.VIEW_ALL_PEER_SESSIONS
       })
   void searchConsultantsShouldReturnForbiddenWhenNoUserAdminAuthority() throws Exception {
@@ -1157,7 +1142,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -1249,7 +1233,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -1317,7 +1300,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -1380,7 +1362,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -1460,7 +1441,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -1544,7 +1524,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -1643,7 +1622,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -1741,7 +1719,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.START_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -1823,7 +1800,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -1926,7 +1902,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -2020,7 +1995,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.STOP_CHAT,
         AuthorityValue.START_CHAT,
         AuthorityValue.USER_DEFAULT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY
       })
@@ -2073,7 +2047,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.USE_FEEDBACK,
         AuthorityValue.USER_ADMIN,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.VIEW_ALL_PEER_SESSIONS,
       })
   void updateE2eInChats_Should_ReturnForbiddenAndCallNoMethods_WhenNoUserOrConsultantAuthority()
@@ -2121,7 +2094,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -2198,7 +2170,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -2259,7 +2230,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -2333,7 +2303,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -2403,7 +2372,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN,
@@ -2466,7 +2434,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -2539,7 +2506,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -2609,7 +2575,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -2663,7 +2628,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -2779,7 +2743,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN,
@@ -2832,7 +2795,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -2890,7 +2852,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -2947,7 +2908,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION
       })
   void deactivateAndFlagUserAccountForDeletion_Should_ReturnForbidden_WhenNoConsultantAuthority()
@@ -3003,7 +2963,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -3061,7 +3020,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -3130,7 +3088,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -3201,7 +3158,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -3258,7 +3214,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN
@@ -3312,7 +3267,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.USER_ADMIN

@@ -101,7 +101,6 @@ class AppointmentControllerAuthorizationIT {
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.VIEW_ALL_PEER_SESSIONS
       })
   void putAppointmentsShouldReturnForbiddenWhenNoConsultantAuthority() throws Exception {
@@ -152,7 +151,6 @@ class AppointmentControllerAuthorizationIT {
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.VIEW_ALL_PEER_SESSIONS
       })
   void deleteAppointmentsShouldReturnForbiddenWhenNoConsultantAuthority() throws Exception {
@@ -198,7 +196,6 @@ class AppointmentControllerAuthorizationIT {
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.VIEW_ALL_PEER_SESSIONS
       })
   void getAppointmentsShouldReturnForbiddenWhenNoConsultantAuthority() throws Exception {
@@ -244,7 +241,6 @@ class AppointmentControllerAuthorizationIT {
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
         AuthorityValue.VIEW_ALL_PEER_SESSIONS
       })
   void postAppointmentsShouldReturnForbiddenWhenNoConsultantAuthority() throws Exception {

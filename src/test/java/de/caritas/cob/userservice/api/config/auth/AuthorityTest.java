@@ -16,10 +16,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class AuthorityTest {
+class AuthorityTest {
 
   @Test
-  public void getAuthoritiesByRoleName_Should_ReturnCorrectRoles_ForKeycloakRoleConsultant() {
+  void getAuthoritiesByRoleName_Should_ReturnCorrectRoles_ForKeycloakRoleConsultant() {
 
     List<String> result = Authority.getAuthoritiesByUserRole(UserRole.CONSULTANT);
 
@@ -32,7 +32,7 @@ public class AuthorityTest {
   }
 
   @Test
-  public void getAuthoritiesByRoleName_Should_ReturnCorrectRoles_ForKeycloakRoleUser() {
+  void getAuthoritiesByRoleName_Should_ReturnCorrectRoles_ForKeycloakRoleUser() {
 
     List<String> result = Authority.getAuthoritiesByUserRole(UserRole.USER);
 
@@ -42,7 +42,7 @@ public class AuthorityTest {
   }
 
   @Test
-  public void getAuthoritiesByRoleName_Should_ReturnCorrectRoles_ForKeycloakRoleAnonymous() {
+  void getAuthoritiesByRoleName_Should_ReturnCorrectRoles_ForKeycloakRoleAnonymous() {
     List<String> result = Authority.getAuthoritiesByUserRole(UserRole.ANONYMOUS);
 
     assertNotNull(result);
@@ -51,7 +51,7 @@ public class AuthorityTest {
   }
 
   @Test
-  public void getAuthoritiesByRoleName_Should_ReturnCorrectRoles_ForKeycloakRolePeerConsultant() {
+  void getAuthoritiesByRoleName_Should_ReturnCorrectRoles_ForKeycloakRolePeerConsultant() {
 
     List<String> result = Authority.getAuthoritiesByUserRole(UserRole.PEER_CONSULTANT);
 
@@ -61,12 +61,11 @@ public class AuthorityTest {
   }
 
   @Test
-  public void getAuthoritiesByRoleName_Should_ReturnCorrectRoles_ForKeycloakRoleMainConsultant() {
+  void getAuthoritiesByRoleName_Should_ReturnCorrectRoles_ForKeycloakRoleMainConsultant() {
 
     List<String> result = Authority.getAuthoritiesByUserRole(UserRole.MAIN_CONSULTANT);
 
     assertNotNull(result);
-    assertTrue(result.contains(AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS));
     assertTrue(result.contains(AuthorityValue.VIEW_ALL_PEER_SESSIONS));
     assertTrue(result.contains(AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY));
     assertTrue(result.contains(AuthorityValue.ASSIGN_CONSULTANT_TO_PEER_SESSION));
@@ -74,7 +73,7 @@ public class AuthorityTest {
   }
 
   @Test
-  public void getAuthoritiesByRoleName_Should_ReturnCorrectRoles_ForKeycloakRoleTechnical() {
+  void getAuthoritiesByRoleName_Should_ReturnCorrectRoles_ForKeycloakRoleTechnical() {
 
     List<String> result = Authority.getAuthoritiesByUserRole(UserRole.TECHNICAL);
 
@@ -84,7 +83,7 @@ public class AuthorityTest {
   }
 
   @Test
-  public void
+  void
       getAuthoritiesByRoleName_Should_ReturnCorrectRoles_ForKeycloakRoleKreuzbundConsultant() {
 
     List<String> result = Authority.getAuthoritiesByUserRole(UserRole.GROUP_CHAT_CONSULTANT);
@@ -99,7 +98,7 @@ public class AuthorityTest {
   }
 
   @Test
-  public void getAuthoritiesByRoleName_Should_ReturnCorrectRoles_When_keycloakRoleIsUserAdmin() {
+  void getAuthoritiesByRoleName_Should_ReturnCorrectRoles_When_keycloakRoleIsUserAdmin() {
 
     List<String> result = Authority.getAuthoritiesByUserRole(UserRole.USER_ADMIN);
 
@@ -111,7 +110,7 @@ public class AuthorityTest {
   }
 
   @Test
-  public void getAuthoritiesByRoleName_Should_ReturnCorrectRoles_When_KeycloakRoleIsAnonymous() {
+  void getAuthoritiesByRoleName_Should_ReturnCorrectRoles_When_KeycloakRoleIsAnonymous() {
     List<String> result = Authority.getAuthoritiesByUserRole(UserRole.ANONYMOUS);
 
     assertNotNull(result);

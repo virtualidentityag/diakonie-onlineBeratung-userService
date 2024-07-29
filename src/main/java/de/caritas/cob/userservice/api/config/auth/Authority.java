@@ -15,7 +15,6 @@ import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValu
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.USER_DEFAULT;
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.USE_FEEDBACK;
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.VIEW_AGENCY_CONSULTANTS;
-import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS;
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.VIEW_ALL_PEER_SESSIONS;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -39,10 +38,7 @@ public enum Authority {
   MAIN_CONSULTANT(
       UserRole.MAIN_CONSULTANT,
       List.of(
-          VIEW_ALL_FEEDBACK_SESSIONS,
-          VIEW_ALL_PEER_SESSIONS,
-          ASSIGN_CONSULTANT_TO_ENQUIRY,
-          ASSIGN_CONSULTANT_TO_PEER_SESSION)),
+          VIEW_ALL_PEER_SESSIONS, ASSIGN_CONSULTANT_TO_ENQUIRY, ASSIGN_CONSULTANT_TO_PEER_SESSION)),
   TECHNICAL(UserRole.TECHNICAL, singletonList(TECHNICAL_DEFAULT)),
   NOTIFICATIONS_TECHNICAL(
       UserRole.NOTIFICATIONS_TECHNICAL, singletonList(AuthorityValue.NOTIFICATIONS_TECHNICAL)),
@@ -83,7 +79,6 @@ public enum Authority {
     public static final String USER_DEFAULT = PREFIX + "USER_DEFAULT";
     public static final String CONSULTANT_DEFAULT = PREFIX + "CONSULTANT_DEFAULT";
     public static final String USE_FEEDBACK = PREFIX + "USE_FEEDBACK";
-    public static final String VIEW_ALL_FEEDBACK_SESSIONS = PREFIX + "VIEW_ALL_FEEDBACK_SESSIONS";
     public static final String VIEW_ALL_PEER_SESSIONS = PREFIX + "VIEW_ALL_PEER_SESSIONS";
     public static final String ASSIGN_CONSULTANT_TO_SESSION =
         PREFIX + "ASSIGN_CONSULTANT_TO_SESSION";

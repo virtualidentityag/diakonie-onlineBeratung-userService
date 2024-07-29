@@ -1,6 +1,5 @@
 package de.caritas.cob.userservice.api.facade.assignsession;
 
-import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS;
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.VIEW_ALL_PEER_SESSIONS;
 import static java.util.Objects.nonNull;
 
@@ -126,14 +125,9 @@ public class UnauthorizedMembersProvider {
       List<String> authorizedMembers,
       List<Consultant> consultantsOfAgency) {
     if (isTeamSessionWithFeedbackChat(session)) {
-      if (rcGroupId.equalsIgnoreCase(session.getGroupId())) {
+      if (rcGroupId.equalsIgnoreCase(session.getGroupId()))
         obtainMainConsultantsOfGroup(
             authorizedMembers, consultantsOfAgency, this::hasAuthorityToViewPeerGroups);
-      }
-      if (rcGroupId.equalsIgnoreCase(session.getFeedbackGroupId())) {
-        obtainMainConsultantsOfGroup(
-            authorizedMembers, consultantsOfAgency, this::hasAuthorityToViewFeedbackGroups);
-      }
     }
   }
 
@@ -153,9 +147,5 @@ public class UnauthorizedMembersProvider {
 
   private boolean hasAuthorityToViewPeerGroups(Consultant consultant) {
     return identityClient.userHasAuthority(consultant.getId(), VIEW_ALL_PEER_SESSIONS);
-  }
-
-  private boolean hasAuthorityToViewFeedbackGroups(Consultant consultant) {
-    return identityClient.userHasAuthority(consultant.getId(), VIEW_ALL_FEEDBACK_SESSIONS);
   }
 }

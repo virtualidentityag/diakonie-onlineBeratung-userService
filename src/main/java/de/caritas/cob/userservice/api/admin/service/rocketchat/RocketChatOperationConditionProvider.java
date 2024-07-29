@@ -4,8 +4,6 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.BooleanUtils.isFalse;
 
-import de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue;
-import de.caritas.cob.userservice.api.config.auth.UserRole;
 import de.caritas.cob.userservice.api.manager.consultingtype.ConsultingTypeManager;
 import de.caritas.cob.userservice.api.model.Consultant;
 import de.caritas.cob.userservice.api.model.Session;
@@ -46,14 +44,7 @@ class RocketChatOperationConditionProvider {
     var consultingTypeSettings =
         consultingTypeManager.getConsultingTypeSettings(this.session.getConsultingTypeId());
     return (nonNull(consultingTypeSettings)
-            && isFalse(consultingTypeSettings.getExcludeNonMainConsultantsFromTeamSessions()))
-        || isMainConsultant();
-  }
-
-  private boolean isMainConsultant() {
-    return identityClient.userHasAuthority(
-            this.consultant.getId(), AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS)
-        || identityClient.userHasRole(this.consultant.getId(), UserRole.MAIN_CONSULTANT.name());
+        && isFalse(consultingTypeSettings.getExcludeNonMainConsultantsFromTeamSessions()));
   }
 
   /**
@@ -66,6 +57,6 @@ class RocketChatOperationConditionProvider {
     if (isNull(this.session.getFeedbackGroupId())) {
       return false;
     }
-    return isEnquiry() || isMainConsultant();
+    return isEnquiry();
   }
 }
