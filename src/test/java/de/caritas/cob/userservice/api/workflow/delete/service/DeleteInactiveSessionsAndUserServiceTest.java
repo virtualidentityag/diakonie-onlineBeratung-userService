@@ -29,7 +29,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class DeleteInactiveSessionsAndUserServiceTest {
+public class DeleteInactiveSessionsAndUserServiceTest {
 
   @InjectMocks private DeleteInactiveSessionsAndUserService deleteInactiveSessionsAndUserService;
 

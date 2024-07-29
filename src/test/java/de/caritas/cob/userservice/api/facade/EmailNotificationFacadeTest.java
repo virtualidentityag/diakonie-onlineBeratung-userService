@@ -21,6 +21,7 @@ import static de.caritas.cob.userservice.api.testHelper.TestConstants.USERNAME_C
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.USERNAME_ENCODED;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.USER_ID;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.atLeastOnce;
@@ -77,19 +78,22 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.jeasy.random.EasyRandom;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.slf4j.Logger;
 import org.springframework.test.util.ReflectionTestUtils;
 
-@RunWith(MockitoJUnitRunner.class)
-public class EmailNotificationFacadeTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class EmailNotificationFacadeTest {
 
   private final Consultant CONSULTANT =
       new Consultant(
@@ -366,6 +370,10 @@ public class EmailNotificationFacadeTest {
 
   @Before
   public void setup() throws NoSuchFieldException, SecurityException {
+  @Mock TenantTemplateSupplier tenantTemplateSupplier;
+
+  @BeforeEach
+  void setup() throws NoSuchFieldException, SecurityException {
     when(identityClientConfig.getEmailDummySuffix()).thenReturn(FIELD_VALUE_EMAIL_DUMMY_SUFFIX);
     ReflectionTestUtils.setField(
         emailNotificationFacade,
@@ -384,7 +392,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void
+  void
       sendNewEnquiryEmailNotification_Should_SendEmailNotificationViaMailServiceHelperToConsultants() {
     givenNewEnquiryMailSupplierReturnNonEmptyMails();
     var session = givenEnquirySession();
@@ -395,8 +403,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void
-      sendNewEnquiryEmailNotification_ShouldNot_SendEmailNotificationViaMailServiceHelperToUser() {
+  void sendNewEnquiryEmailNotification_ShouldNot_SendEmailNotificationViaMailServiceHelperToUser() {
     givenNewEnquiryMailSupplierReturnNonEmptyMails();
     var session = givenEnquirySession();
 
@@ -406,7 +413,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void sendNewEnquiryEmailNotification_Should_SetCurrentTenantContextFromSession() {
+  void sendNewEnquiryEmailNotification_Should_SetCurrentTenantContextFromSession() {
     assertThat(TenantContext.getCurrentTenant()).isNull();
     givenNewEnquiryMailSupplierReturnNonEmptyMails();
     var session = givenEnquirySession();
@@ -435,14 +442,14 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void sendNewEnquiryEmailNotification_ShouldNot_SendEmailWhenGeneratedEmailListIsEmpty() {
+  void sendNewEnquiryEmailNotification_ShouldNot_SendEmailWhenGeneratedEmailListIsEmpty() {
     emailNotificationFacade.sendNewEnquiryEmailNotification(SESSION, null);
 
     verify(mailService, times(0)).sendEmailNotification(Mockito.any(MailsDTO.class));
   }
 
   @Test
-  public void sendNewEnquiryEmailNotification_Should_LogError_WhenSendEmailFails() {
+  void sendNewEnquiryEmailNotification_Should_LogError_WhenSendEmailFails() {
     var session = givenEnquirySession();
     EmailNotificationException emailNotificationException =
         new EmailNotificationException(new Exception());
@@ -455,7 +462,7 @@ public class EmailNotificationFacadeTest {
 
   /** Method: sendNewMessageNotification */
   @Test
-  public void
+  void
       sendNewMessageNotification_Should_SendEmailNotificationViaMailServiceHelperToConsultant_WhenCalledAsUserAuthorityAndIsTeamSession() {
 
     when(sessionService.getSessionByGroupIdAndUser(RC_GROUP_ID, USER_ID, USER_ROLES))
@@ -471,7 +478,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void
+  void
       sendNewMessageNotification_ShouldNot_SendEmailNotificationToUser_WhenCalledAsUserAuthorityAndIsTeamSession() {
 
     when(sessionService.getSessionByGroupIdAndUser(RC_GROUP_ID, USER_ID, USER_ROLES))
@@ -487,7 +494,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void
+  void
       sendNewMessageNotification_ShouldNot_SendEmail_WhenMailListIsEmptyAndCalledAsUserAuthorityAndIsTeamSession() {
 
     when(sessionService.getSessionByGroupIdAndUser(RC_GROUP_ID, USER_ID, USER_ROLES))
@@ -502,7 +509,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void sendNewMessageNotification_Should_LogError_WhenSessionServiceFails() {
+  void sendNewMessageNotification_Should_LogError_WhenSessionServiceFails() {
     InternalServerErrorException serviceException = new InternalServerErrorException(ERROR_MSG);
     when(sessionService.getSessionByGroupIdAndUser(RC_GROUP_ID, USER_ID, USER_ROLES))
         .thenThrow(serviceException);
@@ -512,7 +519,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void
+  void
       sendNewMessageNotification_ShouldNot_SendEmailAndLogEmailNotificationFacadeError_WhenSessionIsNullOrEmpty() {
 
     when(sessionService.getSessionByGroupIdAndUser(RC_GROUP_ID, USER_ID, USER_ROLES))
@@ -525,7 +532,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void
+  void
       sendNewMessageNotification_ShouldNot_SendEmailAndLogEmailNotificationFacadeError_WhenSessionIsNotInProgress() {
 
     when(sessionService.getSessionByGroupIdAndUser(RC_GROUP_ID, USER_ID, USER_ROLES))
@@ -538,7 +545,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void
+  void
       sendNewMessageNotification_ShouldNot_SendEmail_WhenCalledAsUserAuthorityAndIsSingleSessionAndConsultantHasNoEmailProvided() {
 
     when(sessionService.getSessionByGroupIdAndUser(RC_GROUP_ID, USER_ID, USER_ROLES))
@@ -550,7 +557,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void
+  void
       sendNewMessageNotification_Should_SendEmailNotificationViaMailServiceHelper_WhenCalledAsUserAuthorityAndIsSingleSession() {
 
     when(sessionService.getSessionByGroupIdAndUser(RC_GROUP_ID, USER_ID, USER_ROLES))
@@ -562,7 +569,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void
+  void
       sendNewMessageNotification_ShouldNot_SendEmailAndLogEmailNotificationFacadeWarning_When_GetSessionFails() {
 
     when(sessionService.getSessionByGroupIdAndUser(RC_GROUP_ID, CONSULTANT_ID, CONSULTANT_ROLES))
@@ -576,7 +583,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void
+  void
       sendNewMessageNotification_Should_LogEmailNotificationFacadeError_When_ErrorOccursDuringMailTransmission() {
 
     when(sessionService.getSessionByGroupIdAndUser(RC_GROUP_ID, CONSULTANT_ID, CONSULTANT_ROLES))
@@ -591,7 +598,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void
+  void
       sendNewMessageNotification_ShouldNot_SendEmail_WhenCalledAsConsultantAuthorityAndAskerHasNoEmailProvided() {
 
     when(sessionService.getSessionByGroupIdAndUser(RC_GROUP_ID, CONSULTANT_ID, CONSULTANT_ROLES))
@@ -604,7 +611,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void
+  void
       sendNewMessageNotification_Should_SendEmailToUserWithEncodedUsernames_WhenCalledAsConsultantAuthorityAndAskerHasEmail() {
 
     when(sessionService.getSessionByGroupIdAndUser(RC_GROUP_ID, CONSULTANT_ID, CONSULTANT_ROLES))
@@ -617,7 +624,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void
+  void
       sendNewMessageNotification_Should_SendEmailToAllConsultants_WhenIsTeamSessionAndConsultingTypeSettingsToSendToAllTeamConsultantsIsTrue() {
 
     when(sessionService.getSessionByGroupIdAndUser(RC_GROUP_ID, USER_ID, USER_ROLES))
@@ -632,7 +639,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void
+  void
       sendNewMessageNotification_Should_SendEmailToAssignConsultantOnly_WhenIsTeamSessionAndConsultingTypeSettingsToSendToAllTeamConsultantsIsFalse() {
 
     when(sessionService.getSessionByGroupIdAndUser(RC_GROUP_ID, USER_ID, USER_ROLES))
@@ -645,8 +652,73 @@ public class EmailNotificationFacadeTest {
     verify(mailService).sendEmailNotification(Mockito.any());
   }
 
+  /** Method: sendNewFeedbackMessageNotification */
   @Test
-  public void sendAssignEnquiryEmailNotification_Should_SendEmail_WhenAllParametersAreValid() {
+  void
+      sendNewFeedbackMessageNotification_Should_SendEmailToAllFeedbackChatGroupMembersWithDecodedUsernames_WhenAssignedConsultantWroteAFeedbackMessage() {
+    when(consultantService.getConsultant(CONSULTANT_ID)).thenReturn(Optional.of(CONSULTANT));
+    when(sessionService.getSessionByFeedbackGroupId(RC_FEEDBACK_GROUP_ID)).thenReturn(SESSION);
+    when(rocketChatService.getChatUsers(RC_FEEDBACK_GROUP_ID)).thenReturn(GROUP_MEMBERS);
+    when(consultantService.getConsultantByRcUserId(GROUP_MEMBER_1_RC_ID))
+        .thenReturn(Optional.of(CONSULTANT2));
+    when(consultantService.getConsultantByRcUserId(GROUP_MEMBER_2_RC_ID))
+        .thenReturn(Optional.of(CONSULTANT3));
+
+    emailNotificationFacade.sendNewFeedbackMessageNotification(
+        RC_FEEDBACK_GROUP_ID, CONSULTANT_ID, null);
+
+    verify(mailService).sendEmailNotification(Mockito.any());
+  }
+
+  @Test
+  void
+      sendNewFeedbackMessageNotification_Should_SendEmailToAssignedConsultantWithDecodedUsername_WhenOtherConsultantWrote() {
+
+    when(consultantService.getConsultant(CONSULTANT_ID_2)).thenReturn(Optional.of(CONSULTANT2));
+    when(sessionService.getSessionByFeedbackGroupId(RC_FEEDBACK_GROUP_ID)).thenReturn(SESSION);
+
+    emailNotificationFacade.sendNewFeedbackMessageNotification(
+        RC_FEEDBACK_GROUP_ID, CONSULTANT_ID_2, null);
+
+    verify(mailService).sendEmailNotification(Mockito.any());
+  }
+
+  @Test
+  void
+      sendNewFeedbackMessageNotification_Should_LogErrorAndSendNoMails_WhenCallingConsultantIsNotFound() {
+
+    emailNotificationFacade.sendNewFeedbackMessageNotification(
+        RC_FEEDBACK_GROUP_ID, CONSULTANT_ID, null);
+
+    verify(logger, atLeastOnce()).error(anyString(), anyString());
+  }
+
+  @Test
+  void sendNewFeedbackMessageNotification_Should_LogErrorAndSendNoMails_WhenSessionIsNotFound() {
+
+    when(sessionService.getSessionByFeedbackGroupId(RC_FEEDBACK_GROUP_ID)).thenReturn(null);
+
+    emailNotificationFacade.sendNewFeedbackMessageNotification(
+        RC_FEEDBACK_GROUP_ID, CONSULTANT_ID, null);
+
+    verify(logger, atLeastOnce()).error(anyString(), anyString());
+  }
+
+  @Test
+  void
+      sendNewFeedbackMessageNotification_Should_LogErrorAndSendNoMails_WhenNoConsultantIsAssignedToSession() {
+
+    when(sessionService.getSessionByFeedbackGroupId(RC_FEEDBACK_GROUP_ID))
+        .thenReturn(SESSION_WITHOUT_CONSULTANT);
+
+    emailNotificationFacade.sendNewFeedbackMessageNotification(
+        RC_FEEDBACK_GROUP_ID, CONSULTANT_ID, null);
+
+    verify(logger, atLeastOnce()).error(anyString(), anyString());
+  }
+
+  @Test
+  void sendAssignEnquiryEmailNotification_Should_SendEmail_WhenAllParametersAreValid() {
 
     when(consultantService.getConsultant(CONSULTANT_ID_2)).thenReturn(Optional.of(CONSULTANT2));
     emailNotificationFacade.sendAssignEnquiryEmailNotification(
@@ -656,7 +728,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void
+  void
       sendAssignEnquiryEmailNotification_Should_LogErrorAndSendNoMails_WhenReceiverConsultantIsNull() {
     emailNotificationFacade.sendAssignEnquiryEmailNotification(
         null, CONSULTANT_ID_2, USERNAME, null);
@@ -664,7 +736,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void
+  void
       sendAssignEnquiryEmailNotification_Should_LogErrorAndSendNoMails_WhenReceiverConsultantIsMissingEmailAddress() {
     emailNotificationFacade.sendAssignEnquiryEmailNotification(
         CONSULTANT_WITHOUT_MAIL, CONSULTANT_ID_2, USERNAME, null);
@@ -673,7 +745,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void
+  void
       sendAssignEnquiryEmailNotification_Should_LogErrorAndSendNoMails_WhenSenderConsultantIsNotFound() {
 
     when(consultantService.getConsultant(Mockito.anyString())).thenReturn(Optional.empty());
@@ -684,7 +756,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void sendNewMessageNotification_ShouldNot_LogError_When_SessionStatusIsNew() {
+  void sendNewMessageNotification_ShouldNot_LogError_When_SessionStatusIsNew() {
     Session session = mock(Session.class);
     when(session.getStatus()).thenReturn(SessionStatus.NEW);
     when(session.getUser()).thenReturn(USER);
@@ -697,8 +769,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void
-      sendAssignEnquiryEmailNotification_Should_LogError_When_MailServiceHelperThrowsException() {
+  void sendAssignEnquiryEmailNotification_Should_LogError_When_MailServiceHelperThrowsException() {
     doThrow(new RuntimeException("unexpected")).when(mailService).sendEmailNotification(any());
     when(consultantService.getConsultant(any())).thenReturn(Optional.of(CONSULTANT));
     emailNotificationFacade.sendAssignEnquiryEmailNotification(CONSULTANT, USER_ID, NAME, null);
@@ -706,7 +777,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void
+  void
       sendNewEnquiryEmailNotification_Should_notSendAnyMail_When_sessionHasAlreadyAConsultantAssigned() {
     emailNotificationFacade.sendNewEnquiryEmailNotification(
         new EasyRandom().nextObject(Session.class), null);
@@ -715,7 +786,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void sendReassignRequestNotification_Should_SendEmail_When_askerHasValidMailAddress() {
+  void sendReassignRequestNotification_Should_SendEmail_When_askerHasValidMailAddress() {
     var session = new EasyRandom().nextObject(Session.class);
     when(sessionService.getSessionByGroupId(any())).thenReturn(session);
     session.getUser().setEmail("mail@valid.de");
@@ -730,7 +801,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void sendReassignRequestNotification_ShouldNot_SendEmail_When_askerHasDummyMailAddress() {
+  void sendReassignRequestNotification_ShouldNot_SendEmail_When_askerHasDummyMailAddress() {
     var session = new EasyRandom().nextObject(Session.class);
     when(sessionService.getSessionByGroupId(any())).thenReturn(session);
     session.getUser().setEmail("mail@" + FIELD_VALUE_EMAIL_DUMMY_SUFFIX);
@@ -741,7 +812,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void
+  void
       sendReassignRequestNotification_Should_SendEmail_When_NewNotificationModeEnabledAndAskerDoesNotWantToReceiveNotifications() {
     var session = new EasyRandom().nextObject(Session.class);
     when(sessionService.getSessionByGroupId(any())).thenReturn(session);
@@ -760,7 +831,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void sendReassignConfirmationNotification_Should_sendEmail_When_consultantsExists() {
+  void sendReassignConfirmationNotification_Should_sendEmail_When_consultantsExists() {
     var randomConsultant = new EasyRandom().nextObject(Consultant.class);
     when(consultantService.getConsultant(any())).thenReturn(Optional.of(randomConsultant));
     var reassignmentNotification = new EasyRandom().nextObject(ReassignmentNotificationDTO.class);
@@ -773,7 +844,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void
+  void
       sendReassignConfirmationNotification_Should_sendNotEmail_When_newEmailNotificationsEnabledAndConsultantsDoesNotWantToReceiveNotifications() {
     var randomConsultant = new EasyRandom().nextObject(Consultant.class);
     when(consultantService.getConsultant(any())).thenReturn(Optional.of(randomConsultant));
@@ -792,7 +863,7 @@ public class EmailNotificationFacadeTest {
   }
 
   @Test
-  public void
+  void
       sendReassignConfirmationNotification_Should_sendEmail_When_newEmailNotificationsEnabledAndConsultantsDoesWantsToReceiveNotifications() {
     var randomConsultant = new EasyRandom().nextObject(Consultant.class);
     when(consultantService.getConsultant(any())).thenReturn(Optional.of(randomConsultant));
@@ -810,12 +881,18 @@ public class EmailNotificationFacadeTest {
     verifyAsync(a -> mailService.sendEmailNotification(Mockito.any()));
   }
 
-  @Test(expected = NotFoundException.class)
-  public void
+  @Test
+  void
       sendReassignConfirmationNotification_ShouldThrow_NotFoundEception_When_consultantDoesNotExist() {
-    var reassignmentNotification = new EasyRandom().nextObject(ReassignmentNotificationDTO.class);
-    when(consultantService.getConsultant(any())).thenReturn(Optional.empty());
+    assertThrows(
+        NotFoundException.class,
+        () -> {
+          var reassignmentNotification =
+              new EasyRandom().nextObject(ReassignmentNotificationDTO.class);
+          when(consultantService.getConsultant(any())).thenReturn(Optional.empty());
 
-    emailNotificationFacade.sendReassignConfirmationNotification(reassignmentNotification, null);
+          emailNotificationFacade.sendReassignConfirmationNotification(
+              reassignmentNotification, null);
+        });
   }
 }

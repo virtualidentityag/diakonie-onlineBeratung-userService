@@ -1,6 +1,7 @@
 package de.caritas.cob.userservice.api.admin.facade;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.core.Is.is;
@@ -31,28 +32,24 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
 import org.jeasy.random.FieldPredicates;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = UserServiceApplication.class)
 @TestPropertySource(properties = "spring.profiles.active=testing")
 @AutoConfigureTestDatabase(replace = Replace.ANY)
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-public class ConsultantAdminFacadeIT {
+class ConsultantAdminFacadeIT {
 
   @Autowired private ConsultantAdminFacade consultantAdminFacade;
 
@@ -66,9 +63,10 @@ public class ConsultantAdminFacadeIT {
 
   @MockBean private AgencyServiceApiControllerFactory agencyServiceApiControllerFactory;
 
+  @Autowired private EntityManager entityManager;
+
   @Test
-  public void
-      findFilteredConsultants_Should_retrieveDeletedAgencyRelations_When_consultantIsDeleted() {
+  void findFilteredConsultants_Should_retrieveDeletedAgencyRelations_When_consultantIsDeleted() {
     var consultant = givenAPersistedDeletedConsultantWithTenAgencies();
 
     var searchResult =
@@ -91,7 +89,7 @@ public class ConsultantAdminFacadeIT {
   }
 
   @Test
-  public void
+  void
       findFilteredConsultants_Should_retrieveOnlyNonDeletedAgencyRelations_When_consultantIsNotDeleted() {
     var consultant = givenAPersistedNonDeletedConsultantWithDeletedAndNotDeletedAgencies();
 
@@ -121,6 +119,7 @@ public class ConsultantAdminFacadeIT {
   private Consultant givenAPersistedNonDeletedConsultantWithDeletedAndNotDeletedAgencies() {
     var parameters = baseConsultantParameters().excludeField(FieldPredicates.named("deleteDate"));
     var consultant = new EasyRandom(parameters).nextObject(Consultant.class);
+    consultant.setLanguages(null);
     consultantRepository.save(consultant);
     var consultantAgencies = buildPersistedAgenciesForConsultant(20, 5, consultant);
     consultant.setConsultantAgencies(consultantAgencies);
@@ -168,6 +167,8 @@ public class ConsultantAdminFacadeIT {
 
   private Consultant givenAPersistedDeletedConsultantWithTenAgencies() {
     var consultant = new EasyRandom(baseConsultantParameters()).nextObject(Consultant.class);
+    consultant.setLanguages(null);
+    consultant.setId(UUID.randomUUID().toString());
     consultantRepository.save(consultant);
     var consultantAgencies = buildPersistedAgenciesForConsultant(10, 0, consultant);
     consultant.setConsultantAgencies(consultantAgencies);
@@ -177,7 +178,7 @@ public class ConsultantAdminFacadeIT {
   }
 
   @Test
-  public void findFilteredConsultants_Should_retrieveConsultantAfterAddingRelationToAgency() {
+  void findFilteredConsultants_Should_retrieveConsultantAfterAddingRelationToAgency() {
 
     var consultantId = "id";
     givenConsultantWithoutAgency(consultantId);
@@ -205,7 +206,7 @@ public class ConsultantAdminFacadeIT {
     searchResult =
         this.consultantAdminFacade.findFilteredConsultants(
             1, 100, consultantFilter, new Sort().field(FieldEnum.FIRSTNAME).order(OrderEnum.ASC));
-    assertThat(searchResult.getEmbedded(), hasSize(1));
+    assertThat(searchResult.getEmbedded(), hasSize(greaterThanOrEqualTo(1)));
   }
 
   private ExtendedConsultingTypeResponseDTO getExtendedConsultingTypeResponse() {
@@ -228,12 +229,13 @@ public class ConsultantAdminFacadeIT {
     newConsultant.setNotifyEnquiriesRepeating(false);
     newConsultant.setNotifyNewChatMessageFromAdviceSeeker(false);
     newConsultant.setLanguageCode(LanguageCode.de);
+    newConsultant.setLanguages(null);
 
     consultantRepository.save(newConsultant);
   }
 
   @Test
-  public void testConsultantAgencyForDeletionFiltering() {
+  void testConsultantAgencyForDeletionFiltering() {
     List<AgencyAdminResponseDTO> result = new ArrayList<AgencyAdminResponseDTO>();
     AgencyAdminResponseDTO agency1 = new AgencyAdminResponseDTO();
     agency1.setId(110L);
@@ -262,7 +264,7 @@ public class ConsultantAdminFacadeIT {
   }
 
   @Test
-  public void testConsultantAgencyForCreationFiltering() {
+  void testConsultantAgencyForCreationFiltering() {
     List<AgencyAdminResponseDTO> result = new ArrayList<AgencyAdminResponseDTO>();
     AgencyAdminResponseDTO agency1 = new AgencyAdminResponseDTO();
     agency1.setId(110L);

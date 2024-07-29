@@ -22,9 +22,7 @@ import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -37,17 +35,17 @@ import de.caritas.cob.userservice.api.service.session.SessionTopicEnrichmentServ
 import java.util.Date;
 import java.util.Map;
 import org.jeasy.random.EasyRandom;
-import org.junit.After;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ConsultantSessionEnricherTest {
+@ExtendWith(MockitoExtension.class)
+class ConsultantSessionEnricherTest {
 
   @InjectMocks private ConsultantSessionEnricher consultantSessionEnricher;
 
@@ -57,13 +55,13 @@ public class ConsultantSessionEnricherTest {
 
   @Mock private SessionTopicEnrichmentService sessionTopicEnrichmentService;
 
-  @After
-  public void tearDown() {
+  @AfterEach
+  void tearDown() {
     ReflectionTestUtils.setField(consultantSessionEnricher, "topicsFeatureEnabled", false);
   }
 
   @Test
-  public void
+  void
       updateRequiredConsultantSessionValues_Should_ReturnValidSessionListWithMessagesReadTrue_WhenThereAreNoUnreadMessages() {
     RocketChatRoomInformation rocketChatRoomInformation =
         RocketChatRoomInformation.builder()
@@ -90,7 +88,7 @@ public class ConsultantSessionEnricherTest {
   }
 
   @Test
-  public void
+  void
       updateRequiredConsultantSessionValues_Should_ReturnValidSessionListWithMessagesReadFalse_WhenThereAreUnreadMessages() {
     RocketChatRoomInformation rocketChatRoomInformation =
         RocketChatRoomInformation.builder()
@@ -117,8 +115,7 @@ public class ConsultantSessionEnricherTest {
   }
 
   @Test
-  public void
-      updateRequiredConsultantSessionValues_Should_EnrichWithTopicsIfTopicFeatureIsEnabled() {
+  void updateRequiredConsultantSessionValues_Should_EnrichWithTopicsIfTopicFeatureIsEnabled() {
     ReflectionTestUtils.setField(consultantSessionEnricher, "topicsFeatureEnabled", true);
     ReflectionTestUtils.setField(
         consultantSessionEnricher, "sessionTopicEnrichmentService", sessionTopicEnrichmentService);
@@ -150,7 +147,7 @@ public class ConsultantSessionEnricherTest {
   }
 
   @Test
-  public void updateRequiredConsultantSessionValues_Should_SetCorrectMessageDate() {
+  void updateRequiredConsultantSessionValues_Should_SetCorrectMessageDate() {
     RocketChatRoomInformation rocketChatRoomInformation =
         RocketChatRoomInformation.builder()
             .readMessages(MESSAGES_READ_MAP_WITH_UNREADS)
@@ -174,7 +171,7 @@ public class ConsultantSessionEnricherTest {
   }
 
   @Test
-  public void
+  void
       updateRequiredConsultantSessionValues_Should_ReturnFalseAsAttachmentReceivedStatus_WhenCallingConsultantIsSenderOfTheAttachment() {
     RocketChatRoomInformation rocketChatRoomInformation =
         RocketChatRoomInformation.builder()
@@ -200,7 +197,7 @@ public class ConsultantSessionEnricherTest {
   }
 
   @Test
-  public void
+  void
       updateRequiredConsultantSessionValues_Should_ReturnTrueAsAttachmentReceivedStatus_WhenCallingConsultantIsNotSenderOfTheAttachment() {
     RocketChatRoomInformation rocketChatRoomInformation =
         RocketChatRoomInformation.builder()
@@ -226,7 +223,7 @@ public class ConsultantSessionEnricherTest {
   }
 
   @Test
-  public void
+  void
       updateRequiredConsultantSessionValues_Should_SendListWithMonitoringFalse_When_NoMonitoringSetInConsultingTypeSettings() {
     RocketChatRoomInformation rocketChatRoomInformation =
         RocketChatRoomInformation.builder()
@@ -247,7 +244,7 @@ public class ConsultantSessionEnricherTest {
   }
 
   @Test
-  public void
+  void
       updateRequiredConsultantSessionValues_Should_SendListWithMonitoringTrue_When_MonitoringSetInConsultingTypeSettings() {
     RocketChatRoomInformation rocketChatRoomInformation =
         RocketChatRoomInformation.builder()
@@ -268,7 +265,7 @@ public class ConsultantSessionEnricherTest {
   }
 
   @Test
-  public void
+  void
       updateRequiredConsultantSessionValues_Should_ReturnCorrectFileTypeAndImagePreviewForSession() {
     RocketChatRoomInformation rocketChatRoomInformation =
         RocketChatRoomInformation.builder()
@@ -296,7 +293,7 @@ public class ConsultantSessionEnricherTest {
   }
 
   @Test
-  public void
+  void
       updateRequiredConsultantSessionValues_Should_ReturnSessionListWithMessagesReadFalse_WhenThereAreUnreadMessages() {
     RocketChatRoomInformation rocketChatRoomInformation =
         RocketChatRoomInformation.builder()
@@ -322,8 +319,7 @@ public class ConsultantSessionEnricherTest {
   }
 
   @Test
-  public void
-      updateRequiredConsultantSessionValues_Should_ReturnMessageDateAsUnixtime0_WhenNoMessages() {
+  void updateRequiredConsultantSessionValues_Should_ReturnMessageDateAsUnixtime0_WhenNoMessages() {
     RocketChatRoomInformation rocketChatRoomInformation =
         RocketChatRoomInformation.builder()
             .readMessages(MESSAGES_READ_MAP_WITHOUT_UNREADS)
@@ -345,7 +341,7 @@ public class ConsultantSessionEnricherTest {
   }
 
   @Test
-  public void
+  void
       updateRequiredConsultantSessionValues_Should_ReturnSessionListWithChatMessagesReadFalse_WhenThereAreUnreadSessionMessages() {
     RocketChatRoomInformation rocketChatRoomInformation =
         RocketChatRoomInformation.builder()
@@ -370,7 +366,7 @@ public class ConsultantSessionEnricherTest {
   }
 
   @Test
-  public void
+  void
       updateRequiredConsultantSessionValues_Should_ReturnSessionListWithChatMessagesReadTrue_WhenThereAreNoUnreadSessionMessages() {
     RocketChatRoomInformation rocketChatRoomInformation =
         RocketChatRoomInformation.builder()
@@ -395,7 +391,7 @@ public class ConsultantSessionEnricherTest {
   }
 
   @Test
-  public void
+  void
       updateRequiredConsultantSessionValues_Should_ReturnMessageDateAsFromCreateDate_When_sessionIsAnonymous() {
     RocketChatRoomInformation rocketChatRoomInformation =
         RocketChatRoomInformation.builder()
@@ -423,7 +419,7 @@ public class ConsultantSessionEnricherTest {
   }
 
   @Test
-  public void
+  void
       updateRequiredConsultantSessionValues_should_use_fallback_date_if_last_message_is_unavailable() {
     var fallbackDates = Map.of(RC_GROUP_ID, new Date(1655730882738L));
     RocketChatRoomInformation rocketChatRoomInformation =
