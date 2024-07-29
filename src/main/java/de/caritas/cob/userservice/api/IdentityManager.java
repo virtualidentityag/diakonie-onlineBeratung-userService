@@ -15,8 +15,6 @@ import org.springframework.stereotype.Service;
 public class IdentityManager implements IdentityManaging {
 
   private static final String VIEW_ALL_PEER_SESSIONS = "AUTHORIZATION_VIEW_ALL_PEER_SESSIONS";
-  private static final String VIEW_ALL_FEEDBACK_SESSIONS =
-      "AUTHORIZATION_VIEW_ALL_FEEDBACK_SESSIONS";
 
   private final IdentityClient identityClient;
 
@@ -78,10 +76,5 @@ public class IdentityManager implements IdentityManaging {
   @Override
   public boolean canViewPeerSessions(String consultantId) {
     return identityClient.userHasAuthority(consultantId, VIEW_ALL_PEER_SESSIONS);
-  }
-
-  @Override
-  public boolean canViewFeedbackSessions(String consultantId) {
-    return identityClient.userHasAuthority(consultantId, VIEW_ALL_FEEDBACK_SESSIONS);
   }
 }

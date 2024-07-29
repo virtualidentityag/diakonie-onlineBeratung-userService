@@ -148,7 +148,7 @@ public class Messenger implements Messaging {
       }
 
       var feedbackChatId = session.getFeedbackGroupId();
-      if (isInChat(feedbackChatId, chatUserId) && !isMain(consultant)) {
+      if (isInChat(feedbackChatId, chatUserId)) {
         removedOrIgnored.compareAndExchange(
             true, messageClient.removeUserFromSession(chatUserId, feedbackChatId));
       }
@@ -167,10 +167,6 @@ public class Messenger implements Messaging {
 
   private boolean isPeering(Session session, Consultant consultant) {
     return session.hasFeedbackChat() && identityManager.canViewPeerSessions(consultant.getId());
-  }
-
-  private boolean isMain(Consultant consultant) {
-    return identityManager.canViewFeedbackSessions(consultant.getId());
   }
 
   public boolean isInChat(String chatId, String chatUserId) {

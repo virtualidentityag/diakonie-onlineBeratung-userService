@@ -26,6 +26,4 @@ public interface IdentityManaging {
   boolean isEmailAvailableOrOwn(String username, String email);
 
   boolean canViewPeerSessions(String consultantId);
-
-  boolean canViewFeedbackSessions(String toString);
 }
