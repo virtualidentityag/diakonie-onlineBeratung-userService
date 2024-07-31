@@ -56,7 +56,6 @@ class SetRocketChatRoomReadOnlyActionCommandTest {
     this.actionCommand.execute(session);
 
     verify(this.rocketChatService, times(1)).setRoomReadOnly("group id");
-    verify(this.rocketChatService, times(1)).setRoomReadOnly("feedback group id");
   }
 
   @Test

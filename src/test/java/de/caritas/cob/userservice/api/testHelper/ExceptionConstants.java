@@ -2,8 +2,6 @@ package de.caritas.cob.userservice.api.testHelper;
 
 import de.caritas.cob.userservice.api.container.CreateEnquiryExceptionInformation;
 import de.caritas.cob.userservice.api.exception.httpresponses.InternalServerErrorException;
-import de.caritas.cob.userservice.api.exception.rocketchat.RocketChatAddUserToGroupException;
-import de.caritas.cob.userservice.api.exception.rocketchat.RocketChatCreateGroupException;
 import de.caritas.cob.userservice.api.exception.rocketchat.RocketChatPostMessageException;
 import de.caritas.cob.userservice.api.exception.rocketchat.RocketChatRemoveSystemMessagesException;
 import org.springframework.http.HttpStatus;
@@ -28,8 +26,6 @@ public class ExceptionConstants {
   public static final RocketChatRemoveSystemMessagesException
       RC_CHAT_REMOVE_SYSTEM_MESSAGES_EXCEPTION =
           new RocketChatRemoveSystemMessagesException(TestConstants.MESSAGE);
-  public static final RocketChatAddUserToGroupException RC_ADD_USER_TO_GROUP_EXCEPTION =
-      new RocketChatAddUserToGroupException(TestConstants.MESSAGE);
 
   /** HttpStatusCode exception */
   @SuppressWarnings("serial")

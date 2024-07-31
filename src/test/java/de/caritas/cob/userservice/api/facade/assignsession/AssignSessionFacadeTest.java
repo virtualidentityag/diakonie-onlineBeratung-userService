@@ -2,8 +2,6 @@ package de.caritas.cob.userservice.api.facade.assignsession;
 
 import static de.caritas.cob.userservice.api.testHelper.AsyncVerification.verifyAsync;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.CONSULTANT;
-import static de.caritas.cob.userservice.api.testHelper.TestConstants.CONSULTANT_WITH_AGENCY;
-import static de.caritas.cob.userservice.api.testHelper.TestConstants.FEEDBACKSESSION_WITH_CONSULTANT;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -11,13 +9,11 @@ import static org.hamcrest.Matchers.is;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -25,10 +21,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 
 import de.caritas.cob.userservice.api.adapters.keycloak.KeycloakService;
-import de.caritas.cob.userservice.api.adapters.rocketchat.RocketChatService;
 import de.caritas.cob.userservice.api.adapters.rocketchat.dto.group.GroupMemberDTO;
-import de.caritas.cob.userservice.api.exception.httpresponses.InternalServerErrorException;
-import de.caritas.cob.userservice.api.facade.CreateEnquiryMessageFacade;
 import de.caritas.cob.userservice.api.facade.EmailNotificationFacade;
 import de.caritas.cob.userservice.api.facade.RocketChatFacade;
 import de.caritas.cob.userservice.api.helper.AuthenticatedUser;
@@ -38,7 +31,6 @@ import de.caritas.cob.userservice.api.model.ConsultantAgency;
 import de.caritas.cob.userservice.api.model.Session;
 import de.caritas.cob.userservice.api.model.Session.RegistrationType;
 import de.caritas.cob.userservice.api.model.Session.SessionStatus;
-import de.caritas.cob.userservice.api.service.LogService;
 import de.caritas.cob.userservice.api.service.statistics.StatisticsService;
 import de.caritas.cob.userservice.api.service.statistics.event.AssignSessionStatisticsEvent;
 import de.caritas.cob.userservice.consultingtypeservice.generated.web.model.ExtendedConsultingTypeResponseDTO;
@@ -66,39 +58,13 @@ class AssignSessionFacadeTest {
   @Mock
   @SuppressWarnings("unused")
   KeycloakService keycloakService;
+
   @Mock EmailNotificationFacade emailNotificationFacade;
   @Mock AuthenticatedUser authenticatedUser;
   @Mock SessionToConsultantVerifier sessionToConsultantVerifier;
   @Mock UnauthorizedMembersProvider unauthorizedMembersProvider;
   @Mock StatisticsService statisticsService;
   @Mock HttpServletRequest httpServletRequest;
-
-  @Test
-  void
-      assignSession_Should_ReturnInternalServerErrorAndLogErrorAndDoARollback_WhenAddConsultantToRcGroupFails_WhenSessionIsNoEnquiry() {
-    var exception = new InternalServerErrorException(RandomStringUtils.random(16));
-    doThrow(exception)
-        .when(rocketChatFacade)
-        .addUserToRocketChatGroup(
-            CONSULTANT_WITH_AGENCY.getRocketChatId(), FEEDBACKSESSION_WITH_CONSULTANT.getGroupId());
-
-    var thrown =
-        assertThrows(
-            InternalServerErrorException.class,
-            () ->
-                assignSessionFacade.assignSession(
-                    FEEDBACKSESSION_WITH_CONSULTANT, CONSULTANT_WITH_AGENCY, CONSULTANT));
-
-    assertEquals(exception.getMessage(), thrown.getMessage());
-    verify(sessionToConsultantVerifier, times(1))
-        .verifyPreconditionsForAssignment(
-            argThat(
-                consultantSessionDTO ->
-                    consultantSessionDTO.getConsultant().equals(CONSULTANT_WITH_AGENCY)
-                        && consultantSessionDTO
-                            .getSession()
-                            .equals(FEEDBACKSESSION_WITH_CONSULTANT)));
-  }
 
   @Test
   void assignSession_Should_removeAllUnauthorizedMembers_When_sessionIsNotATeamSession() {

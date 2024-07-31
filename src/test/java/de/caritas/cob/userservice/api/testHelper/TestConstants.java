@@ -17,7 +17,6 @@ import de.caritas.cob.userservice.api.adapters.rocketchat.dto.message.attachment
 import de.caritas.cob.userservice.api.adapters.rocketchat.dto.message.attachment.FileDTO;
 import de.caritas.cob.userservice.api.adapters.rocketchat.dto.room.RoomsLastMessageDTO;
 import de.caritas.cob.userservice.api.adapters.rocketchat.dto.room.RoomsUpdateDTO;
-import de.caritas.cob.userservice.api.adapters.rocketchat.dto.subscriptions.SubscriptionsUpdateDTO;
 import de.caritas.cob.userservice.api.adapters.rocketchat.dto.user.RocketChatUserDTO;
 import de.caritas.cob.userservice.api.adapters.rocketchat.dto.user.UserInfoResponseDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.AbsenceDTO;
@@ -140,9 +139,6 @@ public class TestConstants {
   public static final String RC_GROUP_ID_7 = "juuuzte";
   public static final String RC_STATUS_ONLINE = "online";
   public static final String RC_UTC_OFFSET = "1";
-  public static final String RC_FEEDBACK_GROUP_ID = "yyyZZZ";
-  public static final String RC_FEEDBACK_GROUP_ID_2 = "gggasaa";
-  public static final String RC_FEEDBACK_GROUP_ID_3 = "llldkdks";
   public static final String RC_ATTACHMENT_TITLE = "filename.jpg";
   public static final String RC_ATTACHMENT_FILE_TYPE = "image/jpeg";
   public static final String RC_ATTACHMENT_IMAGE_PREVIEW =
@@ -172,112 +168,6 @@ public class TestConstants {
       new ResponseEntity<>(LOGIN_RESPONSE_DTO, HttpStatus.OK);
   public static final ResponseEntity<LoginResponseDTO> LOGIN_RESPONSE_ENTITY_OK_NO_TOKEN =
       new ResponseEntity<>(LOGIN_RESPONSE_DTO_NO_TOKEN, HttpStatus.OK);
-  public static final List<SubscriptionsUpdateDTO>
-      SUBSCRIPTIONS_UPDATE_LIST_DTO_WITH_ONE_FEEDBACK_UNREAD =
-          Arrays.asList(
-              new SubscriptionsUpdateDTO(
-                  "A",
-                  true,
-                  false,
-                  0,
-                  0,
-                  0,
-                  NOW,
-                  RC_GROUP_ID,
-                  "A",
-                  "A",
-                  "P",
-                  null,
-                  null,
-                  null,
-                  null,
-                  null),
-              new SubscriptionsUpdateDTO(
-                  "A",
-                  true,
-                  false,
-                  0,
-                  0,
-                  0,
-                  NOW,
-                  RC_GROUP_ID_2,
-                  "A",
-                  "A",
-                  "P",
-                  null,
-                  null,
-                  null,
-                  null,
-                  null),
-              new SubscriptionsUpdateDTO(
-                  "A",
-                  true,
-                  false,
-                  0,
-                  0,
-                  0,
-                  NOW,
-                  RC_GROUP_ID_3,
-                  "A",
-                  "A",
-                  "P",
-                  null,
-                  null,
-                  null,
-                  null,
-                  null),
-              new SubscriptionsUpdateDTO(
-                  "A",
-                  true,
-                  false,
-                  1,
-                  0,
-                  0,
-                  NOW,
-                  RC_FEEDBACK_GROUP_ID,
-                  "A",
-                  "A",
-                  "P",
-                  null,
-                  null,
-                  null,
-                  null,
-                  null),
-              new SubscriptionsUpdateDTO(
-                  "A",
-                  true,
-                  false,
-                  0,
-                  0,
-                  0,
-                  NOW,
-                  RC_FEEDBACK_GROUP_ID_2,
-                  "A",
-                  "A",
-                  "P",
-                  null,
-                  null,
-                  null,
-                  null,
-                  null),
-              new SubscriptionsUpdateDTO(
-                  "A",
-                  true,
-                  false,
-                  0,
-                  0,
-                  0,
-                  NOW,
-                  RC_FEEDBACK_GROUP_ID_3,
-                  "A",
-                  "A",
-                  "P",
-                  null,
-                  null,
-                  null,
-                  null,
-                  null));
-
   /** Rocket.Chat credentials */
   public static final String TECHNICAL_USER_A_USERNAME = "techUserAName";
 
@@ -897,24 +787,6 @@ public class TestConstants {
           .isPeerChat(false)
           .build();
 
-  public static final Session FEEDBACK_SESSION_WITH_ASKER_AND_CONSULTANT =
-      Session.builder()
-          .id(SESSION_ID)
-          .user(USER_WITH_RC_ID)
-          .consultant(CONSULTANT_2)
-          .consultingTypeId(CONSULTING_TYPE_ID_SUCHT)
-          .registrationType(REGISTERED)
-          .agencyId(AGENCY_ID)
-          .enquiryMessageDate(nowInUtc())
-          .groupId(RC_GROUP_ID)
-          .postcode(POSTCODE)
-          .status(IN_PROGRESS)
-          .createDate(nowInUtc())
-          .updateDate(nowInUtc())
-          .teamSession(true)
-          .isPeerChat(false)
-          .build();
-
   public static final Session ANONYMOUS_ENQUIRY_WITHOUT_CONSULTANT =
       Session.builder()
           .id(SESSION_ID)
@@ -942,40 +814,6 @@ public class TestConstants {
           .groupId(RC_GROUP_ID)
           .postcode(POSTCODE)
           .status(SessionStatus.NEW)
-          .createDate(nowInUtc())
-          .updateDate(nowInUtc())
-          .teamSession(true)
-          .isPeerChat(false)
-          .build();
-
-  public static final Session FEEDBACKSESSION_WITHOUT_CONSULTANT =
-      Session.builder()
-          .id(SESSION_ID)
-          .user(USER_WITH_RC_ID)
-          .consultingTypeId(CONSULTING_TYPE_ID_U25)
-          .registrationType(REGISTERED)
-          .agencyId(AGENCY_ID)
-          .enquiryMessageDate(nowInUtc())
-          .groupId(RC_GROUP_ID)
-          .postcode(POSTCODE)
-          .status(NEW)
-          .createDate(nowInUtc())
-          .updateDate(nowInUtc())
-          .teamSession(true)
-          .isPeerChat(false)
-          .build();
-  public static final Session FEEDBACKSESSION_WITH_CONSULTANT =
-      Session.builder()
-          .id(SESSION_ID)
-          .user(USER_WITH_RC_ID)
-          .consultant(CONSULTANT_2)
-          .consultingTypeId(CONSULTING_TYPE_ID_U25)
-          .registrationType(REGISTERED)
-          .agencyId(AGENCY_ID)
-          .enquiryMessageDate(nowInUtc())
-          .groupId(RC_GROUP_ID)
-          .postcode(POSTCODE)
-          .status(NEW)
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(true)
@@ -1320,9 +1158,6 @@ public class TestConstants {
           put(RC_GROUP_ID_4, false);
           put(RC_GROUP_ID_5, false);
           put(RC_GROUP_ID_6, false);
-          put(RC_FEEDBACK_GROUP_ID, false);
-          put(RC_FEEDBACK_GROUP_ID_2, false);
-          put(RC_FEEDBACK_GROUP_ID_3, false);
         }
       };
   public static final Map<String, Boolean> MESSAGES_READ_MAP_WITHOUT_UNREADS =
@@ -1334,9 +1169,6 @@ public class TestConstants {
           put(RC_GROUP_ID_4, true);
           put(RC_GROUP_ID_5, true);
           put(RC_GROUP_ID_6, true);
-          put(RC_FEEDBACK_GROUP_ID, true);
-          put(RC_FEEDBACK_GROUP_ID_2, true);
-          put(RC_FEEDBACK_GROUP_ID_3, true);
         }
       };
   public static final List<UserSessionResponseDTO> USER_CHAT_RESPONSE_DTO_LIST =
@@ -1469,39 +1301,6 @@ public class TestConstants {
               ROOMS_LAST_MESSAGE_DTO_3,
               new Date()),
           new RoomsUpdateDTO(
-              RC_FEEDBACK_GROUP_ID,
-              "name1",
-              "fname1",
-              "P",
-              USER_DTO_1,
-              true,
-              false,
-              new Date(),
-              ROOMS_LAST_MESSAGE_DTO_1,
-              new Date()),
-          new RoomsUpdateDTO(
-              RC_FEEDBACK_GROUP_ID_2,
-              "name2",
-              "fname2",
-              "P",
-              USER_DTO_2,
-              true,
-              false,
-              new Date(),
-              ROOMS_LAST_MESSAGE_DTO_2,
-              new Date()),
-          new RoomsUpdateDTO(
-              RC_FEEDBACK_GROUP_ID_3,
-              "name3",
-              "fname3",
-              "P",
-              USER_DTO_3,
-              true,
-              false,
-              new Date(),
-              ROOMS_LAST_MESSAGE_DTO_3,
-              new Date()),
-          new RoomsUpdateDTO(
               RC_GROUP_ID_4,
               "name4",
               "fname4",
@@ -1543,9 +1342,6 @@ public class TestConstants {
           put(RC_GROUP_ID_4, ROOMS_LAST_MESSAGE_DTO_4);
           put(RC_GROUP_ID_5, ROOMS_LAST_MESSAGE_DTO_5);
           put(RC_GROUP_ID_6, ROOMS_LAST_MESSAGE_DTO_6);
-          put(RC_FEEDBACK_GROUP_ID, ROOMS_LAST_MESSAGE_DTO_1);
-          put(RC_FEEDBACK_GROUP_ID_2, ROOMS_LAST_MESSAGE_DTO_2);
-          put(RC_FEEDBACK_GROUP_ID_3, ROOMS_LAST_MESSAGE_DTO_3);
         }
       };
   public static final RoomsLastMessageDTO ROOMS_LAST_MESSAGE_DTO_WITH_ATTACHMENT =
