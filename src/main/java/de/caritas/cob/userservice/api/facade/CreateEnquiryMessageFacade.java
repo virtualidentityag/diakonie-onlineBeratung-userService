@@ -397,7 +397,6 @@ public class CreateEnquiryMessageFacade {
 
     try {
       session.setGroupId(rcGroupId);
-      session.setFeedbackGroupId(rcFeedbackGroupId);
       session.setStatus(SessionStatus.NEW);
       session.setEnquiryMessageDate(nowInUtc());
       if (nonNull(language)) {

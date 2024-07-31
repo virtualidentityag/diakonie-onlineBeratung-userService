@@ -108,7 +108,7 @@ public class UnauthorizedMembersProvider {
 
   private void addTeamConsultantsIfTeamSession(
       Session session, List<String> authorizedMembers, List<Consultant> consultantsOfAgency) {
-    if (session.isTeamSession() && !session.hasFeedbackChat()) {
+    if (session.isTeamSession()) {
       consultantsOfAgency.stream()
           .filter(Consultant::isTeamConsultant)
           .map(Consultant::getRocketChatId)
@@ -124,15 +124,9 @@ public class UnauthorizedMembersProvider {
       Session session,
       List<String> authorizedMembers,
       List<Consultant> consultantsOfAgency) {
-    if (isTeamSessionWithFeedbackChat(session)) {
-      if (rcGroupId.equalsIgnoreCase(session.getGroupId()))
-        obtainMainConsultantsOfGroup(
-            authorizedMembers, consultantsOfAgency, this::hasAuthorityToViewPeerGroups);
-    }
-  }
-
-  private boolean isTeamSessionWithFeedbackChat(Session session) {
-    return session.isTeamSession() && session.hasFeedbackChat();
+    if (rcGroupId.equalsIgnoreCase(session.getGroupId()))
+      obtainMainConsultantsOfGroup(
+          authorizedMembers, consultantsOfAgency, this::hasAuthorityToViewPeerGroups);
   }
 
   private void obtainMainConsultantsOfGroup(

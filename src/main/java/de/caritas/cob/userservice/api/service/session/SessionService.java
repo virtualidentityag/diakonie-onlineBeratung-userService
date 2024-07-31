@@ -17,9 +17,7 @@ import de.caritas.cob.userservice.api.adapters.web.dto.SessionTopicDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.UserDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.UserSessionResponseDTO;
 import de.caritas.cob.userservice.api.config.auth.UserRole;
-import de.caritas.cob.userservice.api.exception.UpdateFeedbackGroupIdException;
 import de.caritas.cob.userservice.api.exception.httpresponses.ForbiddenException;
-import de.caritas.cob.userservice.api.exception.httpresponses.InternalServerErrorException;
 import de.caritas.cob.userservice.api.exception.httpresponses.NotFoundException;
 import de.caritas.cob.userservice.api.manager.consultingtype.ConsultingTypeManager;
 import de.caritas.cob.userservice.api.model.Consultant;
@@ -111,27 +109,6 @@ public class SessionService {
     session.setConsultant(consultant);
     session.setStatus(status);
     saveSession(session);
-  }
-
-  /**
-   * Updates the feedback group id of the given {@link Session}.
-   *
-   * @param session an optional session
-   * @param feedbackGroupId the ID of the feedback group
-   */
-  public void updateFeedbackGroupId(Session session, String feedbackGroupId)
-      throws UpdateFeedbackGroupIdException {
-    try {
-      session.setFeedbackGroupId(feedbackGroupId);
-      saveSession(session);
-
-    } catch (InternalServerErrorException serviceException) {
-      throw new UpdateFeedbackGroupIdException(
-          String.format(
-              "Could not update feedback group id %s for session %s",
-              feedbackGroupId, session.getId()),
-          serviceException);
-    }
   }
 
   /**

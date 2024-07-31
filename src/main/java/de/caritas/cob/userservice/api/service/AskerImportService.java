@@ -79,14 +79,7 @@ public class AskerImportService {
   @Value("${rocket.systemuser.password}")
   private String ROCKET_CHAT_SYSTEM_USER_PASSWORD;
 
-  @Value("${asker.import.welcome.message.filename}")
-  private String welcomeMsgFilename;
-
-  @Value("${asker.import.welcome.message.filename.replace.value}")
-  private String welcomeMsgFilenameReplaceValue;
-
   private final String NEWLINE_CHAR = "\r\n";
-  private final String IMPORT_CHARSET = "UTF-8";
   private final String IMPORT_LOG_CHARSET = "UTF-8";
   private final String DUMMY_POSTCODE = "00000";
   private final @NonNull IdentityClient identityClient;
@@ -475,9 +468,6 @@ public class AskerImportService {
                     "Could not remove system messages from feedback group id %s for user %s",
                     rcFeedbackGroupId, record.getUsername()));
           }
-
-          // Update the session's feedback group id
-          sessionService.updateFeedbackGroupId(session, rcFeedbackGroupId);
         }
 
         // Update session data by Rocket.Chat group id and consultant id

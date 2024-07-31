@@ -339,20 +339,6 @@ class AssignEnquiryFacadeTest {
   }
 
   @Test
-  void assignEnquiry_Should_AddPeerConsultantToFeedbackGroup_WhenSessionHasFeedbackIsTrue() {
-    assignEnquiryFacade.assignRegisteredEnquiry(
-        U25_SESSION_WITHOUT_CONSULTANT, CONSULTANT_WITH_AGENCY);
-
-    verifyConsultantAndSessionHaveBeenChecked(
-        U25_SESSION_WITHOUT_CONSULTANT, CONSULTANT_WITH_AGENCY);
-    verifyAsync(
-        (a) ->
-            verify(rocketChatFacade, times(1))
-                .addUserToRocketChatGroup(
-                    ROCKETCHAT_ID, U25_SESSION_WITHOUT_CONSULTANT.getFeedbackGroupId()));
-  }
-
-  @Test
   void assignEnquiry_Should_removeAllUnauthorizedMembers_When_sessionIsNotATeamSession() {
     Session session = new EasyRandom().nextObject(Session.class);
     session.setTeamSession(false);
@@ -384,11 +370,6 @@ class AssignEnquiryFacadeTest {
         (a) ->
             verify(this.rocketChatFacade, times(1))
                 .removeUserFromGroup(consultantToRemove.getRocketChatId(), session.getGroupId()));
-    verifyAsync(
-        (a) ->
-            verify(this.rocketChatFacade, times(1))
-                .removeUserFromGroup(
-                    consultantToRemove.getRocketChatId(), session.getFeedbackGroupId()));
   }
 
   @Test
@@ -427,19 +408,10 @@ class AssignEnquiryFacadeTest {
                 .removeUserFromGroup(consultantToRemove.getRocketChatId(), session.getGroupId()));
     verifyAsync(
         (a) ->
-            verify(this.rocketChatFacade, atLeastOnce())
-                .removeUserFromGroup(
-                    consultantToRemove.getRocketChatId(), session.getFeedbackGroupId()));
-    verifyAsync(
-        (a) ->
             verify(this.rocketChatFacade, never())
                 .removeUserFromGroup("teamConsultantRcId", session.getGroupId()));
     verify(this.rocketChatFacade, never())
-        .removeUserFromGroup("teamConsultantRcId", session.getFeedbackGroupId());
-    verify(this.rocketChatFacade, never())
         .removeUserFromGroup("teamConsultantRcId2", session.getGroupId());
-    verify(this.rocketChatFacade, never())
-        .removeUserFromGroup("teamConsultantRcId2", session.getFeedbackGroupId());
   }
 
   @Test

@@ -1,6 +1,5 @@
 package de.caritas.cob.userservice.api.admin.service.rocketchat;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 import de.caritas.cob.userservice.api.manager.consultingtype.ConsultingTypeManager;
@@ -43,18 +42,5 @@ class RocketChatOperationConditionProvider {
     var consultingTypeSettings =
         consultingTypeManager.getConsultingTypeSettings(this.session.getConsultingTypeId());
     return nonNull(consultingTypeSettings);
-  }
-
-  /**
-   * Checks if a given {@link Consultant} can be added to a Rocket.Chat feedback group.
-   *
-   * @return true if {@link Session} has feedback room and {@link Session} is an enquiry or {@link
-   *     Consultant} is a main consultant
-   */
-  boolean canAddToRocketChatFeedbackGroup() {
-    if (isNull(this.session.getFeedbackGroupId())) {
-      return false;
-    }
-    return isEnquiry();
   }
 }

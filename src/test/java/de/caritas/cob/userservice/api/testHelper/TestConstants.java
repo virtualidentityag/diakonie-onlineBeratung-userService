@@ -907,7 +907,6 @@ public class TestConstants {
           .agencyId(AGENCY_ID)
           .enquiryMessageDate(nowInUtc())
           .groupId(RC_GROUP_ID)
-          .feedbackGroupId(RC_FEEDBACK_GROUP_ID_2)
           .postcode(POSTCODE)
           .status(IN_PROGRESS)
           .createDate(nowInUtc())
@@ -924,7 +923,6 @@ public class TestConstants {
           .agencyId(AGENCY_ID)
           .enquiryMessageDate(nowInUtc())
           .groupId(RC_GROUP_ID)
-          .feedbackGroupId(RC_FEEDBACK_GROUP_ID_2)
           .postcode(POSTCODE)
           .status(NEW)
           .createDate(nowInUtc())
@@ -959,7 +957,6 @@ public class TestConstants {
           .agencyId(AGENCY_ID)
           .enquiryMessageDate(nowInUtc())
           .groupId(RC_GROUP_ID)
-          .feedbackGroupId(RC_FEEDBACK_GROUP_ID)
           .postcode(POSTCODE)
           .status(NEW)
           .createDate(nowInUtc())
@@ -977,7 +974,6 @@ public class TestConstants {
           .agencyId(AGENCY_ID)
           .enquiryMessageDate(nowInUtc())
           .groupId(RC_GROUP_ID)
-          .feedbackGroupId(RC_FEEDBACK_GROUP_ID)
           .postcode(POSTCODE)
           .status(NEW)
           .createDate(nowInUtc())
@@ -995,7 +991,6 @@ public class TestConstants {
           .agencyId(AGENCY_ID)
           .enquiryMessageDate(nowInUtc())
           .groupId(RC_GROUP_ID)
-          .feedbackGroupId(RC_FEEDBACK_GROUP_ID)
           .postcode(POSTCODE)
           .status(NEW)
           .createDate(nowInUtc())
@@ -1013,7 +1008,6 @@ public class TestConstants {
           .agencyId(AGENCY_ID)
           .enquiryMessageDate(nowInUtc())
           .groupId(RC_GROUP_ID)
-          .feedbackGroupId(RC_FEEDBACK_GROUP_ID)
           .postcode(POSTCODE)
           .status(NEW)
           .createDate(nowInUtc())
@@ -1047,18 +1041,6 @@ public class TestConstants {
           null,
           false,
           null);
-
-  public static final SessionDTO SESSION_DTO_SUCHT =
-      new SessionDTO()
-          .id(SESSION_ID)
-          .agencyId(AGENCY_ID)
-          .consultingType(CONSULTING_TYPE_ID_SUCHT)
-          .status(SESSION_STATUS_IN_PROGRESS)
-          .postcode(POSTCODE)
-          .groupId(RC_GROUP_ID)
-          .askerRcId(RC_USER_ID)
-          .messageDate(MESSAGE_DATE)
-          .isTeamSession(IS_TEAM_SESSION);
   public static final SessionDTO SESSION_DTO_U25 =
       new SessionDTO()
           .id(SESSION_ID)

@@ -113,7 +113,6 @@ public class SessionArchiveService {
       Session session) {
     try {
       setRocketChatRoomState(session.getGroupId(), rcUpdateRoomStateMethod);
-      setRocketChatRoomState(session.getFeedbackGroupId(), rcUpdateRoomStateMethod);
       session.setStatus(sessionStatusTo);
       sessionRepository.save(session);
     } catch (InternalServerErrorException | RocketChatUserNotInitializedException ex) {

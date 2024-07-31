@@ -689,7 +689,6 @@ class CreateEnquiryMessageFacadeTest {
         new EnquiryData(user, SESSION_ID, MESSAGE, null, rocketChatCredentials));
 
     verify(spySession, times(1)).setGroupId(groupResponseDTO.getGroup().getId());
-    verify(spySession, times(1)).setFeedbackGroupId(groupResponseDTO.getGroup().getId());
     assertNotNull(spySession.getEnquiryMessageDate());
     verify(spySession, times(1)).setStatus(SessionStatus.NEW);
     verify(sessionService, times(1)).saveSession(spySession);

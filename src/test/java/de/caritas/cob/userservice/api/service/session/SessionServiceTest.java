@@ -57,7 +57,6 @@ import de.caritas.cob.userservice.api.adapters.web.dto.SessionConsultantForConsu
 import de.caritas.cob.userservice.api.adapters.web.dto.UserDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.UserSessionResponseDTO;
 import de.caritas.cob.userservice.api.config.auth.UserRole;
-import de.caritas.cob.userservice.api.exception.UpdateFeedbackGroupIdException;
 import de.caritas.cob.userservice.api.exception.httpresponses.ForbiddenException;
 import de.caritas.cob.userservice.api.exception.httpresponses.InternalServerErrorException;
 import de.caritas.cob.userservice.api.exception.httpresponses.NotFoundException;
@@ -181,7 +180,6 @@ class SessionServiceTest {
       new ConsultantAgency(1L, CONSULTANT, 1L, nowInUtc(), nowInUtc(), nowInUtc(), null, null);
   private final Set<ConsultantAgency> CONSULTANT_AGENCY_SET = new HashSet<>();
   private final List<Session> SESSION_LIST_WITH_CONSULTANT = singletonList(SESSION_WITH_CONSULTANT);
-  private final String ERROR_MSG = "error";
   private final UserDTO USER_DTO =
       new UserDTO(
           USERNAME,
@@ -537,27 +535,6 @@ class SessionServiceTest {
         sessionDTO.getId() != null
             && sessionDTO.getFirstName() != null
             && sessionDTO.getLastName() != null);
-  }
-
-  @Test
-  void updateFeedbackGroupId_Should_ThrowUpdateFeedbackGroupIdException_WhenSaveSessionFails() {
-
-    InternalServerErrorException ex = new InternalServerErrorException(ERROR_MSG) {};
-    when(sessionService.saveSession(any())).thenThrow(ex);
-
-    try {
-      sessionService.updateFeedbackGroupId(SESSION, RC_GROUP_ID);
-      fail("Expected exception: UpdateFeedbackGroupIdException");
-    } catch (UpdateFeedbackGroupIdException updateFeedbackGroupIdException) {
-      // As expected
-    }
-  }
-
-  @Test
-  void updateFeedbackGroupId_Should_SaveSession() throws UpdateFeedbackGroupIdException {
-
-    sessionService.updateFeedbackGroupId(SESSION, RC_GROUP_ID);
-    verify(sessionRepository, times(1)).save(SESSION);
   }
 
   @Test

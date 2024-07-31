@@ -33,7 +33,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
@@ -84,7 +83,6 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -103,7 +101,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.keycloak.adapters.KeycloakConfigResolver;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.RoleMappingResource;
@@ -181,8 +178,6 @@ class UserControllerSessionE2EIT {
   @MockBean private AuthenticatedUser authenticatedUser;
 
   @MockBean private RocketChatCredentialsProvider rocketChatCredentialsProvider;
-
-  @MockBean private KeycloakConfigResolver keycloakConfigResolver;
 
   @TestConfiguration
   static class TestConfig {
@@ -896,11 +891,6 @@ class UserControllerSessionE2EIT {
     verifyRocketChatUserRemovedFromGroup(
         logOutput, session.getGroupId(), session.getConsultant().getRocketChatId(), 0);
     verifyRocketChatTechUserLeftGroup(logOutput, session.getGroupId(), 0);
-
-    verifyRocketChatTechUserAddedToGroup(logOutput, session.getFeedbackGroupId(), 0);
-    verifyRocketChatUserRemovedFromGroup(
-        logOutput, session.getFeedbackGroupId(), consultant.getRocketChatId(), 0);
-    verifyRocketChatTechUserLeftGroup(logOutput, session.getFeedbackGroupId(), 0);
   }
 
   @Test
@@ -929,45 +919,6 @@ class UserControllerSessionE2EIT {
     verifyRocketChatUserRemovedFromGroup(
         logOutput, session.getGroupId(), session.getConsultant().getRocketChatId(), 0);
     verifyRocketChatTechUserLeftGroup(logOutput, session.getGroupId(), 0);
-
-    verifyRocketChatTechUserAddedToGroup(logOutput, session.getFeedbackGroupId(), 0);
-    verifyRocketChatUserRemovedFromGroup(
-        logOutput, session.getFeedbackGroupId(), consultant.getRocketChatId(), 0);
-    verifyRocketChatTechUserLeftGroup(logOutput, session.getFeedbackGroupId(), 0);
-  }
-
-  @Test
-  @WithMockUser(authorities = AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION)
-  void removeFromSessionShouldReturnNoContentAndRemoveConsultantFromSessionNotFromFeedbackChat(
-      CapturedOutput logOutput) throws Exception {
-    givenAValidConsultant(true);
-    givenAValidRocketChatSystemUser();
-    givenAValidRocketChatInfoUserResponse();
-    givenAValidSession();
-    var doc = givenSubscription(consultant.getRocketChatId(), "c", null);
-    givenMongoResponseWith(doc);
-    givenKeycloakUserRoles(consultant.getId(), "consultant");
-
-    mockMvc
-        .perform(
-            delete(
-                    "/users/sessions/{sessionId}/consultant/{consultantId}",
-                    session.getId(),
-                    consultant.getId())
-                .cookie(CSRF_COOKIE)
-                .header(CSRF_HEADER, CSRF_VALUE)
-                .accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isNoContent());
-
-    verifyRocketChatTechUserAddedToGroup(logOutput, session.getGroupId(), 1);
-    verifyRocketChatUserRemovedFromGroup(
-        logOutput, session.getGroupId(), consultant.getRocketChatId(), 1);
-    verifyRocketChatTechUserLeftGroup(logOutput, session.getGroupId(), 1);
-
-    verifyRocketChatTechUserAddedToGroup(logOutput, session.getFeedbackGroupId(), 0);
-    verifyRocketChatUserRemovedFromGroup(
-        logOutput, session.getFeedbackGroupId(), consultant.getRocketChatId(), 0);
-    verifyRocketChatTechUserLeftGroup(logOutput, session.getFeedbackGroupId(), 0);
   }
 
   @Test
@@ -995,11 +946,6 @@ class UserControllerSessionE2EIT {
     verifyRocketChatUserRemovedFromGroup(
         logOutput, session.getGroupId(), session.getConsultant().getRocketChatId(), 0);
     verifyRocketChatTechUserLeftGroup(logOutput, session.getGroupId(), 0);
-
-    verifyRocketChatTechUserAddedToGroup(logOutput, session.getFeedbackGroupId(), 0);
-    verifyRocketChatUserRemovedFromGroup(
-        logOutput, session.getFeedbackGroupId(), consultant.getRocketChatId(), 0);
-    verifyRocketChatTechUserLeftGroup(logOutput, session.getFeedbackGroupId(), 0);
   }
 
   @Test
@@ -1140,28 +1086,6 @@ class UserControllerSessionE2EIT {
     when(mongoCollection.find(any(Bson.class))).thenReturn(findIterable).thenReturn(findIterable);
     when(mockedMongoClient.getDatabase("rocketchat")).thenReturn(mongoDatabase);
     when(mongoDatabase.getCollection("rocketchat_subscription")).thenReturn(mongoCollection);
-  }
-
-  @SuppressWarnings("SameParameterValue")
-  private Document givenSubscription(String chatUserId, String username, String name)
-      throws JsonProcessingException {
-    var doc = new LinkedHashMap<String, Object>();
-    doc.put("_id", RandomStringUtils.randomAlphanumeric(17));
-    doc.put("rid", RandomStringUtils.randomAlphanumeric(17));
-    doc.put("name", RandomStringUtils.randomAlphanumeric(17));
-
-    var user = new LinkedHashMap<>();
-    user.put("_id", chatUserId);
-    user.put("username", username);
-    if (nonNull(name)) {
-      user.put("name", name);
-    }
-
-    doc.put("u", user);
-
-    var json = objectMapper.writeValueAsString(doc);
-
-    return Document.parse(json);
   }
 
   private void givenAnEmptyRocketChatGetSubscriptionsResponse() {

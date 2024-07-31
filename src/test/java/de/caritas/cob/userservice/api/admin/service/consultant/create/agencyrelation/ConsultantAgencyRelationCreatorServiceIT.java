@@ -57,7 +57,7 @@ import org.springframework.test.context.TestPropertySource;
 @TestPropertySource(properties = "spring.profiles.active=testing")
 @AutoConfigureTestDatabase(replace = Replace.ANY)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-public class ConsultantAgencyRelationCreatorServiceIT {
+class ConsultantAgencyRelationCreatorServiceIT {
 
   private final EasyRandom easyRandom = new EasyRandom();
 
@@ -82,7 +82,7 @@ public class ConsultantAgencyRelationCreatorServiceIT {
   @MockBean private ConsultingTypeManager consultingTypeManager;
 
   @Test
-  public void
+  void
       createNewConsultantAgency_Should_addConsultantToEnquiriesRocketChatGroups_When_ParamsAreValid() {
 
     Consultant consultant = createConsultantWithoutAgencyAndSession();
@@ -115,13 +115,6 @@ public class ConsultantAgencyRelationCreatorServiceIT {
                 .addUserToRocketChatGroup(
                     consultant.getRocketChatId(), enquirySessionWithoutConsultant.getGroupId()));
 
-    verifyAsync(
-        (a) ->
-            verify(rocketChatFacade, times(1))
-                .addUserToRocketChatGroup(
-                    consultant.getRocketChatId(),
-                    enquirySessionWithoutConsultant.getFeedbackGroupId()));
-
     List<ConsultantAgency> result =
         this.consultantAgencyRepository.findByConsultantIdAndDeleteDateIsNull(consultant.getId());
 
@@ -130,7 +123,7 @@ public class ConsultantAgencyRelationCreatorServiceIT {
   }
 
   @Test
-  public void
+  void
       createNewConsultantAgency_Should_addConsultantToTeamSessionRocketChatGroups_When_ParamsAreValid() {
 
     Consultant consultant = createConsultantWithoutAgencyAndSession();
@@ -160,10 +153,6 @@ public class ConsultantAgencyRelationCreatorServiceIT {
         .addUserToRocketChatGroup(
             consultant.getRocketChatId(), enquirySessionWithoutConsultant.getGroupId());
 
-    verify(rocketChatFacade, timeout(10000))
-        .addUserToRocketChatGroup(
-            consultant.getRocketChatId(), enquirySessionWithoutConsultant.getFeedbackGroupId());
-
     List<ConsultantAgency> result =
         this.consultantAgencyRepository.findByConsultantIdAndDeleteDateIsNull(consultant.getId());
 
@@ -178,7 +167,7 @@ public class ConsultantAgencyRelationCreatorServiceIT {
   }
 
   @Test
-  public void createNewConsultantAgency_Should_updateKeycloakRoles_When_ParamsAreValid() {
+  void createNewConsultantAgency_Should_updateKeycloakRoles_When_ParamsAreValid() {
     var roleSetName = "peer";
     var createConsultantAgencyDTO = new CreateConsultantAgencyDTO();
     createConsultantAgencyDTO.setAgencyId(15L);
@@ -270,7 +259,7 @@ public class ConsultantAgencyRelationCreatorServiceIT {
   }
 
   @Test
-  public void
+  void
       createConsultantAgencyRelations_Should_throwBadRequestException_When_consultantDoesNotExist() {
     assertThrows(
         BadRequestException.class,
@@ -281,7 +270,7 @@ public class ConsultantAgencyRelationCreatorServiceIT {
   }
 
   @Test
-  public void
+  void
       createNewConsultantAgency_Should_throwBadRequestException_When_consultantHasNotExpectedRole() {
     assertThrows(
         BadRequestException.class,
@@ -297,7 +286,7 @@ public class ConsultantAgencyRelationCreatorServiceIT {
   }
 
   @Test
-  public void
+  void
       createNewConsultantAgency_Should_throwBadRequestException_When_agencyServiceReturnesNullForAgency() {
     assertThrows(
         BadRequestException.class,
@@ -315,7 +304,7 @@ public class ConsultantAgencyRelationCreatorServiceIT {
   }
 
   @Test
-  public void
+  void
       createNewConsultantAgency_Should_throwInternalServerErrorException_When_agencyServiceThrowsAgencyServiceHelperException() {
     assertThrows(
         InternalServerErrorException.class,
@@ -334,7 +323,7 @@ public class ConsultantAgencyRelationCreatorServiceIT {
   }
 
   @Test
-  public void
+  void
       createNewConsultantAgency_Should_throwBadRequestException_When_agencyTypeIsU25AndConsultantHasAnotherConsultingTypeAssigned() {
     assertThrows(
         BadRequestException.class,
@@ -358,7 +347,7 @@ public class ConsultantAgencyRelationCreatorServiceIT {
   }
 
   @Test
-  public void
+  void
       createNewConsultantAgency_Should_throwBadRequestException_When_agencyTypeIsKreuzbundAndConsultantHasAnotherConsultingTypeAssigned() {
     assertThrows(
         BadRequestException.class,
@@ -381,7 +370,7 @@ public class ConsultantAgencyRelationCreatorServiceIT {
   }
 
   @Test
-  public void
+  void
       createConsultantAgencyRelations_Should_throwBadRequestException_When_ConsultantHasNotRequestedRole() {
     final var consultant = createConsultantWithoutAgencyAndSession();
     try {

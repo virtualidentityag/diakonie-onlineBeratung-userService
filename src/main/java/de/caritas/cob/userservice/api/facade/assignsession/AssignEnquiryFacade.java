@@ -129,9 +129,6 @@ public class AssignEnquiryFacade {
     return () -> {
       tenantContextProvider.setCurrentTenantContextIfMissing(currentTenantId);
       updateRocketChatRooms(session.getGroupId(), session, consultant);
-      if (session.hasFeedbackChat()) {
-        updateRocketChatRooms(session.getFeedbackGroupId(), session, consultant);
-      }
       return null;
     };
   }
@@ -140,9 +137,6 @@ public class AssignEnquiryFacade {
     try {
       var memberList = this.rocketChatFacade.retrieveRocketChatMembers(rcGroupId);
       removeUnauthorizedMembers(rcGroupId, session, consultant, memberList);
-      if (session.hasFeedbackChat()) {
-        this.rocketChatFacade.addUserToRocketChatGroup(consultant.getRocketChatId(), rcGroupId);
-      }
       this.rocketChatFacade.removeSystemMessagesFromRocketChatGroup(rcGroupId);
 
     } catch (Exception e) {
@@ -164,9 +158,6 @@ public class AssignEnquiryFacade {
 
     if (rcGroupId.equalsIgnoreCase(session.getGroupId())) {
       rocketChatRemoveFromGroupOperationService.removeFromGroup();
-    }
-    if (rcGroupId.equalsIgnoreCase(session.getFeedbackGroupId())) {
-      rocketChatRemoveFromGroupOperationService.removeFromFeedbackGroup();
     }
   }
 
