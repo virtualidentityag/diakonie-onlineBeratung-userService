@@ -362,11 +362,9 @@ class UserControllerE2EIT {
                 "emailToggles[*].name",
                 containsInAnyOrder(
                     "DAILY_ENQUIRY",
-                    "NEW_CHAT_MESSAGE_FROM_ADVICE_SEEKER",
-                    "NEW_FEEDBACK_MESSAGE_FROM_ADVICE_SEEKER")))
+                    "NEW_CHAT_MESSAGE_FROM_ADVICE_SEEKER")))
         .andExpect(jsonPath("emailToggles[0].state", is(true)))
         .andExpect(jsonPath("emailToggles[1].state", is(true)))
-        .andExpect(jsonPath("emailToggles[2].state", is(true)))
         .andExpect(jsonPath("inTeamAgency", is(consultant.isTeamConsultant())));
   }
 
@@ -484,11 +482,9 @@ class UserControllerE2EIT {
                 "emailToggles[*].name",
                 containsInAnyOrder(
                     "DAILY_ENQUIRY",
-                    "NEW_CHAT_MESSAGE_FROM_ADVICE_SEEKER",
-                    "NEW_FEEDBACK_MESSAGE_FROM_ADVICE_SEEKER")))
+                    "NEW_CHAT_MESSAGE_FROM_ADVICE_SEEKER")))
         .andExpect(jsonPath("emailToggles[0].state", is(true)))
         .andExpect(jsonPath("emailToggles[1].state", is(true)))
-        .andExpect(jsonPath("emailToggles[2].state", is(true)))
         .andExpect(jsonPath("inTeamAgency", is(consultant.isTeamConsultant())));
   }
 
@@ -759,11 +755,9 @@ class UserControllerE2EIT {
                 "emailToggles[*].name",
                 containsInAnyOrder(
                     "DAILY_ENQUIRY",
-                    "NEW_CHAT_MESSAGE_FROM_ADVICE_SEEKER",
-                    "NEW_FEEDBACK_MESSAGE_FROM_ADVICE_SEEKER")))
+                    "NEW_CHAT_MESSAGE_FROM_ADVICE_SEEKER")))
         .andExpect(jsonPath("emailToggles[0].state", is(true)))
         .andExpect(jsonPath("emailToggles[1].state", is(true)))
-        .andExpect(jsonPath("emailToggles[2].state", is(true)))
         .andExpect(jsonPath("inTeamAgency", is(consultant.isTeamConsultant())))
         .andExpect(jsonPath("emailNotifications.emailNotificationsEnabled", is(true)))
         .andExpect(jsonPath("emailNotifications.settings", is(notNullValue())))
@@ -861,7 +855,7 @@ class UserControllerE2EIT {
         .andExpect(
             jsonPath(
                 "emailToggles[?(@.name =~ /NEW_.*_MESSAGE_FROM_ADVICE_SEEKER/)].state",
-                is(List.of(true, true))))
+                is(List.of(true))))
         .andExpect(jsonPath("e2eEncryptionEnabled", is(true)))
         .andExpect(jsonPath("isDisplayNameEditable", is(true)));
   }
@@ -892,7 +886,7 @@ class UserControllerE2EIT {
         .andExpect(
             jsonPath(
                 "emailToggles[?(@.name =~ /NEW_.*_MESSAGE_FROM_ADVICE_SEEKER/)].state",
-                is(List.of(false, false))));
+                is(List.of(false))));
   }
 
   @Test
