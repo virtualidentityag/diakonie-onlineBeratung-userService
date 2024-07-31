@@ -360,9 +360,7 @@ class UserControllerE2EIT {
         .andExpect(
             jsonPath(
                 "emailToggles[*].name",
-                containsInAnyOrder(
-                    "DAILY_ENQUIRY",
-                    "NEW_CHAT_MESSAGE_FROM_ADVICE_SEEKER")))
+                containsInAnyOrder("DAILY_ENQUIRY", "NEW_CHAT_MESSAGE_FROM_ADVICE_SEEKER")))
         .andExpect(jsonPath("emailToggles[0].state", is(true)))
         .andExpect(jsonPath("emailToggles[1].state", is(true)))
         .andExpect(jsonPath("inTeamAgency", is(consultant.isTeamConsultant())));
@@ -480,9 +478,7 @@ class UserControllerE2EIT {
         .andExpect(
             jsonPath(
                 "emailToggles[*].name",
-                containsInAnyOrder(
-                    "DAILY_ENQUIRY",
-                    "NEW_CHAT_MESSAGE_FROM_ADVICE_SEEKER")))
+                containsInAnyOrder("DAILY_ENQUIRY", "NEW_CHAT_MESSAGE_FROM_ADVICE_SEEKER")))
         .andExpect(jsonPath("emailToggles[0].state", is(true)))
         .andExpect(jsonPath("emailToggles[1].state", is(true)))
         .andExpect(jsonPath("inTeamAgency", is(consultant.isTeamConsultant())));
@@ -753,9 +749,7 @@ class UserControllerE2EIT {
         .andExpect(
             jsonPath(
                 "emailToggles[*].name",
-                containsInAnyOrder(
-                    "DAILY_ENQUIRY",
-                    "NEW_CHAT_MESSAGE_FROM_ADVICE_SEEKER")))
+                containsInAnyOrder("DAILY_ENQUIRY", "NEW_CHAT_MESSAGE_FROM_ADVICE_SEEKER")))
         .andExpect(jsonPath("emailToggles[0].state", is(true)))
         .andExpect(jsonPath("emailToggles[1].state", is(true)))
         .andExpect(jsonPath("inTeamAgency", is(consultant.isTeamConsultant())))
