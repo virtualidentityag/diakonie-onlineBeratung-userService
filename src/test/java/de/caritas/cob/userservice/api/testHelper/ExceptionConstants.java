@@ -20,16 +20,9 @@ public class ExceptionConstants {
   public static final CreateEnquiryExceptionInformation CREATE_ENQUIRY_EXCEPTION_PARAMETER =
       CreateEnquiryExceptionInformation.builder()
           .rcGroupId(TestConstants.RC_GROUP_ID)
-          .rcFeedbackGroupId(TestConstants.RC_FEEDBACK_GROUP_ID)
           .session(TestConstants.SESSION)
           .build();
 
-  /*
-   * Rocket.Chat exceptions
-   *
-   */
-  public static final RocketChatCreateGroupException RC_CREATE_GROUP_EXCEPTION =
-      new RocketChatCreateGroupException(new Exception());
   public static final RocketChatPostMessageException RC_POST_MESSAGE_EXCEPTION =
       new RocketChatPostMessageException(TestConstants.MESSAGE, CREATE_ENQUIRY_EXCEPTION_PARAMETER);
   public static final RocketChatRemoveSystemMessagesException

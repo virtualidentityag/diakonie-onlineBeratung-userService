@@ -16,7 +16,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
@@ -28,7 +27,6 @@ import static org.springframework.test.util.ReflectionTestUtils.getField;
 import de.caritas.cob.userservice.api.adapters.keycloak.KeycloakService;
 import de.caritas.cob.userservice.api.adapters.rocketchat.RocketChatService;
 import de.caritas.cob.userservice.api.adapters.rocketchat.dto.group.GroupMemberDTO;
-import de.caritas.cob.userservice.api.exception.CreateEnquiryException;
 import de.caritas.cob.userservice.api.exception.httpresponses.InternalServerErrorException;
 import de.caritas.cob.userservice.api.facade.CreateEnquiryMessageFacade;
 import de.caritas.cob.userservice.api.facade.EmailNotificationFacade;
@@ -64,14 +62,10 @@ class AssignSessionFacadeTest {
   @InjectMocks AssignSessionFacade assignSessionFacade;
   @Mock RocketChatFacade rocketChatFacade;
   @Mock ConsultingTypeManager consultingTypeManager;
-  @Mock RocketChatService rocketChatService;
-  @Mock CreateEnquiryMessageFacade createEnquiryMessageFacade;
 
   @Mock
   @SuppressWarnings("unused")
   KeycloakService keycloakService;
-
-  @Mock LogService logService;
   @Mock EmailNotificationFacade emailNotificationFacade;
   @Mock AuthenticatedUser authenticatedUser;
   @Mock SessionToConsultantVerifier sessionToConsultantVerifier;
@@ -156,37 +150,6 @@ class AssignSessionFacadeTest {
                 .removeUserFromGroup(consultantToRemove.getRocketChatId(), session.getGroupId()));
     verify(this.emailNotificationFacade, times(1))
         .sendAssignEnquiryEmailNotification(any(), any(), any(), any());
-  }
-
-  @Test
-  void assignSession_Should_DeleteOldFeedbackChat_When_ItExists() throws CreateEnquiryException {
-    Session session = easyRandom.nextObject(Session.class);
-    session.setTeamSession(false);
-    session.setStatus(SessionStatus.NEW);
-    session.setConsultant(null);
-    session.getUser().setRcUserId("userRcId");
-    session.setRegistrationType(RegistrationType.REGISTERED);
-    session.setAgencyId(1L);
-    ConsultantAgency consultantAgency = easyRandom.nextObject(ConsultantAgency.class);
-    consultantAgency.setAgencyId(1L);
-    Consultant consultant = easyRandom.nextObject(Consultant.class);
-    consultant.setConsultantAgencies(asSet(consultantAgency));
-    consultant.setRocketChatId("newConsultantRcId");
-    Consultant consultantToRemove = easyRandom.nextObject(Consultant.class);
-    consultantToRemove.setRocketChatId("otherRcId");
-    when(this.authenticatedUser.getUserId()).thenReturn("authenticatedUserId");
-    ExtendedConsultingTypeResponseDTO extendedConsultingTypeResponseDTO =
-        new ExtendedConsultingTypeResponseDTO();
-    extendedConsultingTypeResponseDTO.setInitializeFeedbackChat(true);
-    when(consultingTypeManager.getConsultingTypeSettings(anyInt()))
-        .thenReturn(extendedConsultingTypeResponseDTO);
-    when(createEnquiryMessageFacade.createRcFeedbackGroup(
-            eq(session), eq(session.getGroupId()), any()))
-        .thenReturn("newFeedbackGroupId");
-
-    this.assignSessionFacade.assignSession(session, consultant, CONSULTANT);
-
-    verify(rocketChatService, times(1)).deleteGroupAsSystemUser("oldFeedbackGroupId");
   }
 
   @Test

@@ -1045,7 +1045,6 @@ class CreateEnquiryMessageFacadeTest {
     CreateEnquiryExceptionInformation createEnquiryExceptionInformation =
         CreateEnquiryExceptionInformation.builder()
             .rcGroupId(GROUP_RESPONSE_DTO.getGroup().getId())
-            .rcFeedbackGroupId(FEEDBACK_GROUP_RESPONSE_DTO_2.getGroup().getId())
             .session(SESSION_WITHOUT_CONSULTANT)
             .build();
     RocketChatPostWelcomeMessageException rocketChatPostWelcomeMessageException =
@@ -1089,7 +1088,6 @@ class CreateEnquiryMessageFacadeTest {
     CreateEnquiryExceptionInformation createEnquiryExceptionInformation =
         CreateEnquiryExceptionInformation.builder()
             .rcGroupId(GROUP_RESPONSE_DTO.getGroup().getId())
-            .rcFeedbackGroupId(FEEDBACK_GROUP_RESPONSE_DTO_2.getGroup().getId())
             .session(SESSION_WITHOUT_CONSULTANT)
             .build();
     RocketChatPostMessageException rocketChatPostMessageException =

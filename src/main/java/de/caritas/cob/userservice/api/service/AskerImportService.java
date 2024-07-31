@@ -433,43 +433,6 @@ public class AskerImportService {
         List<ConsultantAgency> agencyList =
             consultantAgencyService.findConsultantsByAgencyId(record.getAgencyId());
 
-        // Create feedback group and add consultants if enabled for this agency/consulting type
-        if (extendedConsultingTypeResponseDTO.getInitializeFeedbackChat().booleanValue()) {
-          String rcFeedbackGroupId =
-              rocketChatService
-                  .createPrivateGroupWithSystemUser(
-                      rocketChatRoomNameGenerator.generateFeedbackGroupName(session))
-                  .get()
-                  .getGroup()
-                  .getId();
-          if (rcFeedbackGroupId == null || rcFeedbackGroupId.equals(StringUtils.EMPTY)) {
-            throw new ImportException(
-                String.format(
-                    "Could not create Rocket.Chat feedback group for user %s",
-                    record.getUsername()));
-          }
-
-          // Add the assigned consultant and all consultants of the session's agency to the feedback
-          // group that have the right to view all feedback sessions
-          for (ConsultantAgency agency : agencyList) {
-            if (agency.getConsultant().getId().equals(record.getConsultantId())) {
-              rocketChatService.addUserToGroup(
-                  agency.getConsultant().getRocketChatId(), rcFeedbackGroupId);
-            }
-          }
-
-          // Remove all system messages from feedback group
-          try {
-            rocketChatService.removeSystemMessages(
-                rcFeedbackGroupId, nowInUtc().minusHours(Helper.ONE_DAY_IN_HOURS), nowInUtc());
-          } catch (RocketChatRemoveSystemMessagesException e) {
-            throw new ImportException(
-                String.format(
-                    "Could not remove system messages from feedback group id %s for user %s",
-                    rcFeedbackGroupId, record.getUsername()));
-          }
-        }
-
         // Update session data by Rocket.Chat group id and consultant id
         session.setConsultant(consultant.get());
         session.setGroupId(rcGroupId);
