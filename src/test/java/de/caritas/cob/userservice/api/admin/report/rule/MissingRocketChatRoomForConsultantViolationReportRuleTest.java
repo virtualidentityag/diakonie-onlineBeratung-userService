@@ -67,7 +67,8 @@ class MissingRocketChatRoomForConsultantViolationReportRuleTest {
     assertThat(resultViolation.getIdentifier(), is(violatedSession.getConsultant().getId()));
     assertThat(resultViolation.getViolationType(), is(CONSULTANT));
     assertThat(
-        resultViolation.getReason(), is("Missing room with id " + violatedSession.getGroupId()));
+        resultViolation.getReason(),
+        is("Missing room with id " + violatedSession.getGroupId() + " in rocket chat"));
   }
 
   @Test
