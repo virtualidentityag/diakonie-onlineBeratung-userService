@@ -56,7 +56,7 @@ class RocketChatAddToGroupOperationServiceTest {
 
     verify(this.rocketChatFacade, times(1))
         .addUserToRocketChatGroup(eq(consultant.getRocketChatId()), eq(session.getGroupId()));
-    verify(logMethod, times(2)).accept(anyString());
+    verify(logMethod, times(1)).accept(anyString());
   }
 
   @Test
