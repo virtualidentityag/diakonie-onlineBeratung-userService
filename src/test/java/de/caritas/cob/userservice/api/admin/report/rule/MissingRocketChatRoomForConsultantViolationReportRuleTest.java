@@ -79,9 +79,7 @@ class MissingRocketChatRoomForConsultantViolationReportRuleTest {
     violatedConsultant.setSessions(singleton(violatedSession));
     UserInfoResponseDTO userInfoResponseDTO =
         new EasyRandom().nextObject(UserInfoResponseDTO.class);
-    userInfoResponseDTO
-        .getUser()
-        .setRooms(singletonList(new UserRoomDTO(violatedSession.getGroupId())));
+    userInfoResponseDTO.getUser().setRooms(singletonList(new UserRoomDTO("A")));
 
     when(this.consultantRepository.findAll()).thenReturn(singletonList(violatedConsultant));
     when(this.sessionRepository.findByConsultantAndStatus(any(), any()))
