@@ -24,6 +24,7 @@ import de.caritas.cob.userservice.api.adapters.web.dto.*;
 import de.caritas.cob.userservice.api.adapters.web.dto.validation.MandatoryFieldsProvider;
 import de.caritas.cob.userservice.api.adapters.web.mapping.ConsultantDtoMapper;
 import de.caritas.cob.userservice.api.adapters.web.mapping.UserDtoMapper;
+import de.caritas.cob.userservice.api.admin.facade.AdminUserFacade;
 import de.caritas.cob.userservice.api.admin.service.consultant.update.ConsultantUpdateService;
 import de.caritas.cob.userservice.api.config.VideoChatConfig;
 import de.caritas.cob.userservice.api.config.auth.Authority;
@@ -338,6 +339,8 @@ class UserControllerIT {
   @MockBean
   @SuppressWarnings("unused")
   private VideoChatConfig videoChatConfig;
+
+  @MockBean private AdminUserFacade adminUserFacade;
 
   @MockBean private SessionDeleteService sessionDeleteService;
 

@@ -31,6 +31,7 @@ public class ConsultingTypeManagerTestConfig {
 
       private ExtendedConsultingTypeResponseDTO createDummy(Integer consultingTypeId) {
         var dummy = new EasyRandom().nextObject(ExtendedConsultingTypeResponseDTO.class);
+        dummy.welcomeMessage(null);
         if (initializeFeedbackChat.isPresent()) {
           dummy.initializeFeedbackChat(false);
         }

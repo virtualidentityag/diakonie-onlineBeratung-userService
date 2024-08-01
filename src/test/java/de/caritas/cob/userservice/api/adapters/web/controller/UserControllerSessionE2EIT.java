@@ -646,20 +646,12 @@ class UserControllerSessionE2EIT {
         .andExpect(jsonPath("sessions[0].consultant.firstName", is("Manfred")))
         .andExpect(jsonPath("sessions[0].consultant.lastName", is("Main")))
         .andExpect(jsonPath("sessions[0].consultant.username").doesNotExist())
-        .andExpect(jsonPath("sessions[1].session.feedbackGroupId", is("4SPkApB8So88c7tQ3")))
-        .andExpect(jsonPath("sessions[1].session.feedbackRead", is(true)))
-        .andExpect(jsonPath("sessions[1].user.username", is("u25depp")))
-        .andExpect(
-            jsonPath("sessions[1].consultant.id", is("bad14912-cf9f-4c16-9d0e-fe8ede9b60dc")))
-        .andExpect(jsonPath("sessions[1].consultant.firstName", is("Manfred")))
-        .andExpect(jsonPath("sessions[1].consultant.lastName", is("Main")))
-        .andExpect(jsonPath("sessions[1].consultant.username").doesNotExist())
-        .andExpect(jsonPath("sessions", hasSize(2)));
+        .andExpect(jsonPath("sessions", hasSize(1)));
   }
 
   @Test
   @WithMockUser(authorities = {AuthorityValue.USER_DEFAULT})
-  void getSessionsForGroupOrFeedbackGroupIdsShouldFindSessionByGroupId() throws Exception {
+  void getSessionsForGroupIdsShouldFindSessionByGroupId() throws Exception {
     givenAUserWithSessions();
     givenNoRocketChatSubscriptionUpdates();
     givenNoRocketChatRoomUpdates();
@@ -679,8 +671,7 @@ class UserControllerSessionE2EIT {
 
   @Test
   @WithMockUser(authorities = {AuthorityValue.USER_DEFAULT})
-  void getSessionsForGroupOrFeedbackGroupIdsShouldContainConsultantOfUserSession()
-      throws Exception {
+  void getSessionsForGroupIdsShouldContainConsultantOfUserSession() throws Exception {
     givenAUserWithSessions();
     givenNoRocketChatSubscriptionUpdates();
     givenNoRocketChatRoomUpdates();
@@ -706,7 +697,7 @@ class UserControllerSessionE2EIT {
   @WithMockUser(authorities = {AuthorityValue.CONSULTANT_DEFAULT})
   @ValueSource(strings = {"QBv2xym9qQ2DoAxkR", "doesNotExist", "mzAdWzQEobJ2PkoxP"})
   void
-      getSessionsForGroupOrFeedbackGroupIdsShouldBeNoContentIfConsultantDoesNotParticipateInSessionOrNoSessionsFoundForIdsOrNewEnquiriesForConsultantsNotInAgency(
+      getSessionsForGroupIdsShouldBeNoContentIfConsultantDoesNotParticipateInSessionOrNoSessionsFoundForIdsOrNewEnquiriesForConsultantsNotInAgency(
           String rcGroupId) throws Exception {
     givenAConsultantWithSessions();
     givenNoRocketChatSubscriptionUpdates();
@@ -724,9 +715,8 @@ class UserControllerSessionE2EIT {
 
   @Test
   @WithMockUser(authorities = {AuthorityValue.CONSULTANT_DEFAULT})
-  void
-      getSessionsForGroupOrFeedbackGroupIdsShouldReturnSessionsForNewEnquiriesOfConsultantInAgency()
-          throws Exception {
+  void getSessionsForGroupIdsShouldReturnSessionsForNewEnquiriesOfConsultantInAgency()
+      throws Exception {
     givenAConsultantWithSessionsOfNewEnquiries();
     givenNoRocketChatSubscriptionUpdates();
     givenNoRocketChatRoomUpdates();
