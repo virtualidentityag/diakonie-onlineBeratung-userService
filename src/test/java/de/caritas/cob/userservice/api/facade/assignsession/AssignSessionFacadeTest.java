@@ -31,6 +31,7 @@ import de.caritas.cob.userservice.api.model.ConsultantAgency;
 import de.caritas.cob.userservice.api.model.Session;
 import de.caritas.cob.userservice.api.model.Session.RegistrationType;
 import de.caritas.cob.userservice.api.model.Session.SessionStatus;
+import de.caritas.cob.userservice.api.service.session.SessionService;
 import de.caritas.cob.userservice.api.service.statistics.StatisticsService;
 import de.caritas.cob.userservice.api.service.statistics.event.AssignSessionStatisticsEvent;
 import de.caritas.cob.userservice.consultingtypeservice.generated.web.model.ExtendedConsultingTypeResponseDTO;
@@ -54,6 +55,8 @@ class AssignSessionFacadeTest {
   @InjectMocks AssignSessionFacade assignSessionFacade;
   @Mock RocketChatFacade rocketChatFacade;
   @Mock ConsultingTypeManager consultingTypeManager;
+
+  @Mock SessionService sessionService;
 
   @Mock
   @SuppressWarnings("unused")
@@ -94,8 +97,6 @@ class AssignSessionFacadeTest {
     ExtendedConsultingTypeResponseDTO extendedConsultingTypeResponseDTO =
         new ExtendedConsultingTypeResponseDTO();
     extendedConsultingTypeResponseDTO.setInitializeFeedbackChat(true);
-    when(consultingTypeManager.getConsultingTypeSettings(anyInt()))
-        .thenReturn(extendedConsultingTypeResponseDTO);
     var consultantToKeep = easyRandom.nextObject(Consultant.class);
 
     assignSessionFacade.assignSession(session, consultant, consultantToKeep);
@@ -198,8 +199,6 @@ class AssignSessionFacadeTest {
     ExtendedConsultingTypeResponseDTO extendedConsultingTypeResponseDTO =
         new ExtendedConsultingTypeResponseDTO();
     extendedConsultingTypeResponseDTO.setInitializeFeedbackChat(true);
-    when(consultingTypeManager.getConsultingTypeSettings(anyInt()))
-        .thenReturn(extendedConsultingTypeResponseDTO);
     when(httpServletRequest.getRequestURI()).thenReturn(RandomStringUtils.randomAlphanumeric(32));
     when(httpServletRequest.getHeader("Referer"))
         .thenReturn(RandomStringUtils.randomAlphanumeric(32));
@@ -246,8 +245,6 @@ class AssignSessionFacadeTest {
     when(authenticatedUser.getUserId()).thenReturn("authenticatedUserId");
     var extendedConsultingTypeResponseDTO = new ExtendedConsultingTypeResponseDTO();
     extendedConsultingTypeResponseDTO.setInitializeFeedbackChat(true);
-    when(consultingTypeManager.getConsultingTypeSettings(anyInt()))
-        .thenReturn(extendedConsultingTypeResponseDTO);
 
     assignSessionFacade.assignSession(session, consultant, CONSULTANT);
 

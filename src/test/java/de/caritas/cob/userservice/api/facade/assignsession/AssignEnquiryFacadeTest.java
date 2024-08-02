@@ -37,9 +37,11 @@ import de.caritas.cob.userservice.api.model.Session.RegistrationType;
 import de.caritas.cob.userservice.api.model.Session.SessionStatus;
 import de.caritas.cob.userservice.api.service.LogService;
 import de.caritas.cob.userservice.api.service.session.SessionService;
+import de.caritas.cob.userservice.api.service.statistics.StatisticsService;
 import de.caritas.cob.userservice.api.tenant.TenantContext;
 import de.caritas.cob.userservice.api.tenant.TenantContextProvider;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -71,6 +73,8 @@ class AssignEnquiryFacadeTest {
   @Mock Logger logger;
   @Mock UnauthorizedMembersProvider unauthorizedMembersProvider;
   @Mock TenantContextProvider tenantContextProvider;
+  @Mock StatisticsService statisticsService;
+  @Mock HttpServletRequest httpServletRequest;
 
   @BeforeEach
   public void setup() {
