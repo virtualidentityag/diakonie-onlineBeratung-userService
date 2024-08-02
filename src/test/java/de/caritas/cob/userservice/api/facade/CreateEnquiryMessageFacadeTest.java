@@ -704,7 +704,7 @@ class CreateEnquiryMessageFacadeTest {
           when(rocketChatRoomNameGenerator.generateGroupName(any(Session.class)))
               .thenReturn(session.getId().toString());
           when(rocketChatService.createPrivateGroup(anyString(), any()))
-              .thenReturn(Optional.of(groupResponseDTO));
+              .thenThrow(RocketChatCreateGroupException.class);
 
           createEnquiryMessageFacade.createEnquiryMessage(
               new EnquiryData(user, SESSION_ID, MESSAGE, null, rocketChatCredentials));
@@ -739,6 +739,9 @@ class CreateEnquiryMessageFacadeTest {
               .thenReturn(session.getId().toString());
           when(rocketChatService.createPrivateGroup(anyString(), any()))
               .thenReturn(Optional.of(groupResponseDTO));
+          doThrow(IllegalArgumentException.class)
+              .when(userService)
+              .updateRocketChatIdInDatabase(any(), anyString());
 
           createEnquiryMessageFacade.createEnquiryMessage(
               new EnquiryData(user, SESSION_ID, MESSAGE, null, rocketChatCredentials));
@@ -772,6 +775,7 @@ class CreateEnquiryMessageFacadeTest {
               .thenReturn(session.getId().toString());
           when(rocketChatService.createPrivateGroup(Mockito.anyString(), any()))
               .thenReturn(Optional.of(groupResponseDTO));
+          when(sessionService.saveSession(any())).thenThrow(InternalServerErrorException.class);
           createEnquiryMessageFacade.createEnquiryMessage(
               new EnquiryData(user, SESSION_ID, MESSAGE, null, rocketChatCredentials));
           resetRequestAttributes();
