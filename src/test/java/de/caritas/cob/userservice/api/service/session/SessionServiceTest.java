@@ -71,6 +71,7 @@ import de.caritas.cob.userservice.api.port.out.SessionRepository;
 import de.caritas.cob.userservice.api.service.ConsultantService;
 import de.caritas.cob.userservice.api.service.LogService;
 import de.caritas.cob.userservice.api.service.agency.AgencyService;
+import de.caritas.cob.userservice.api.service.user.UserService;
 import de.caritas.cob.userservice.api.testHelper.TestConstants;
 import de.caritas.cob.userservice.consultingtypeservice.generated.web.model.ExtendedConsultingTypeResponseDTO;
 import java.util.ArrayList;
@@ -207,6 +208,7 @@ class SessionServiceTest {
   @Mock private Logger logger;
   @Mock private ConsultantService consultantService;
   @Mock private ConsultingTypeManager consultingTypeManager;
+  @Mock UserService userService;
 
   private final EasyRandom easyRandom = new EasyRandom();
 
