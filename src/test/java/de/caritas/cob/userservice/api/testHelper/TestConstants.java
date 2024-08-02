@@ -17,6 +17,7 @@ import de.caritas.cob.userservice.api.adapters.rocketchat.dto.message.attachment
 import de.caritas.cob.userservice.api.adapters.rocketchat.dto.message.attachment.FileDTO;
 import de.caritas.cob.userservice.api.adapters.rocketchat.dto.room.RoomsLastMessageDTO;
 import de.caritas.cob.userservice.api.adapters.rocketchat.dto.room.RoomsUpdateDTO;
+import de.caritas.cob.userservice.api.adapters.rocketchat.dto.subscriptions.SubscriptionsUpdateDTO;
 import de.caritas.cob.userservice.api.adapters.rocketchat.dto.user.RocketChatUserDTO;
 import de.caritas.cob.userservice.api.adapters.rocketchat.dto.user.UserInfoResponseDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.AbsenceDTO;
@@ -168,6 +169,60 @@ public class TestConstants {
       new ResponseEntity<>(LOGIN_RESPONSE_DTO, HttpStatus.OK);
   public static final ResponseEntity<LoginResponseDTO> LOGIN_RESPONSE_ENTITY_OK_NO_TOKEN =
       new ResponseEntity<>(LOGIN_RESPONSE_DTO_NO_TOKEN, HttpStatus.OK);
+
+  public static final List<SubscriptionsUpdateDTO> SUBSCRIPTIONS_UPDATE_LIST_DTO =
+      Arrays.asList(
+          new SubscriptionsUpdateDTO(
+              "A",
+              true,
+              false,
+              0,
+              0,
+              0,
+              NOW,
+              RC_GROUP_ID,
+              "A",
+              "A",
+              "P",
+              null,
+              null,
+              null,
+              null,
+              null),
+          new SubscriptionsUpdateDTO(
+              "A",
+              true,
+              false,
+              0,
+              0,
+              0,
+              NOW,
+              RC_GROUP_ID_2,
+              "A",
+              "A",
+              "P",
+              null,
+              null,
+              null,
+              null,
+              null),
+          new SubscriptionsUpdateDTO(
+              "A",
+              true,
+              false,
+              0,
+              0,
+              0,
+              NOW,
+              RC_GROUP_ID_3,
+              "A",
+              "A",
+              "P",
+              null,
+              null,
+              null,
+              null,
+              null));
   /** Rocket.Chat credentials */
   public static final String TECHNICAL_USER_A_USERNAME = "techUserAName";
 

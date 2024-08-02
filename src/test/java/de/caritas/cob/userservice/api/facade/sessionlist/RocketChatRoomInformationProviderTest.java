@@ -7,6 +7,7 @@ import static de.caritas.cob.userservice.api.testHelper.TestConstants.RC_GROUP_I
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.RC_GROUP_ID_3;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.ROOMS_LAST_MESSAGE_DTO_MAP;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.ROOMS_UPDATE_DTO_LIST;
+import static de.caritas.cob.userservice.api.testHelper.TestConstants.SUBSCRIPTIONS_UPDATE_LIST_DTO;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.USERS_ROOMS_LIST;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.USER_DTO_3;
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,6 +36,8 @@ class RocketChatRoomInformationProviderTest {
   @Test
   void retrieveRocketChatInformation_Should_Return_CorrectMessagesReadMap() {
 
+    when(rocketChatService.getSubscriptionsOfUser(RC_CREDENTIALS))
+        .thenReturn(SUBSCRIPTIONS_UPDATE_LIST_DTO);
     RocketChatRoomInformation rocketChatRoomInformation =
         rocketChatRoomInformationProvider.retrieveRocketChatInformation(RC_CREDENTIALS);
 
