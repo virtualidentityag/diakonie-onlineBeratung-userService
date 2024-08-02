@@ -55,6 +55,9 @@ public class EmailNotificationFacade {
   @Value("${app.base.url}")
   private String applicationBaseUrl;
 
+  @Value("${rocket.systemuser.id}")
+  private String rocketChatSystemUserId;
+
   private final @NonNull MailService mailService;
   private final @NonNull SessionService sessionService;
   private final @NonNull ConsultantAgencyService consultantAgencyService;

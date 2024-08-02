@@ -36,6 +36,7 @@ import static org.powermock.reflect.Whitebox.setInternalState;
 import com.google.api.client.util.Lists;
 import com.neovisionaries.i18n.LanguageCode;
 import de.caritas.cob.userservice.api.adapters.keycloak.KeycloakService;
+import de.caritas.cob.userservice.api.adapters.rocketchat.RocketChatService;
 import de.caritas.cob.userservice.api.adapters.web.dto.NotificationsSettingsDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.ReassignmentNotificationDTO;
 import de.caritas.cob.userservice.api.config.auth.UserRole;
@@ -58,8 +59,8 @@ import de.caritas.cob.userservice.api.service.consultingtype.ReleaseToggleServic
 import de.caritas.cob.userservice.api.service.emailsupplier.AssignEnquiryEmailSupplier;
 import de.caritas.cob.userservice.api.service.emailsupplier.NewDirectEnquiryEmailSupplier;
 import de.caritas.cob.userservice.api.service.emailsupplier.NewEnquiryEmailSupplier;
-import de.caritas.cob.userservice.api.service.emailsupplier.NewFeedbackEmailSupplier;
 import de.caritas.cob.userservice.api.service.emailsupplier.NewMessageEmailSupplier;
+import de.caritas.cob.userservice.api.service.emailsupplier.TenantTemplateSupplier;
 import de.caritas.cob.userservice.api.service.helper.MailService;
 import de.caritas.cob.userservice.api.service.session.SessionService;
 import de.caritas.cob.userservice.api.tenant.TenantContext;
@@ -322,7 +323,6 @@ class EmailNotificationFacadeTest {
                   new WelcomeMessageDTO().sendWelcomeMessage(false).welcomeMessageText(null))
               .sendFurtherStepsMessage(false)
               .sessionDataInitializing(null)
-              .initializeFeedbackChat(false)
               .notifications(NOTIFICATIONS_DTO_TO_ALL_TEAM_CONSULTANTS)
               .languageFormal(false)
               .roles(null)
@@ -338,7 +338,6 @@ class EmailNotificationFacadeTest {
                   new WelcomeMessageDTO().sendWelcomeMessage(false).welcomeMessageText(null))
               .sendFurtherStepsMessage(false)
               .sessionDataInitializing(null)
-              .initializeFeedbackChat(false)
               .notifications(NOTIFICATIONS_DTO_TO_ASSIGNED_CONSULTANT_ONLY)
               .languageFormal(false)
               .roles(null)
@@ -361,6 +360,8 @@ class EmailNotificationFacadeTest {
   @Mock ConsultingTypeManager consultingTypeManager;
   @Mock IdentityClientConfig identityClientConfig;
   @Mock ReleaseToggleService releaseToggleService;
+  @Mock RocketChatService messageClient;
+  @Mock TenantTemplateSupplier tenantTemplateSupplier;
 
   @Mock
   @SuppressWarnings("unused")
@@ -379,7 +380,6 @@ class EmailNotificationFacadeTest {
         assignEnquiryEmailSupplier, "consultantService", consultantService);
     setInternalState(EmailNotificationFacade.class, "log", logger);
     setInternalState(AssignEnquiryEmailSupplier.class, "log", logger);
-    setInternalState(NewFeedbackEmailSupplier.class, "log", logger);
     setInternalState(NewMessageEmailSupplier.class, "log", logger);
     when(releaseToggleService.isToggleEnabled(ReleaseToggle.NEW_EMAIL_NOTIFICATIONS))
         .thenReturn(false);
