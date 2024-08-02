@@ -149,8 +149,6 @@ class AssignSessionFacadeTest {
     ExtendedConsultingTypeResponseDTO extendedConsultingTypeResponseDTO =
         new ExtendedConsultingTypeResponseDTO();
     extendedConsultingTypeResponseDTO.setInitializeFeedbackChat(true);
-    when(consultingTypeManager.getConsultingTypeSettings(anyInt()))
-        .thenReturn(extendedConsultingTypeResponseDTO);
     var consultantToKeep = easyRandom.nextObject(Consultant.class);
 
     assignSessionFacade.assignSession(session, consultant, consultantToKeep);
