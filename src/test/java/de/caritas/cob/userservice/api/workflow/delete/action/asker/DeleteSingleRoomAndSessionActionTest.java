@@ -63,7 +63,7 @@ class DeleteSingleRoomAndSessionActionTest {
 
     assertThat(workflowErrors, hasSize(0));
     verifyNoMoreInteractions(this.logger);
-    verify(this.rocketChatService, times(2)).deleteGroupAsTechnicalUser(any());
+    verify(this.rocketChatService, times(1)).deleteGroupAsTechnicalUser(any());
     verify(this.sessionDataRepository, times(1)).findBySessionId(session.getId());
     verify(this.sessionDataRepository, times(1)).deleteAll(any());
     verify(this.sessionRepository, times(1)).delete(session);
@@ -84,8 +84,8 @@ class DeleteSingleRoomAndSessionActionTest {
     this.deleteSingleRoomAndSessionAction.execute(workflowDTO);
     List<DeletionWorkflowError> workflowErrors = workflowDTO.getDeletionWorkflowErrors();
 
-    assertThat(workflowErrors, hasSize(4));
-    verify(logger, times(4)).error(anyString(), any(Exception.class));
+    assertThat(workflowErrors, hasSize(3));
+    verify(logger, times(3)).error(anyString(), any(Exception.class));
   }
 
   @Test
@@ -100,17 +100,13 @@ class DeleteSingleRoomAndSessionActionTest {
     this.deleteSingleRoomAndSessionAction.execute(workflowDTO);
     List<DeletionWorkflowError> workflowErrors = workflowDTO.getDeletionWorkflowErrors();
 
-    assertThat(workflowErrors, hasSize(2));
-    verify(logger, times(2)).error(anyString(), any(RocketChatDeleteGroupException.class));
+    assertThat(workflowErrors, hasSize(1));
+    verify(logger, times(1)).error(anyString(), any(RocketChatDeleteGroupException.class));
     assertThat(workflowErrors.get(0).getDeletionSourceType(), is(ASKER));
     assertThat(workflowErrors.get(0).getDeletionTargetType(), is(ROCKET_CHAT));
     assertThat(workflowErrors.get(0).getIdentifier(), is(session.getGroupId()));
     assertThat(workflowErrors.get(0).getReason(), is("Deletion of Rocket.Chat group failed"));
     assertThat(workflowErrors.get(0).getTimestamp(), notNullValue());
-    assertThat(workflowErrors.get(1).getDeletionSourceType(), is(ASKER));
-    assertThat(workflowErrors.get(1).getDeletionTargetType(), is(ROCKET_CHAT));
-    assertThat(workflowErrors.get(1).getReason(), is("Deletion of Rocket.Chat group failed"));
-    assertThat(workflowErrors.get(1).getTimestamp(), notNullValue());
   }
 
   @Test
