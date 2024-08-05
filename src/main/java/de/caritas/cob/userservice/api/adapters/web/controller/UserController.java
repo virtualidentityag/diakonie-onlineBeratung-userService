@@ -337,7 +337,7 @@ public class UserController implements UsersApi {
 
   /**
    * Returns a list of sessions for the currently authenticated/logged in user and given RocketChat
-   * group, or feedback group IDs.
+   * group IDs.
    *
    * @param rcToken Rocket.Chat token (required)
    * @return {@link ResponseEntity} of {@link UserSessionListResponseDTO}
