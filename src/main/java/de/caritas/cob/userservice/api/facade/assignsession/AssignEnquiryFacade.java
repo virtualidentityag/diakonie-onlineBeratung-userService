@@ -50,7 +50,6 @@ public class AssignEnquiryFacade {
   /**
    * Assigns the given {@link Session} session to the given {@link Consultant}. Remove all other
    * consultants from the Rocket.Chat group which don't have the right to view this session anymore.
-   * Furthermore add the given {@link Consultant} to the feedback group if needed.
    *
    * <p>If the statistics function is enabled, the assignment of the enquired is processed as
    * statistical event.
