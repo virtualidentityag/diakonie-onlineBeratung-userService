@@ -33,7 +33,6 @@ import de.caritas.cob.userservice.api.model.Session.SessionStatus;
 import de.caritas.cob.userservice.api.service.session.SessionService;
 import de.caritas.cob.userservice.api.service.statistics.StatisticsService;
 import de.caritas.cob.userservice.api.service.statistics.event.AssignSessionStatisticsEvent;
-import de.caritas.cob.userservice.consultingtypeservice.generated.web.model.ExtendedConsultingTypeResponseDTO;
 import de.caritas.cob.userservice.statisticsservice.generated.web.model.UserRole;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -93,9 +92,6 @@ class AssignSessionFacadeTest {
     when(this.authenticatedUser.getUserId()).thenReturn("authenticatedUserId");
     when(unauthorizedMembersProvider.obtainConsultantsToRemove(any(), any(), any(), any(), any()))
         .thenReturn(List.of(consultantToRemove));
-    ExtendedConsultingTypeResponseDTO extendedConsultingTypeResponseDTO =
-        new ExtendedConsultingTypeResponseDTO();
-    extendedConsultingTypeResponseDTO.setInitializeFeedbackChat(true);
     var consultantToKeep = easyRandom.nextObject(Consultant.class);
 
     assignSessionFacade.assignSession(session, consultant, consultantToKeep);
@@ -145,9 +141,6 @@ class AssignSessionFacadeTest {
     when(this.authenticatedUser.getUserId()).thenReturn("authenticatedUserId");
     when(unauthorizedMembersProvider.obtainConsultantsToRemove(any(), any(), any(), any(), any()))
         .thenReturn(List.of(consultantToRemove));
-    ExtendedConsultingTypeResponseDTO extendedConsultingTypeResponseDTO =
-        new ExtendedConsultingTypeResponseDTO();
-    extendedConsultingTypeResponseDTO.setInitializeFeedbackChat(true);
     var consultantToKeep = easyRandom.nextObject(Consultant.class);
 
     assignSessionFacade.assignSession(session, consultant, consultantToKeep);
@@ -193,9 +186,6 @@ class AssignSessionFacadeTest {
     Consultant consultantToRemove = easyRandom.nextObject(Consultant.class);
     consultantToRemove.setRocketChatId("otherRcId");
     when(this.authenticatedUser.getUserId()).thenReturn("authenticatedUserId");
-    ExtendedConsultingTypeResponseDTO extendedConsultingTypeResponseDTO =
-        new ExtendedConsultingTypeResponseDTO();
-    extendedConsultingTypeResponseDTO.setInitializeFeedbackChat(true);
     when(httpServletRequest.getRequestURI()).thenReturn(RandomStringUtils.randomAlphanumeric(32));
     when(httpServletRequest.getHeader("Referer"))
         .thenReturn(RandomStringUtils.randomAlphanumeric(32));
@@ -240,8 +230,6 @@ class AssignSessionFacadeTest {
     consultantToRemove.setRocketChatId("otherRcId");
 
     when(authenticatedUser.getUserId()).thenReturn("authenticatedUserId");
-    var extendedConsultingTypeResponseDTO = new ExtendedConsultingTypeResponseDTO();
-    extendedConsultingTypeResponseDTO.setInitializeFeedbackChat(true);
 
     assignSessionFacade.assignSession(session, consultant, CONSULTANT);
 

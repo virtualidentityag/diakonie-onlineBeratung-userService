@@ -450,13 +450,9 @@ public class AskerImportService {
         if (isTrue(agencyDTO.getTeamAgency())) {
           if (agencyList != null) {
             for (ConsultantAgency agency : agencyList) {
-              // If feedback chat enabled add all main consultants and the assigned consultant. If
-              // it is a "normal" team session add all consultants.
-              if (extendedConsultingTypeResponseDTO.getInitializeFeedbackChat().booleanValue()) {
-                if (agency.getConsultant().getId().equals(record.getConsultantId())) {
-                  rocketChatService.addUserToGroup(
-                      agency.getConsultant().getRocketChatId(), rcGroupId);
-                }
+              if (agency.getConsultant().getId().equals(record.getConsultantId())) {
+                rocketChatService.addUserToGroup(
+                    agency.getConsultant().getRocketChatId(), rcGroupId);
               } else {
                 rocketChatService.addUserToGroup(
                     agency.getConsultant().getRocketChatId(), rcGroupId);

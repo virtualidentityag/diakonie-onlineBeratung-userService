@@ -155,7 +155,6 @@ class CreateEnquiryMessageFacadeTest {
               new WelcomeMessageDTO().sendWelcomeMessage(false).welcomeMessageText(null))
           .sendFurtherStepsMessage(false)
           .sessionDataInitializing(SESSION_DATA_INITIALIZING)
-          .initializeFeedbackChat(false)
           .notifications(null)
           .languageFormal(false)
           .roles(null)
@@ -170,7 +169,6 @@ class CreateEnquiryMessageFacadeTest {
               new WelcomeMessageDTO().sendWelcomeMessage(false).welcomeMessageText(null))
           .sendFurtherStepsMessage(false)
           .sessionDataInitializing(SESSION_DATA_INITIALIZING)
-          .initializeFeedbackChat(true)
           .notifications(null)
           .languageFormal(false)
           .roles(null)
@@ -186,7 +184,6 @@ class CreateEnquiryMessageFacadeTest {
                   new WelcomeMessageDTO().sendWelcomeMessage(true).welcomeMessageText(MESSAGE))
               .sendFurtherStepsMessage(false)
               .sessionDataInitializing(SESSION_DATA_INITIALIZING)
-              .initializeFeedbackChat(true)
               .notifications(null)
               .languageFormal(false)
               .roles(null)
@@ -285,7 +282,6 @@ class CreateEnquiryMessageFacadeTest {
     session.setAgencyId(AGENCY_ID);
     session.setIsConsultantDirectlySet(false);
     extendedConsultingTypeResponseDTO.getWelcomeMessage().sendWelcomeMessage(false);
-    extendedConsultingTypeResponseDTO.initializeFeedbackChat(false);
     groupDTO.setId(RC_GROUP_ID);
     groupResponseDTO.setSuccess(true);
     groupResponseDTO.setGroup(groupDTO);
@@ -339,7 +335,6 @@ class CreateEnquiryMessageFacadeTest {
     session.setEnquiryMessageDate(null);
     session.setAgencyId(AGENCY_ID);
     extendedConsultingTypeResponseDTO.getWelcomeMessage().sendWelcomeMessage(false);
-    extendedConsultingTypeResponseDTO.initializeFeedbackChat(false);
     groupDTO.setId(RC_GROUP_ID);
     groupResponseDTO.setSuccess(true);
     groupResponseDTO.setGroup(groupDTO);
@@ -643,7 +638,6 @@ class CreateEnquiryMessageFacadeTest {
     session.setConsultingTypeId(0);
     session.setConsultant(null);
     session.setIsConsultantDirectlySet(false);
-    extendedConsultingTypeResponseDTO.setInitializeFeedbackChat(true);
     rocketChatUserDTO.setUsername(USERNAME);
     userInfoResponseDTO.setUser(rocketChatUserDTO);
     groupDTO.setId(RC_GROUP_ID);
@@ -687,7 +681,6 @@ class CreateEnquiryMessageFacadeTest {
           session.setUser(user);
           session.setConsultingTypeId(0);
           session.setConsultant(null);
-          extendedConsultingTypeResponseDTO.setInitializeFeedbackChat(true);
           rocketChatUserDTO.setUsername(USERNAME);
           userInfoResponseDTO.setUser(rocketChatUserDTO);
           groupDTO.setId(RC_GROUP_ID);
@@ -728,7 +721,6 @@ class CreateEnquiryMessageFacadeTest {
           groupResponseDTO.setGroup(groupDTO);
           rocketChatCredentials.setRocketChatUserId(RC_USER_ID);
           rocketChatCredentials.setRocketChatUsername(RC_USERNAME);
-          extendedConsultingTypeResponseDTO.setInitializeFeedbackChat(true);
 
           when(sessionService.getSession(SESSION_ID)).thenReturn(Optional.of(session));
           when(consultingTypeManager.getConsultingTypeSettings(session.getConsultingTypeId()))
@@ -982,7 +974,6 @@ class CreateEnquiryMessageFacadeTest {
     session.setAgencyId(AGENCY_ID);
     extendedConsultingTypeResponseDTO.getWelcomeMessage().setSendWelcomeMessage(true);
     extendedConsultingTypeResponseDTO.setSendFurtherStepsMessage(true);
-    extendedConsultingTypeResponseDTO.setInitializeFeedbackChat(false);
     groupDTO.setId(RC_GROUP_ID);
     groupResponseDTO.setSuccess(true);
     groupResponseDTO.setGroup(groupDTO);
@@ -1027,7 +1018,6 @@ class CreateEnquiryMessageFacadeTest {
     when(session.getConsultant()).thenReturn(new Consultant());
     when(session.getAgencyId()).thenReturn(AGENCY_ID);
     when(session.getRegistrationType()).thenReturn(REGISTERED);
-    extendedConsultingTypeResponseDTO.setInitializeFeedbackChat(false);
     groupDTO.setId(RC_GROUP_ID);
     groupResponseDTO.setSuccess(true);
     groupResponseDTO.setGroup(groupDTO);

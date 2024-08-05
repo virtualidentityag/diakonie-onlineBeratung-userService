@@ -5,7 +5,6 @@ import static java.util.Collections.emptyList;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
-import static org.apache.commons.lang3.BooleanUtils.isTrue;
 
 import com.google.api.client.util.Lists;
 import com.neovisionaries.i18n.LanguageCode;
@@ -189,7 +188,6 @@ public class SessionService {
             .languageCode(LanguageCode.de)
             .status(sessionStatus)
             .teamSession(isTeamSession)
-            .isPeerChat(isTrue(extendedConsultingTypeResponseDTO.getIsPeerChat()))
             .createDate(nowInUtc())
             .updateDate(nowInUtc())
             .mainTopicId(userDto.getMainTopicId())
