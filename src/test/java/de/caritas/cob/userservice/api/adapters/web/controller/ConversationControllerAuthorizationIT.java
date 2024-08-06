@@ -15,7 +15,6 @@ import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValu
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.UPDATE_CHAT;
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.USER_ADMIN;
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.USER_DEFAULT;
-import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.USE_FEEDBACK;
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.VIEW_AGENCY_CONSULTANTS;
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.VIEW_ALL_PEER_SESSIONS;
 import static de.caritas.cob.userservice.api.conversation.model.ConversationListType.ANONYMOUS_ENQUIRY;
@@ -114,7 +113,6 @@ class ConversationControllerAuthorizationIT {
       authorities = {
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
-        AuthorityValue.USE_FEEDBACK,
         AuthorityValue.TECHNICAL_DEFAULT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
         AuthorityValue.VIEW_ALL_PEER_SESSIONS,
@@ -193,7 +191,6 @@ class ConversationControllerAuthorizationIT {
       authorities = {
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
-        AuthorityValue.USE_FEEDBACK,
         AuthorityValue.TECHNICAL_DEFAULT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
         AuthorityValue.VIEW_ALL_PEER_SESSIONS,
@@ -265,7 +262,6 @@ class ConversationControllerAuthorizationIT {
       authorities = {
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
-        AuthorityValue.USE_FEEDBACK,
         AuthorityValue.TECHNICAL_DEFAULT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
         AuthorityValue.VIEW_ALL_PEER_SESSIONS,
@@ -387,7 +383,6 @@ class ConversationControllerAuthorizationIT {
       authorities = {
         USER_DEFAULT,
         CONSULTANT_DEFAULT,
-        USE_FEEDBACK,
         VIEW_ALL_PEER_SESSIONS,
         ASSIGN_CONSULTANT_TO_SESSION,
         ASSIGN_CONSULTANT_TO_ENQUIRY,

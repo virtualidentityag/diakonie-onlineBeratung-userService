@@ -87,7 +87,6 @@ class UserAdminControllerAuthorizationIT {
       authorities = {
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
-        AuthorityValue.USE_FEEDBACK,
         AuthorityValue.CONSULTANT_DEFAULT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
         AuthorityValue.VIEW_ALL_PEER_SESSIONS,
@@ -137,7 +136,6 @@ class UserAdminControllerAuthorizationIT {
       authorities = {
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
-        AuthorityValue.USE_FEEDBACK,
         AuthorityValue.CONSULTANT_DEFAULT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
         AuthorityValue.VIEW_ALL_PEER_SESSIONS,
@@ -183,7 +181,6 @@ class UserAdminControllerAuthorizationIT {
       authorities = {
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
-        AuthorityValue.USE_FEEDBACK,
         AuthorityValue.CONSULTANT_DEFAULT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
         AuthorityValue.VIEW_ALL_PEER_SESSIONS,
@@ -233,7 +230,6 @@ class UserAdminControllerAuthorizationIT {
       authorities = {
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
-        AuthorityValue.USE_FEEDBACK,
         AuthorityValue.CONSULTANT_DEFAULT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
         AuthorityValue.VIEW_ALL_PEER_SESSIONS,
@@ -283,7 +279,6 @@ class UserAdminControllerAuthorizationIT {
       authorities = {
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
-        AuthorityValue.USE_FEEDBACK,
         AuthorityValue.CONSULTANT_DEFAULT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
         AuthorityValue.VIEW_ALL_PEER_SESSIONS,
@@ -332,7 +327,6 @@ class UserAdminControllerAuthorizationIT {
       authorities = {
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
-        AuthorityValue.USE_FEEDBACK,
         AuthorityValue.CONSULTANT_DEFAULT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
         AuthorityValue.VIEW_ALL_PEER_SESSIONS,
@@ -381,7 +375,6 @@ class UserAdminControllerAuthorizationIT {
       authorities = {
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
-        AuthorityValue.USE_FEEDBACK,
         AuthorityValue.CONSULTANT_DEFAULT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
         AuthorityValue.VIEW_ALL_PEER_SESSIONS,
@@ -434,7 +427,6 @@ class UserAdminControllerAuthorizationIT {
       authorities = {
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
-        AuthorityValue.USE_FEEDBACK,
         AuthorityValue.CONSULTANT_DEFAULT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
         AuthorityValue.VIEW_ALL_PEER_SESSIONS,
@@ -496,7 +488,6 @@ class UserAdminControllerAuthorizationIT {
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.USE_FEEDBACK,
         AuthorityValue.USER_DEFAULT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
         AuthorityValue.VIEW_ALL_PEER_SESSIONS,
@@ -550,7 +541,6 @@ class UserAdminControllerAuthorizationIT {
       authorities = {
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
-        AuthorityValue.USE_FEEDBACK,
         AuthorityValue.CONSULTANT_DEFAULT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
         AuthorityValue.VIEW_ALL_PEER_SESSIONS,
@@ -604,7 +594,6 @@ class UserAdminControllerAuthorizationIT {
       authorities = {
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
-        AuthorityValue.USE_FEEDBACK,
         AuthorityValue.CONSULTANT_DEFAULT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
         AuthorityValue.VIEW_ALL_PEER_SESSIONS,
@@ -658,7 +647,6 @@ class UserAdminControllerAuthorizationIT {
       authorities = {
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
-        AuthorityValue.USE_FEEDBACK,
         AuthorityValue.CONSULTANT_DEFAULT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
         AuthorityValue.VIEW_ALL_PEER_SESSIONS,
@@ -722,7 +710,6 @@ class UserAdminControllerAuthorizationIT {
       authorities = {
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
-        AuthorityValue.USE_FEEDBACK,
         AuthorityValue.CONSULTANT_DEFAULT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
         AuthorityValue.VIEW_ALL_PEER_SESSIONS,
@@ -765,7 +752,6 @@ class UserAdminControllerAuthorizationIT {
       authorities = {
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
-        AuthorityValue.USE_FEEDBACK,
         AuthorityValue.CONSULTANT_DEFAULT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
         AuthorityValue.VIEW_ALL_PEER_SESSIONS,

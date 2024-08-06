@@ -76,7 +76,6 @@ public enum Authority {
     public static final String NOTIFICATIONS_TECHNICAL = PREFIX + "NOTIFICATIONS_TECHNICAL";
     public static final String USER_DEFAULT = PREFIX + "USER_DEFAULT";
     public static final String CONSULTANT_DEFAULT = PREFIX + "CONSULTANT_DEFAULT";
-    public static final String USE_FEEDBACK = PREFIX + "USE_FEEDBACK";
     public static final String VIEW_ALL_PEER_SESSIONS = PREFIX + "VIEW_ALL_PEER_SESSIONS";
     public static final String ASSIGN_CONSULTANT_TO_SESSION =
         PREFIX + "ASSIGN_CONSULTANT_TO_SESSION";
