@@ -2031,9 +2031,6 @@ components:
           type: string
           example: xGklslk2JJKK
           description: Rocket.Chat room ID
-        isPeerChat:
-          type: boolean
-          example: false
         askerRcId:
           type: string
           example: 8ertjlasdKJA
