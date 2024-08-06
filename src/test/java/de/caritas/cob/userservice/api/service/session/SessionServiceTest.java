@@ -138,7 +138,6 @@ class SessionServiceTest {
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(false)
-          .isPeerChat(false)
           .build();
 
   private final Session SESSION_WITH_CONSULTANT =
@@ -153,7 +152,6 @@ class SessionServiceTest {
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(false)
-          .isPeerChat(false)
           .build();
 
   private final Session ACCEPTED_SESSION =
@@ -169,7 +167,6 @@ class SessionServiceTest {
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(false)
-          .isPeerChat(false)
           .build();
 
   private final ConsultantAgency CONSULTANT_AGENCY_1 =

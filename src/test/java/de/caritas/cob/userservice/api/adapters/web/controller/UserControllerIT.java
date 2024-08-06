@@ -170,7 +170,6 @@ class UserControllerIT {
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(false)
-          .isPeerChat(false)
           .build();
 
   private final Session SESSION_WITHOUT_CONSULTANT =
@@ -187,7 +186,6 @@ class UserControllerIT {
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(false)
-          .isPeerChat(false)
           .build();
 
   private final Session TEAM_SESSION =
@@ -205,7 +203,6 @@ class UserControllerIT {
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(true)
-          .isPeerChat(false)
           .build();
 
   private final Session TEAM_SESSION_WITHOUT_GROUP_ID =
@@ -222,7 +219,6 @@ class UserControllerIT {
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(true)
-          .isPeerChat(false)
           .build();
 
   private final ConsultantResponseDTO CONSULTANT_RESPONSE_DTO =

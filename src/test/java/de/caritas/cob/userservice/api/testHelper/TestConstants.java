@@ -803,7 +803,6 @@ public class TestConstants {
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(false)
-          .isPeerChat(false)
           .build();
 
   public static final Session SESSION_WITH_ASKER_AND_CONSULTANT =
@@ -821,7 +820,6 @@ public class TestConstants {
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(false)
-          .isPeerChat(false)
           .build();
 
   public static final Session TEAM_SESSION_WITH_ASKER_AND_CONSULTANT =
@@ -839,7 +837,6 @@ public class TestConstants {
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(true)
-          .isPeerChat(false)
           .build();
 
   public static final Session ANONYMOUS_ENQUIRY_WITHOUT_CONSULTANT =
@@ -855,7 +852,6 @@ public class TestConstants {
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(false)
-          .isPeerChat(false)
           .build();
 
   public static final Session SESSION_WITHOUT_CONSULTANT =
@@ -872,7 +868,6 @@ public class TestConstants {
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(true)
-          .isPeerChat(false)
           .build();
 
   public static final Session SESSION_WITHOUT_CONSULTANT_NO_RC_USER_ID =
@@ -889,7 +884,6 @@ public class TestConstants {
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(false)
-          .isPeerChat(false)
           .build();
 
   public static final Session U25_SESSION_WITHOUT_CONSULTANT =
@@ -906,7 +900,6 @@ public class TestConstants {
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(true)
-          .isPeerChat(false)
           .build();
   public static final List<Session> SESSION_LIST = Collections.singletonList(SESSION);
   public static final Set<Session> SESSION_SET =
