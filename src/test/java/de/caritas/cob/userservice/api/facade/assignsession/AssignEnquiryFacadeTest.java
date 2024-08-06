@@ -159,24 +159,6 @@ class AssignEnquiryFacadeTest {
   }
 
   @Test
-  void assignEnquiry_Should_LogError_When_RemoveSystemMessagesFromFeedbackChatFails() {
-    doThrow(new InternalServerErrorException("error"))
-        .when(rocketChatFacade)
-        .removeSystemMessagesFromRocketChatGroup(Mockito.any());
-
-    assignEnquiryFacade.assignRegisteredEnquiry(
-        U25_SESSION_WITHOUT_CONSULTANT, CONSULTANT_WITH_AGENCY);
-
-    verifyConsultantAndSessionHaveBeenChecked(
-        U25_SESSION_WITHOUT_CONSULTANT, CONSULTANT_WITH_AGENCY);
-    verifyAsync(
-        (a) -> verify(logger, times(1)).error(anyString(), anyString(), anyString(), anyString()));
-    verify(sessionService, times(1))
-        .updateConsultantAndStatusForSession(
-            U25_SESSION_WITHOUT_CONSULTANT, CONSULTANT_WITH_AGENCY, IN_PROGRESS);
-  }
-
-  @Test
   void assignEnquiry_Should_removeAllUnauthorizedMembers_When_sessionIsNotATeamSession() {
     Session session = new EasyRandom().nextObject(Session.class);
     session.setTeamSession(false);

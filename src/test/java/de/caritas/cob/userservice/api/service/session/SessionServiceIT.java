@@ -85,7 +85,7 @@ class SessionServiceIT {
   }
 
   @Test
-  void getSessionsByUserAndGroupOrFeedbackGroupIdsShouldBeForbiddenIfUserHasNotRequiredRole() {
+  void getSessionsByUserAndGroupIdsShouldBeForbiddenIfUserHasNotRequiredRole() {
     assertThrows(
         ForbiddenException.class,
         () ->

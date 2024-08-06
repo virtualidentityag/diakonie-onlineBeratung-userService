@@ -3119,7 +3119,7 @@ class UserControllerAuthorizationIT {
         AuthorityValue.USER_ADMIN
       })
   void
-      getSessionsForGroupOrFeedbackGroupIds_should_return_forbidden_and_call_no_methods_when_no_user_or_consultant_authority()
+      getSessionsForGroupOrGroupIds_should_return_forbidden_and_call_no_methods_when_no_user_or_consultant_authority()
           throws Exception {
     mvc.perform(
             get("/users/sessions/room?rcGroupIds=mzAdWzQEobJ2PkoxP")
@@ -3134,7 +3134,7 @@ class UserControllerAuthorizationIT {
   @Test
   @WithMockUser(authorities = {AuthorityValue.USER_DEFAULT, AuthorityValue.CONSULTANT_DEFAULT})
   void
-      getSessionsForGroupOrFeedbackGroupIds_should_return_forbidden_and_call_no_methods_when_no_csrf_token_given()
+      getSessionsForGroupOrGroupIds_should_return_forbidden_and_call_no_methods_when_no_csrf_token_given()
           throws Exception {
     mvc.perform(
             get("/users/sessions/room?rcGroupIds=mzAdWzQEobJ2PkoxP")
@@ -3146,7 +3146,7 @@ class UserControllerAuthorizationIT {
 
   @Test
   void
-      getSessionsForGroupOrFeedbackGroupIds_should_return_unauthorized_and_call_no_methods_when_no_keycloak_authorization()
+      getSessionsForGroupOrGroupIds_should_return_unauthorized_and_call_no_methods_when_no_keycloak_authorization()
           throws Exception {
     mvc.perform(
             get("/users/sessions/room?rcGroupIds=mzAdWzQEobJ2PkoxP")

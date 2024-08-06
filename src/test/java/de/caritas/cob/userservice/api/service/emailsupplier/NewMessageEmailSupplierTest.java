@@ -59,7 +59,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class NewMessageEmailSupplierTest {
+class NewMessageEmailSupplierTest {
 
   private NewMessageEmailSupplier newMessageEmailSupplier;
 
@@ -82,11 +82,11 @@ public class NewMessageEmailSupplierTest {
   @Mock private ReleaseToggleService releaseToggleService;
 
   @BeforeEach
-  public void setup() {
+  void setup() {
     this.newMessageEmailSupplier =
         NewMessageEmailSupplier.builder()
             .session(session)
-            .rcGroupId("feedbackGroupId")
+            .rcGroupId("groupId")
             .roles(roles)
             .userId(USER.getUserId())
             .consultantAgencyService(consultantAgencyService)
@@ -101,14 +101,14 @@ public class NewMessageEmailSupplierTest {
   }
 
   @Test
-  public void generateEmails_Should_ReturnEmptyList_When_NoUserRoleIsAvailable() {
+  void generateEmails_Should_ReturnEmptyList_When_NoUserRoleIsAvailable() {
     List<MailDTO> generatedMails = this.newMessageEmailSupplier.generateEmails();
 
     assertThat(generatedMails, hasSize(0));
   }
 
   @Test
-  public void
+  void
       generateEmails_Should_ReturnEmptyListAndLogError_When_UserRoleIsUserAndSessionIsNotValidAndMessageIsNotTheFirst() {
     when(roles.contains(UserRole.USER.getValue())).thenReturn(true);
     User userAnotherId = mock(User.class);
@@ -123,7 +123,7 @@ public class NewMessageEmailSupplierTest {
   }
 
   @Test
-  public void
+  void
       generateEmails_Should_ReturnEmptyListAndNotLogError_When_UserRoleIsUserAndSessionIsNotValidAndMessageIsTheFirst() {
     when(roles.contains(UserRole.USER.getValue())).thenReturn(true);
     when(session.getUser()).thenReturn(USER);
@@ -135,7 +135,7 @@ public class NewMessageEmailSupplierTest {
   }
 
   @Test
-  public void
+  void
       generateEmails_Should_ReturnEmptyList_When_UserRoleIsUserAndSessionIsValidAndMessageAndNoDependentConsultantsExists() {
     when(roles.contains(UserRole.USER.getValue())).thenReturn(true);
     when(session.getUser()).thenReturn(USER);
@@ -148,7 +148,7 @@ public class NewMessageEmailSupplierTest {
   }
 
   @Test
-  public void
+  void
       generateEmails_Should_ReturnExpectedMail_When_UserRoleIsUserAndSessionIsNoTeamSession() {
     when(roles.contains(UserRole.USER.getValue())).thenReturn(true);
     User user = mock(User.class);
@@ -177,7 +177,7 @@ public class NewMessageEmailSupplierTest {
   }
 
   @Test
-  public void
+  void
       generateEmails_Should_ReturnExpectedMail_When_UserRoleIsUserAndSessionIsTeamSession() {
     ExtendedConsultingTypeResponseDTO settings = mock(ExtendedConsultingTypeResponseDTO.class);
     NewMessageDTO newMessageDTO = new NewMessageDTO().allTeamConsultants(true);
@@ -213,7 +213,7 @@ public class NewMessageEmailSupplierTest {
   }
 
   @Test
-  public void
+  void
       generateEmails_Should_ReturnEmptyListAndLogError_When_UserRoleIsConsultantAndAskerHasNoMailAddress() {
     when(roles.contains(UserRole.CONSULTANT.getValue())).thenReturn(true);
     User user = Mockito.mock(User.class);
@@ -227,7 +227,7 @@ public class NewMessageEmailSupplierTest {
   }
 
   @Test
-  public void generateEmails_Should_ReturnEmptyList_When_UserMailIsDummy() {
+  void generateEmails_Should_ReturnEmptyList_When_UserMailIsDummy() {
     when(roles.contains(UserRole.CONSULTANT.getValue())).thenReturn(true);
     User user = mock(User.class);
     when(user.getEmail()).thenReturn("email@dummySuffix");
@@ -239,7 +239,7 @@ public class NewMessageEmailSupplierTest {
   }
 
   @Test
-  public void generateEmails_Should_ReturnEmailToConsultant_When_NewChatMessageToggleIsOn() {
+  void generateEmails_Should_ReturnEmailToConsultant_When_NewChatMessageToggleIsOn() {
     when(roles.contains(UserRole.USER.getValue())).thenReturn(true);
     when(session.getConsultant()).thenReturn(CONSULTANT);
     when(session.getUser()).thenReturn(USER);
@@ -251,7 +251,7 @@ public class NewMessageEmailSupplierTest {
   }
 
   @Test
-  public void generateEmails_Should_ReturnNoEmailToConsultant_When_NewChatMessageToggleIsOff() {
+  void generateEmails_Should_ReturnNoEmailToConsultant_When_NewChatMessageToggleIsOff() {
     when(roles.contains(UserRole.USER.getValue())).thenReturn(true);
     Consultant consultant = mock(Consultant.class);
     when(consultant.getNotifyNewChatMessageFromAdviceSeeker()).thenReturn(false);
@@ -266,7 +266,7 @@ public class NewMessageEmailSupplierTest {
   }
 
   @Test
-  public void generateEmails_Should_ReturnEmailToConsultant_When_ConsultantIsOffline() {
+  void generateEmails_Should_ReturnEmailToConsultant_When_ConsultantIsOffline() {
     when(roles.contains(UserRole.USER.getValue())).thenReturn(true);
     when(session.getConsultant()).thenReturn(CONSULTANT);
     when(session.getUser()).thenReturn(USER);
@@ -279,7 +279,7 @@ public class NewMessageEmailSupplierTest {
   }
 
   @Test
-  public void generateEmails_Should_ReturnNoEmailToConsultant_When_ConsultantIsOnline() {
+  void generateEmails_Should_ReturnNoEmailToConsultant_When_ConsultantIsOnline() {
     when(roles.contains(UserRole.USER.getValue())).thenReturn(true);
     when(session.getConsultant()).thenReturn(CONSULTANT);
     when(session.getUser()).thenReturn(USER);
@@ -292,7 +292,7 @@ public class NewMessageEmailSupplierTest {
   }
 
   @Test
-  public void
+  void
       generateEmails_Should_ReturnExpectedEmailToAsker_When_ConsultantWritesToValidReceiver() {
     when(roles.contains(UserRole.CONSULTANT.getValue())).thenReturn(true);
     Consultant consultant = mock(Consultant.class);
@@ -319,7 +319,7 @@ public class NewMessageEmailSupplierTest {
   }
 
   @Test
-  public void generateEmails_Should_ReturnExpectedEmailToAdviceSeeker_When_AdviceSeekerIsOffline() {
+  void generateEmails_Should_ReturnExpectedEmailToAdviceSeeker_When_AdviceSeekerIsOffline() {
     when(roles.contains(UserRole.CONSULTANT.getValue())).thenReturn(true);
     Consultant consultant = mock(Consultant.class);
     when(consultant.getUsername()).thenReturn(USERNAME_ENCODED);
@@ -334,7 +334,7 @@ public class NewMessageEmailSupplierTest {
   }
 
   @Test
-  public void generateEmails_Should_ReturnExpectedEmailToAdviceSeeker_When_AdviceSeekerIsOnline() {
+  void generateEmails_Should_ReturnExpectedEmailToAdviceSeeker_When_AdviceSeekerIsOnline() {
     when(roles.contains(UserRole.CONSULTANT.getValue())).thenReturn(true);
     when(session.getUser()).thenReturn(USER);
     when(messageClient.isLoggedIn(any())).thenReturn(Optional.of(true));
@@ -345,7 +345,7 @@ public class NewMessageEmailSupplierTest {
   }
 
   @Test
-  public void
+  void
       generateEmails_Should_ReturnExpectedEmailToAsker_When_ConsultantWritesToValidReceiverMultiTenancy() {
     // given
     givenCurrentTenantDataIsSet();
@@ -372,7 +372,7 @@ public class NewMessageEmailSupplierTest {
   }
 
   @Test
-  public void generateEmails_Should_ThrowInternalServerException_When_ConsultantIsNotFound() {
+  void generateEmails_Should_ThrowInternalServerException_When_ConsultantIsNotFound() {
     assertThrows(
         InternalServerErrorException.class,
         () -> {
