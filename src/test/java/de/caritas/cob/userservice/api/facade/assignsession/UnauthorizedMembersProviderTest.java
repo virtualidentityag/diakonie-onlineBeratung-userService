@@ -49,8 +49,6 @@ class UnauthorizedMembersProviderTest {
   Consultant teamConsultant2 = easyRandom.nextObject(Consultant.class);
   Consultant mainConsultant = easyRandom.nextObject(Consultant.class);
   Consultant mainConsultant2 = easyRandom.nextObject(Consultant.class);
-  Consultant peerConsultant = easyRandom.nextObject(Consultant.class);
-  Consultant peerConsultant2 = easyRandom.nextObject(Consultant.class);
   RocketChatCredentials techUserRcCredentials = easyRandom.nextObject(RocketChatCredentials.class);
   List<GroupMemberDTO> initialMemberList;
 
@@ -71,10 +69,6 @@ class UnauthorizedMembersProviderTest {
     mainConsultant.setTeamConsultant(true);
     mainConsultant2.setRocketChatId("mainConsultantRcId2");
     mainConsultant2.setTeamConsultant(true);
-    peerConsultant.setRocketChatId("peerConsultantRcId");
-    peerConsultant.setTeamConsultant(true);
-    peerConsultant2.setRocketChatId("peerConsultantRcId2");
-    peerConsultant2.setTeamConsultant(true);
     techUserRcCredentials.setRocketChatUserId("techUserRcId");
     initialMemberList =
         asList(
@@ -87,8 +81,6 @@ class UnauthorizedMembersProviderTest {
             new GroupMemberDTO("teamConsultantRcId2", null, "name", null, null),
             new GroupMemberDTO("mainConsultantRcId", null, "name", null, null),
             new GroupMemberDTO("mainConsultantRcId2", null, "name", null, null),
-            new GroupMemberDTO("peerConsultantRcId", null, "name", null, null),
-            new GroupMemberDTO("peerConsultantRcId2", null, "name", null, null),
             new GroupMemberDTO("rcTechnicalRcId", null, "name", null, null),
             new GroupMemberDTO(ROCKET_CHAT_SYSTEM_USER_ID, null, "name", null, null),
             new GroupMemberDTO("techUserRcId", null, "name", null, null));
@@ -98,9 +90,7 @@ class UnauthorizedMembersProviderTest {
             teamConsultant,
             teamConsultant2,
             mainConsultant,
-            mainConsultant2,
-            peerConsultant,
-            peerConsultant2)
+            mainConsultant2)
         .forEach(
             consultant ->
                 when(consultantService.getConsultantByRcUserId(consultant.getRocketChatId()))
@@ -191,17 +181,11 @@ class UnauthorizedMembersProviderTest {
         unauthorizedMembersProvider.obtainConsultantsToRemove(
             RC_GROUP_ID, SESSION_WITH_ASKER_AND_CONSULTANT, newConsultant, initialMemberList);
 
-    assertThat(result.size(), is(7));
+    assertThat(result.size(), is(5));
     assertThat(
         result,
         contains(
-            normalConsultant,
-            teamConsultant,
-            teamConsultant2,
-            mainConsultant,
-            mainConsultant2,
-            peerConsultant,
-            peerConsultant2));
+            normalConsultant, teamConsultant, teamConsultant2, mainConsultant, mainConsultant2));
   }
 
   @Test
@@ -219,9 +203,7 @@ class UnauthorizedMembersProviderTest {
                 teamConsultant,
                 teamConsultant2,
                 mainConsultant,
-                mainConsultant2,
-                peerConsultant,
-                peerConsultant2));
+                mainConsultant2));
 
     var result =
         unauthorizedMembersProvider.obtainConsultantsToRemove(
