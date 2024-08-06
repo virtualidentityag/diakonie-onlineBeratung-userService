@@ -148,8 +148,7 @@ class NewMessageEmailSupplierTest {
   }
 
   @Test
-  void
-      generateEmails_Should_ReturnExpectedMail_When_UserRoleIsUserAndSessionIsNoTeamSession() {
+  void generateEmails_Should_ReturnExpectedMail_When_UserRoleIsUserAndSessionIsNoTeamSession() {
     when(roles.contains(UserRole.USER.getValue())).thenReturn(true);
     User user = mock(User.class);
     when(user.getUserId()).thenReturn(USER.getUserId());
@@ -177,8 +176,7 @@ class NewMessageEmailSupplierTest {
   }
 
   @Test
-  void
-      generateEmails_Should_ReturnExpectedMail_When_UserRoleIsUserAndSessionIsTeamSession() {
+  void generateEmails_Should_ReturnExpectedMail_When_UserRoleIsUserAndSessionIsTeamSession() {
     ExtendedConsultingTypeResponseDTO settings = mock(ExtendedConsultingTypeResponseDTO.class);
     NewMessageDTO newMessageDTO = new NewMessageDTO().allTeamConsultants(true);
     TeamSessionsDTO teamSessionsDTO = new TeamSessionsDTO().newMessage(newMessageDTO);
@@ -292,8 +290,7 @@ class NewMessageEmailSupplierTest {
   }
 
   @Test
-  void
-      generateEmails_Should_ReturnExpectedEmailToAsker_When_ConsultantWritesToValidReceiver() {
+  void generateEmails_Should_ReturnExpectedEmailToAsker_When_ConsultantWritesToValidReceiver() {
     when(roles.contains(UserRole.CONSULTANT.getValue())).thenReturn(true);
     Consultant consultant = mock(Consultant.class);
     when(consultant.getUsername()).thenReturn(USERNAME_ENCODED);
