@@ -362,10 +362,10 @@ public class SessionService {
   }
 
   /**
-   * Retrieves user sessions by user ID and rocket chat group, or feedback group IDs
+   * Retrieves user sessions by user ID and rocket chat group IDs
    *
    * @param userId the user ID
-   * @param rcGroupIds rocket chat group or feedback group IDs
+   * @param rcGroupIds rocket chat group IDs
    * @param roles the roles of the given user
    * @return {@link UserSessionResponseDTO}
    */
@@ -407,10 +407,10 @@ public class SessionService {
   }
 
   /**
-   * Retrieves consultant sessions by consultant ID and rocket chat group, or feedback group IDs
+   * Retrieves consultant sessions by consultant ID and rocket chat group IDs
    *
    * @param consultant the ID of the consultant
-   * @param rcGroupIds rocket chat group or feedback group IDs
+   * @param rcGroupIds rocket chat group IDs
    * @param roles the roles of the given consultant
    * @return {@link ConsultantSessionResponseDTO}
    */

@@ -34,7 +34,7 @@ public class ConsultantSessionListService {
 
   /**
    * @param consultant {@link Consultant}
-   * @param rcGroupIds rocket chat group or feedback group IDs
+   * @param rcGroupIds rocket chat group IDs
    * @param roles roles of the consultant
    * @return List of {@link ConsultantSessionResponseDTO}
    */

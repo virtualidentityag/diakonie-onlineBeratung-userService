@@ -71,10 +71,10 @@ public class SessionListFacade {
 
   /**
    * Returns a list of {@link UserSessionListResponseDTO} for the specified user ID and rocket chat
-   * group, or feedback group IDs, with the session list sorted by last message date descending.
+   * group IDs, with the session list sorted by last message date descending.
    *
    * @param userId the user ID
-   * @param rcGroupIds the group or feedback group IDs
+   * @param rcGroupIds the group IDs
    * @param rocketChatCredentials the rocket chat credentials
    * @param roles the roles of given user
    * @return {@link UserSessionListResponseDTO}
@@ -144,7 +144,7 @@ public class SessionListFacade {
 
   /**
    * @param consultant the authenticated consultant
-   * @param rcGroupIds the group or feedback group IDs
+   * @param rcGroupIds the group IDs
    * @param roles the roles of given consultant
    * @return {@link GroupSessionListResponseDTO}
    */
