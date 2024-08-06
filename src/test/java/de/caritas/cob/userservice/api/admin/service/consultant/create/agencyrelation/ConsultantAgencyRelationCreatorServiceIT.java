@@ -168,7 +168,7 @@ class ConsultantAgencyRelationCreatorServiceIT {
 
   @Test
   void createNewConsultantAgency_Should_updateKeycloakRoles_When_ParamsAreValid() {
-    var roleSetName = "peer";
+    var roleSetName = "consultant";
     var createConsultantAgencyDTO = new CreateConsultantAgencyDTO();
     createConsultantAgencyDTO.setAgencyId(15L);
     createConsultantAgencyDTO.setRoleSetKey(roleSetName);
