@@ -13,7 +13,6 @@ import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValu
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.UPDATE_CHAT;
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.USER_DEFAULT;
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.VIEW_AGENCY_CONSULTANTS;
-import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.VIEW_ALL_PEER_SESSIONS;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
@@ -32,8 +31,7 @@ public enum Authority {
   CONSULTANT(
       UserRole.CONSULTANT,
       List.of(CONSULTANT_DEFAULT, ASSIGN_CONSULTANT_TO_SESSION, VIEW_AGENCY_CONSULTANTS)),
-  MAIN_CONSULTANT(
-      UserRole.MAIN_CONSULTANT, List.of(VIEW_ALL_PEER_SESSIONS, ASSIGN_CONSULTANT_TO_ENQUIRY)),
+  MAIN_CONSULTANT(UserRole.MAIN_CONSULTANT, List.of(ASSIGN_CONSULTANT_TO_ENQUIRY)),
   TECHNICAL(UserRole.TECHNICAL, singletonList(TECHNICAL_DEFAULT)),
   NOTIFICATIONS_TECHNICAL(
       UserRole.NOTIFICATIONS_TECHNICAL, singletonList(AuthorityValue.NOTIFICATIONS_TECHNICAL)),
@@ -73,7 +71,6 @@ public enum Authority {
     public static final String NOTIFICATIONS_TECHNICAL = PREFIX + "NOTIFICATIONS_TECHNICAL";
     public static final String USER_DEFAULT = PREFIX + "USER_DEFAULT";
     public static final String CONSULTANT_DEFAULT = PREFIX + "CONSULTANT_DEFAULT";
-    public static final String VIEW_ALL_PEER_SESSIONS = PREFIX + "VIEW_ALL_PEER_SESSIONS";
     public static final String ASSIGN_CONSULTANT_TO_SESSION =
         PREFIX + "ASSIGN_CONSULTANT_TO_SESSION";
     public static final String ASSIGN_CONSULTANT_TO_ENQUIRY =

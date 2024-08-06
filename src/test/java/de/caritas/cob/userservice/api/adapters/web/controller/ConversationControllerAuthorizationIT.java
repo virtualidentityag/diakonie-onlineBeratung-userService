@@ -15,7 +15,6 @@ import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValu
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.USER_ADMIN;
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.USER_DEFAULT;
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.VIEW_AGENCY_CONSULTANTS;
-import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.VIEW_ALL_PEER_SESSIONS;
 import static de.caritas.cob.userservice.api.conversation.model.ConversationListType.ANONYMOUS_ENQUIRY;
 import static de.caritas.cob.userservice.api.conversation.model.ConversationListType.REGISTERED_ENQUIRY;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.RC_TOKEN;
@@ -114,7 +113,6 @@ class ConversationControllerAuthorizationIT {
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.TECHNICAL_DEFAULT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
-        AuthorityValue.VIEW_ALL_PEER_SESSIONS,
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
@@ -192,7 +190,6 @@ class ConversationControllerAuthorizationIT {
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.TECHNICAL_DEFAULT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
-        AuthorityValue.VIEW_ALL_PEER_SESSIONS,
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
@@ -263,7 +260,6 @@ class ConversationControllerAuthorizationIT {
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
         AuthorityValue.TECHNICAL_DEFAULT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
-        AuthorityValue.VIEW_ALL_PEER_SESSIONS,
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
@@ -382,7 +378,6 @@ class ConversationControllerAuthorizationIT {
       authorities = {
         USER_DEFAULT,
         CONSULTANT_DEFAULT,
-        VIEW_ALL_PEER_SESSIONS,
         ASSIGN_CONSULTANT_TO_SESSION,
         ASSIGN_CONSULTANT_TO_ENQUIRY,
         VIEW_AGENCY_CONSULTANTS,

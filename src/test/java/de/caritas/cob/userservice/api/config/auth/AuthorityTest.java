@@ -56,9 +56,8 @@ class AuthorityTest {
     List<String> result = Authority.getAuthoritiesByUserRole(UserRole.MAIN_CONSULTANT);
 
     assertNotNull(result);
-    assertTrue(result.contains(AuthorityValue.VIEW_ALL_PEER_SESSIONS));
     assertTrue(result.contains(AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY));
-    assertEquals(2, result.size());
+    assertEquals(1, result.size());
   }
 
   @Test
