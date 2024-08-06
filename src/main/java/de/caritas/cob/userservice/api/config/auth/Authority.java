@@ -1,7 +1,6 @@
 package de.caritas.cob.userservice.api.config.auth;
 
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.ANONYMOUS_DEFAULT;
-import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY;
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION;
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.CONSULTANT_CREATE;
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.CONSULTANT_DEFAULT;
@@ -31,7 +30,6 @@ public enum Authority {
   CONSULTANT(
       UserRole.CONSULTANT,
       List.of(CONSULTANT_DEFAULT, ASSIGN_CONSULTANT_TO_SESSION, VIEW_AGENCY_CONSULTANTS)),
-  MAIN_CONSULTANT(UserRole.MAIN_CONSULTANT, List.of(ASSIGN_CONSULTANT_TO_ENQUIRY)),
   TECHNICAL(UserRole.TECHNICAL, singletonList(TECHNICAL_DEFAULT)),
   NOTIFICATIONS_TECHNICAL(
       UserRole.NOTIFICATIONS_TECHNICAL, singletonList(AuthorityValue.NOTIFICATIONS_TECHNICAL)),

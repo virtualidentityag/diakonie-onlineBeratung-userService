@@ -25,14 +25,14 @@ class RocketChatOperationConditionProvider {
    * @return true if consultant can be added
    */
   boolean canAddToRocketChatGroup() {
-    return isEnquiry() || isTeamSessionAndMainConsultant();
+    return isEnquiry() || isTeamSession();
   }
 
   private boolean isEnquiry() {
     return this.session.getStatus().equals(SessionStatus.NEW);
   }
 
-  private boolean isTeamSessionAndMainConsultant() {
+  private boolean isTeamSession() {
     return this.session.getStatus().equals(SessionStatus.IN_PROGRESS)
         && this.session.isTeamSession()
         && canAddToTeamConsultingSession();

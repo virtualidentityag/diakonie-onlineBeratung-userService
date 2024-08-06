@@ -51,16 +51,6 @@ class AuthorityTest {
   }
 
   @Test
-  void getAuthoritiesByRoleName_Should_ReturnCorrectRoles_ForKeycloakRoleMainConsultant() {
-
-    List<String> result = Authority.getAuthoritiesByUserRole(UserRole.MAIN_CONSULTANT);
-
-    assertNotNull(result);
-    assertTrue(result.contains(AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY));
-    assertEquals(1, result.size());
-  }
-
-  @Test
   void getAuthoritiesByRoleName_Should_ReturnCorrectRoles_ForKeycloakRoleTechnical() {
 
     List<String> result = Authority.getAuthoritiesByUserRole(UserRole.TECHNICAL);

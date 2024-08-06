@@ -361,8 +361,6 @@ public class TestConstants {
   public static final String USER_ID_3 = "df3322-fd33-asdf-3333-2332jk23j32j";
   public static final String CONSULTANT_ID = "87ddcss-650d-42bb-8299-f8e3f6j8dk3";
   public static final String CONSULTANT_ID_2 = "kd93kd-fd33-asdf-3333-2332jkkk39d";
-  public static final String MAIN_CONSULTANT_ID = "asdj78wfjsdf";
-  public static final String RC_USER_ID_MAIN_CONSULTANT = "xxxyyy";
   public static final String ENCODING_PREFIX = "enc.";
   public static final String USERNAME_CONSULTANT_DECODED = "Consultantname!#123";
   public static final String USERNAME_CONSULTANT_ENCODED =
@@ -420,71 +418,6 @@ public class TestConstants {
       new Consultant(
           CONSULTANT_ID_2,
           ROCKETCHAT_ID,
-          USERNAME,
-          "first name",
-          "last name",
-          EMAIL,
-          false,
-          false,
-          null,
-          false,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          true,
-          true,
-          true,
-          null,
-          null,
-          ConsultantStatus.CREATED,
-          false,
-          LanguageCode.de,
-          null,
-          null,
-          false,
-          null);
-  public static final Consultant MAIN_CONSULTANT =
-      new Consultant(
-          MAIN_CONSULTANT_ID,
-          RC_USER_ID_MAIN_CONSULTANT,
-          USERNAME,
-          "first name",
-          "last name",
-          EMAIL,
-          false,
-          false,
-          null,
-          false,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          true,
-          true,
-          true,
-          null,
-          null,
-          ConsultantStatus.CREATED,
-          false,
-          LanguageCode.de,
-          null,
-          null,
-          false,
-          null);
-
-  public static final Consultant MAIN_CONSULTANT_WITH_NEW_EMAIL_NOTIFICATIONS =
-      new Consultant(
-          MAIN_CONSULTANT_ID,
-          RC_USER_ID_MAIN_CONSULTANT,
           USERNAME,
           "first name",
           "last name",
@@ -1506,10 +1439,8 @@ public class TestConstants {
 
   public static final GroupMemberDTO GROUP_MEMBER_DTO_2 =
       new GroupMemberDTO(RC_USER_ID_2, null, USERNAME, null, null);
-  public static final GroupMemberDTO GROUP_MEMBER_DTO_MAIN_CONSULTANT =
-      new GroupMemberDTO(RC_USER_ID_MAIN_CONSULTANT, null, USERNAME, null, null);
   public static final List<GroupMemberDTO> LIST_GROUP_MEMBER_DTO =
-      Arrays.asList(GROUP_MEMBER_DTO, GROUP_MEMBER_DTO_2, GROUP_MEMBER_DTO_MAIN_CONSULTANT);
+      Arrays.asList(GROUP_MEMBER_DTO, GROUP_MEMBER_DTO_2);
   /*
    * Passwords
    */

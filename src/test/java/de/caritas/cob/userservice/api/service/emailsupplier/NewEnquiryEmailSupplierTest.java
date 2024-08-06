@@ -3,8 +3,8 @@ package de.caritas.cob.userservice.api.service.emailsupplier;
 import static de.caritas.cob.userservice.api.helper.CustomLocalDateTime.nowInUtc;
 import static de.caritas.cob.userservice.api.service.emailsupplier.EmailSupplier.TEMPLATE_NEW_ENQUIRY_NOTIFICATION;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.AGENCY_DTO_U25;
-import static de.caritas.cob.userservice.api.testHelper.TestConstants.MAIN_CONSULTANT;
-import static de.caritas.cob.userservice.api.testHelper.TestConstants.MAIN_CONSULTANT_WITH_NEW_EMAIL_NOTIFICATIONS;
+import static de.caritas.cob.userservice.api.testHelper.TestConstants.CONSULTANT;
+import static de.caritas.cob.userservice.api.testHelper.TestConstants.CONSULTANT_2;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -29,7 +29,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class NewEnquiryEmailSupplierTest {
+class NewEnquiryEmailSupplierTest {
 
   private NewEnquiryEmailSupplier newEnquiryEmailSupplier;
 
@@ -42,7 +42,7 @@ public class NewEnquiryEmailSupplierTest {
   @Mock private ReleaseToggleService releaseToggleService;
 
   @BeforeEach
-  public void setup() {
+  void setup() {
     this.newEnquiryEmailSupplier =
         new NewEnquiryEmailSupplier(
             consultantAgencyRepository, agencyService, releaseToggleService, null);
@@ -50,14 +50,14 @@ public class NewEnquiryEmailSupplierTest {
   }
 
   @Test
-  public void generateEmails_Should_ReturnEmptyList_When_NoParametersAreProvided() {
+  void generateEmails_Should_ReturnEmptyList_When_NoParametersAreProvided() {
     List<MailDTO> generatedMails = newEnquiryEmailSupplier.generateEmails();
 
     assertThat(generatedMails).isEmpty();
   }
 
   @Test
-  public void generateEmails_Should_ReturnEmptyList_When_NoValidConsultantWasFound() {
+  void generateEmails_Should_ReturnEmptyList_When_NoValidConsultantWasFound() {
     Consultant absentConsultant = new Consultant();
     absentConsultant.setAbsent(true);
     absentConsultant.setEmail("email");
@@ -76,14 +76,14 @@ public class NewEnquiryEmailSupplierTest {
   }
 
   @Test
-  public void generateEmails_Should_ReturnExpectedMailDTO_When_PresentConsultantsWereFound() {
+  void generateEmails_Should_ReturnExpectedMailDTO_When_PresentConsultantsWereFound() {
     when(consultantAgencyRepository.findByAgencyIdAndDeleteDateIsNull(anyLong()))
         .thenReturn(
             asList(
                 new ConsultantAgency(
-                    0L, MAIN_CONSULTANT, 0L, nowInUtc(), nowInUtc(), nowInUtc(), null, null),
+                    0L, CONSULTANT_2, 0L, nowInUtc(), nowInUtc(), nowInUtc(), null, null),
                 new ConsultantAgency(
-                    1L, MAIN_CONSULTANT, 1L, nowInUtc(), nowInUtc(), nowInUtc(), null, null)));
+                    1L, CONSULTANT_2, 1L, nowInUtc(), nowInUtc(), nowInUtc(), null, null)));
     when(agencyService.getAgency(any())).thenReturn(AGENCY_DTO_U25);
     when(session.getPostcode()).thenReturn("12345");
 
@@ -106,7 +106,7 @@ public class NewEnquiryEmailSupplierTest {
   }
 
   @Test
-  public void
+  void
       generateEmails_Should_ReturnExpectedMailDTO_When_PresentConsultantsWereFoundAndNotificatonsForConsultantEnabled() {
     when(releaseToggleService.isToggleEnabled(ReleaseToggle.NEW_EMAIL_NOTIFICATIONS))
         .thenReturn(true);
@@ -114,23 +114,9 @@ public class NewEnquiryEmailSupplierTest {
         .thenReturn(
             asList(
                 new ConsultantAgency(
-                    0L,
-                    MAIN_CONSULTANT_WITH_NEW_EMAIL_NOTIFICATIONS,
-                    0L,
-                    nowInUtc(),
-                    nowInUtc(),
-                    nowInUtc(),
-                    null,
-                    null),
+                    0L, CONSULTANT_2, 0L, nowInUtc(), nowInUtc(), nowInUtc(), null, null),
                 new ConsultantAgency(
-                    1L,
-                    MAIN_CONSULTANT_WITH_NEW_EMAIL_NOTIFICATIONS,
-                    1L,
-                    nowInUtc(),
-                    nowInUtc(),
-                    nowInUtc(),
-                    null,
-                    null)));
+                    1L, CONSULTANT_2, 1L, nowInUtc(), nowInUtc(), nowInUtc(), null, null)));
     when(agencyService.getAgency(any())).thenReturn(AGENCY_DTO_U25);
     when(session.getPostcode()).thenReturn("12345");
 
@@ -153,18 +139,16 @@ public class NewEnquiryEmailSupplierTest {
   }
 
   @Test
-  public void
+  void
       generateEmails_Should_ReturnEmptyList_When_NewNotificationsFeatureEnabledButConsultantNotificationsDisabled() {
     when(consultantAgencyRepository.findByAgencyIdAndDeleteDateIsNull(anyLong()))
         .thenReturn(
             asList(
                 new ConsultantAgency(
-                    0L, MAIN_CONSULTANT, 0L, nowInUtc(), nowInUtc(), nowInUtc(), null, null),
+                    0L, CONSULTANT, 0L, nowInUtc(), nowInUtc(), nowInUtc(), null, null),
                 new ConsultantAgency(
-                    1L, MAIN_CONSULTANT, 1L, nowInUtc(), nowInUtc(), nowInUtc(), null, null)));
+                    1L, CONSULTANT, 1L, nowInUtc(), nowInUtc(), nowInUtc(), null, null)));
     when(agencyService.getAgency(any())).thenReturn(AGENCY_DTO_U25);
-    when(releaseToggleService.isToggleEnabled(ReleaseToggle.NEW_EMAIL_NOTIFICATIONS))
-        .thenReturn(true);
 
     List<MailDTO> generatedMails = newEnquiryEmailSupplier.generateEmails();
 
