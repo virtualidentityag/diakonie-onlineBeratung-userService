@@ -490,8 +490,7 @@ class UserAdminControllerAuthorizationIT {
         AuthorityValue.UPDATE_CHAT,
         AuthorityValue.USER_DEFAULT,
         AuthorityValue.VIEW_AGENCY_CONSULTANTS,
-        AuthorityValue.VIEW_ALL_PEER_SESSIONS,
-        AuthorityValue.ASSIGN_CONSULTANT_TO_PEER_SESSION
+        AuthorityValue.VIEW_ALL_PEER_SESSIONS
       })
   void setConsultantAgenciesShouldReturnForbiddenAndCallNoMethodsIfNotUserAdmin() throws Exception {
     mvc.perform(

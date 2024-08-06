@@ -58,8 +58,7 @@ class AuthorityTest {
     assertNotNull(result);
     assertTrue(result.contains(AuthorityValue.VIEW_ALL_PEER_SESSIONS));
     assertTrue(result.contains(AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY));
-    assertTrue(result.contains(AuthorityValue.ASSIGN_CONSULTANT_TO_PEER_SESSION));
-    assertEquals(3, result.size());
+    assertEquals(2, result.size());
   }
 
   @Test

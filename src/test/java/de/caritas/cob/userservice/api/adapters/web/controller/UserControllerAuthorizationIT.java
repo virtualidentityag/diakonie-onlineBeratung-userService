@@ -1077,7 +1077,6 @@ class UserControllerAuthorizationIT {
         AuthorityValue.ANONYMOUS_DEFAULT,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
-        AuthorityValue.ASSIGN_CONSULTANT_TO_PEER_SESSION,
         AuthorityValue.CONSULTANT_DEFAULT,
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.USER_DEFAULT,
@@ -2011,7 +2010,6 @@ class UserControllerAuthorizationIT {
       authorities = {
         AuthorityValue.ANONYMOUS_DEFAULT,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
-        AuthorityValue.ASSIGN_CONSULTANT_TO_PEER_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.START_CHAT,

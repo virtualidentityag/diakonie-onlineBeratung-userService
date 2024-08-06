@@ -2,7 +2,6 @@ package de.caritas.cob.userservice.api.adapters.web.controller;
 
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.ANONYMOUS_DEFAULT;
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY;
-import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.ASSIGN_CONSULTANT_TO_PEER_SESSION;
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION;
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.CONSULTANT_DEFAULT;
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.CREATE_NEW_CHAT;
@@ -386,7 +385,6 @@ class ConversationControllerAuthorizationIT {
         VIEW_ALL_PEER_SESSIONS,
         ASSIGN_CONSULTANT_TO_SESSION,
         ASSIGN_CONSULTANT_TO_ENQUIRY,
-        ASSIGN_CONSULTANT_TO_PEER_SESSION,
         VIEW_AGENCY_CONSULTANTS,
         TECHNICAL_DEFAULT,
         CREATE_NEW_CHAT,
