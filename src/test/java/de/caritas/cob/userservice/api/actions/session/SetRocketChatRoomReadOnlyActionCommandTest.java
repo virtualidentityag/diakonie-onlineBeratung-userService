@@ -49,7 +49,7 @@ class SetRocketChatRoomReadOnlyActionCommandTest {
   }
 
   @Test
-  void execute_Should_useRocketChatServiceTwice_When_sessionHasGroupId() throws Exception {
+  void execute_Should_useRocketChatService_When_sessionHasGroupId() throws Exception {
     Session session = new Session();
     session.setGroupId("group id");
 
