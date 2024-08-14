@@ -11,9 +11,4 @@
         stripComments="true"/>
     </rollback>
   </changeSet>
-  <changeSet author="COBH-1323" id="COBH-1323-feedbackChatColumn">
-      <sqlFile
-        path="db/changelog/changeset/0002_monitoringKeys_feedbackChatClumn/feedbackChatColumn-rollback.sql"
-        stripComments="true"/>
-  </changeSet>
 </databaseChangeLog>
