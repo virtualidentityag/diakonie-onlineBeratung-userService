@@ -2,7 +2,7 @@
 <databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
-  <changeSet author="tkuzynow" id="migrateUserNotificationSettings">
+  <changeSet author="leandroSilva" id="removeFeedbackRelatedColumns">
     <sqlFile path="db/changelog/changeset/0046_remove_feeback_related_columns/removeRc_feedback_group_idFromSession.sql"
       stripComments="true"/>
     <rollback>
