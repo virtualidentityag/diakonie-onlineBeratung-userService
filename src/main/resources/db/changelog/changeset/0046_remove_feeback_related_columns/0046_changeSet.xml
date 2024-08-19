@@ -5,21 +5,9 @@
   <changeSet author="leandroSilva" id="removeFeedbackRelatedColumns">
     <sqlFile path="db/changelog/changeset/0046_remove_feeback_related_columns/removeRc_feedback_group_idFromSession.sql"
       stripComments="true"/>
-    <rollback>
-      <sqlFile path="db/changelog/changeset/0046_remove_feeback_related_columns/removeRc_feedback_group_idFromSession-rollback.sql"
-        stripComments="true"/>
-    </rollback>
     <sqlFile path="db/changelog/changeset/0046_remove_feeback_related_columns/removeIs_peer_chatFromSession.sql"
       stripComments="true"/>
-    <rollback>
-      <sqlFile path="db/changelog/changeset/0046_remove_feeback_related_columns/removeIs_peer_chatFromSession-rollback.sql"
-        stripComments="true"/>
-    </rollback>
     <sqlFile path="db/changelog/changeset/0046_remove_feeback_related_columns/removeNotify_new_feedback_message_from_advice_seekerFromConsultant.sql"
       stripComments="true"/>
-    <rollback>
-      <sqlFile path="db/changelog/changeset/0046_remove_feeback_related_columns/removeNotify_new_feedback_message_from_advice_seekerFromConsultant-rollback.sql"
-        stripComments="true"/>
-    </rollback>
   </changeSet>
 </databaseChangeLog>
