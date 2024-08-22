@@ -82,10 +82,10 @@ public class RocketChatRemoveFromGroupOperationService extends RocketChatGroupOp
   }
 
   public void removeFromGroup() {
-      this.consultantsToRemoveFromSessions.forEach(
-          ((session, consultants) ->
-              removeConsultantsFromSessionGroup(session.getGroupId(), consultants)));
-    }
+    this.consultantsToRemoveFromSessions.forEach(
+        ((session, consultants) ->
+            removeConsultantsFromSessionGroup(session.getGroupId(), consultants)));
+  }
 
   /**
    * Removes the given consultant from Rocket.Chat group of given session with rollback on error.
