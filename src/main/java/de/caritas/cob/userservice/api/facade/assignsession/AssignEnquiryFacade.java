@@ -163,7 +163,7 @@ public class AssignEnquiryFacade {
             .onSessionConsultants(Map.of(session, consultantsToRemoveFromRocketChat));
 
     if (rcGroupId.equalsIgnoreCase(session.getGroupId())) {
-      rocketChatRemoveFromGroupOperationService.removeFromGroupAndIgnoreGroupNotFound();
+      rocketChatRemoveFromGroupOperationService.removeFromGroup();
     }
     if (rcGroupId.equalsIgnoreCase(session.getFeedbackGroupId())) {
       rocketChatRemoveFromGroupOperationService.removeFromFeedbackGroup();
