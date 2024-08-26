@@ -2135,7 +2135,6 @@ components:
         - "APPOINTMENT_RESCHEDULED"
         - "FURTHER_STEPS"
         - "UPDATE_SESSION_DATA"
-        - "FORWARD"
         - "VIDEOCALL"
         - "FINISHED_CONVERSATION"
         - "USER_MUTED"
