@@ -383,7 +383,8 @@ class AssignEnquiryFacadeTest {
     verifyAsync(
         (a) ->
             verify(this.rocketChatFacade, times(1))
-                .removeUserFromGroupIgnoreGroupNotFound(consultantToRemove.getRocketChatId(), session.getGroupId()));
+                .removeUserFromGroupIgnoreGroupNotFound(
+                    consultantToRemove.getRocketChatId(), session.getGroupId()));
     verifyAsync(
         (a) ->
             verify(this.rocketChatFacade, times(1))
@@ -424,7 +425,8 @@ class AssignEnquiryFacadeTest {
     verifyAsync(
         (a) ->
             verify(this.rocketChatFacade, atLeastOnce())
-                .removeUserFromGroupIgnoreGroupNotFound(consultantToRemove.getRocketChatId(), session.getGroupId()));
+                .removeUserFromGroupIgnoreGroupNotFound(
+                    consultantToRemove.getRocketChatId(), session.getGroupId()));
     verifyAsync(
         (a) ->
             verify(this.rocketChatFacade, atLeastOnce())
