@@ -135,6 +135,7 @@ public class RocketChatService implements MessageClient {
       "Could not get users list from Rocket.Chat";
   private static final String USER_LIST_GET_FIELD_SELECTION = "{\"_id\":1}";
   private static final Integer PAGE_SIZE = 100;
+  private static final String ERROR_ROOM_NOT_FOUND = "error-room-not-found";
   private final LocalDateTime localDateTime1900 = LocalDateTime.of(1900, 1, 1, 0, 0);
 
   private final LocalDateTime localDateTimeFuture = nowInUtc().plusYears(1L);
@@ -1355,7 +1356,7 @@ public class RocketChatService implements MessageClient {
       try {
         response = tryRemoveUserFromGroup(rcUserId, rcGroupId);
       } catch (Exception ex) {
-        if (ex.getMessage().contains("error-group-not-found")) {
+        if (ex.getMessage().contains(ERROR_ROOM_NOT_FOUND)) {
           return;
         }
         log.error(
