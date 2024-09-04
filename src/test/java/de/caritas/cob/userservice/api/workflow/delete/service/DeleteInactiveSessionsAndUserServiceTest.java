@@ -21,15 +21,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.jeasy.random.EasyRandom;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class DeleteInactiveSessionsAndUserServiceTest {
+@ExtendWith(MockitoExtension.class)
+class DeleteInactiveSessionsAndUserServiceTest {
 
   @InjectMocks private DeleteInactiveSessionsAndUserService deleteInactiveSessionsAndUserService;
 
@@ -42,9 +42,8 @@ public class DeleteInactiveSessionsAndUserServiceTest {
   @Mock private InactivePrivateGroupsProvider inactivePrivateGroupsProvider;
 
   @Test
-  public void
-      deleteInactiveSessionsAndUsers_Should_SendWorkflowErrorsMail_When_userNotFoundReason() {
-
+  void deleteInactiveSessionsAndUsers_Should_SendWorkflowErrorsMail_When_userNotFoundReason() {
+    // given
     EasyRandom easyRandom = new EasyRandom();
     User user = easyRandom.nextObject(User.class);
     Session session = easyRandom.nextObject(Session.class);
@@ -63,17 +62,19 @@ public class DeleteInactiveSessionsAndUserServiceTest {
     when(deleteUserAccountService.performUserDeletion(user))
         .thenReturn(Collections.singletonList(deletionWorkflowError));
 
+    // when
     deleteInactiveSessionsAndUserService.deleteInactiveSessionsAndUsers();
 
+    // then
     verify(workflowErrorLogService, Mockito.times(1)).logWorkflowErrors(Collections.emptyList());
     verify(workflowErrorMailService, Mockito.times(1))
         .buildAndSendErrorMail(argThat(list -> !list.isEmpty()));
   }
 
   @Test
-  public void
+  void
       deleteInactiveSessionsAndUsers_Should_DeleteEntireUserAccount_WhenUserHasOnlyInactiveSessions() {
-
+    // given
     EasyRandom easyRandom = new EasyRandom();
     User user = easyRandom.nextObject(User.class);
     Session session1 = easyRandom.nextObject(Session.class);
@@ -90,15 +91,17 @@ public class DeleteInactiveSessionsAndUserServiceTest {
         .thenReturn(Optional.of(user));
     when(sessionRepository.findByUser(user)).thenReturn(Arrays.asList(session1, session2));
 
+    // when
     deleteInactiveSessionsAndUserService.deleteInactiveSessionsAndUsers();
 
+    // then
     verify(deleteUserAccountService, Mockito.times(1)).performUserDeletion(user);
   }
 
   @Test
-  public void
+  void
       deleteInactiveSessionsAndUsers_Should_DeleteSingleSession_WhenUserHasActiveAndInactiveSessions() {
-
+    // given
     EasyRandom easyRandom = new EasyRandom();
     User user = easyRandom.nextObject(User.class);
     Session session1 = easyRandom.nextObject(Session.class);
@@ -115,15 +118,17 @@ public class DeleteInactiveSessionsAndUserServiceTest {
         .thenReturn(Optional.of(user));
     when(sessionRepository.findByUser(user)).thenReturn(Arrays.asList(session1, session2));
 
+    // when
     deleteInactiveSessionsAndUserService.deleteInactiveSessionsAndUsers();
 
+    // then
     verify(deleteSessionService, Mockito.times(1)).performSessionDeletion(session1);
   }
 
   @Test
-  public void
+  void
       deleteInactiveSessionsAndUsers_Should_logWorkflowErrorMail_WhenUserHasActiveAndInactiveSessionsAndHasErrors() {
-
+    // given
     EasyRandom easyRandom = new EasyRandom();
     User user = easyRandom.nextObject(User.class);
     Session session1 = easyRandom.nextObject(Session.class);
@@ -150,8 +155,10 @@ public class DeleteInactiveSessionsAndUserServiceTest {
     when(deleteSessionService.performSessionDeletion(session1))
         .thenReturn(Collections.singletonList(deletionWorkflowError));
 
+    // when
     deleteInactiveSessionsAndUserService.deleteInactiveSessionsAndUsers();
 
+    // then
     verify(workflowErrorLogService, Mockito.times(1))
         .logWorkflowErrors(argThat(list -> !list.isEmpty()));
     verify(workflowErrorMailService, Mockito.times(1))
@@ -159,9 +166,9 @@ public class DeleteInactiveSessionsAndUserServiceTest {
   }
 
   @Test
-  public void
-      deleteInactiveSessionsAndUsers_Should_logWorkflowErrorMail_WhenSessionCouldNotBeFound() {
-
+  void
+      deleteInactiveSessionsAndUsers_Should_notLogError_WhenSessionCouldNotBeFound_BecauseItMayHaveBeenDeletedByPreviousWorkflowRun() {
+    // given
     EasyRandom easyRandom = new EasyRandom();
     User user = easyRandom.nextObject(User.class);
     Session session1 = easyRandom.nextObject(Session.class);
@@ -179,18 +186,17 @@ public class DeleteInactiveSessionsAndUserServiceTest {
         .thenReturn(Optional.of(user));
     when(sessionRepository.findByUser(user)).thenReturn(Arrays.asList(session2, session3));
 
+    // when
     deleteInactiveSessionsAndUserService.deleteInactiveSessionsAndUsers();
 
-    verify(workflowErrorLogService, Mockito.times(1))
-        .logWorkflowErrors(argThat(list -> !list.isEmpty()));
-    verify(workflowErrorMailService, Mockito.times(1))
-        .buildAndSendErrorMail(Collections.emptyList());
+    // then
+    verify(workflowErrorLogService, Mockito.never()).logWorkflowErrors(Mockito.anyList());
+    verify(workflowErrorMailService, Mockito.never()).buildAndSendErrorMail(Mockito.anyList());
   }
 
   @Test
-  public void
-      deleteInactiveSessionsAndUsers_Should_SendWorkflowErrorMail_WhenUserCouldNotBeFound() {
-
+  void deleteInactiveSessionsAndUsers_Should_AttemptToDeleteUserSessions_WhenUserCouldNotBeFound() {
+    // given
     EasyRandom easyRandom = new EasyRandom();
     User user = easyRandom.nextObject(User.class);
     Session session1 = easyRandom.nextObject(Session.class);
@@ -205,10 +211,10 @@ public class DeleteInactiveSessionsAndUserServiceTest {
     when(userRepository.findByRcUserIdAndDeleteDateIsNull(anyString()))
         .thenReturn(Optional.empty());
 
+    // when
     deleteInactiveSessionsAndUserService.deleteInactiveSessionsAndUsers();
 
-    verify(workflowErrorLogService, Mockito.times(1)).logWorkflowErrors(Collections.emptyList());
-    verify(workflowErrorMailService, Mockito.times(1))
-        .buildAndSendErrorMail(argThat(list -> !list.isEmpty()));
+    // then
+    deleteSessionService.performSessionDeletion(session1);
   }
 }
