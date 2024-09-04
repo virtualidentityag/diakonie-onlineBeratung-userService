@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/compare/v3.0.2...v3.1.0) (2024-09-04)
+
+
+### Features
+
+* make deletion routine more error tolerant ([af4a090](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/af4a0903797fa29214c0b8f5d66df18af96c4922))
+* make deletion routine more error tolerant ([a09fea0](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/a09fea00d69af199ff72c99ff6ffd29c7359733b))
+
+
+### Bug Fixes
+
+* delete rooms even if user is already deleted from MariaDB ([c07de3b](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/c07de3bd99af967c70848b9e119a723060bbb214))
+* delete rooms even if user is already deleted from MariaDB ([3a287be](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/3a287be4e827c0ab34370deece502fb9eeb999c2))
+* delete rooms even if user is already deleted from MariaDB ([fb063f7](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/fb063f76e24788811939f8122a45a7dcacdc81bb))
+* delete rooms even if user is already deleted from MariaDB ([959d352](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/959d352c1d20c79ce57ccdbc40495a50dbcf2ed8))
+* tests ([1b1883c](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/1b1883c49d6c1573c45814302bc70194c8759a69))
+* tests ([a399a47](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/a399a474c551b31fd4251261f753f7834ed42078))
+* tests ([798b11d](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/798b11d5b94a5d6d27a08beb5028c9992bae6895))
+* tests ([340da77](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/340da77a83d24cb1ffa47eb31f3c3a28dce32b98))
+* tests ([b9fdf7d](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/b9fdf7d11d70ca5d0e8b5de97136178c57cd90ac))
+
 ### [3.0.2](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/compare/v3.0.1...v3.0.2) (2024-06-14)
 
 
