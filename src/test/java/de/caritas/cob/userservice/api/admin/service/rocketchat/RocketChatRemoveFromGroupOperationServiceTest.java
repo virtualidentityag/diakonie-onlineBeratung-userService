@@ -129,7 +129,7 @@ class RocketChatRemoveFromGroupOperationServiceTest {
 
     this.removeService.removeFromGroupOrRollbackOnFailure();
 
-    verify(this.rocketChatFacade, times(1)).removeUserFromGroup("rcId", "group");
+    verify(this.rocketChatFacade, times(1)).removeUserFromGroupIgnoreGroupNotFound("rcId", "group");
   }
 
   @Test

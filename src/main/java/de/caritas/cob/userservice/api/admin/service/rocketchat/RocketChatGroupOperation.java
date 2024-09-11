@@ -46,7 +46,8 @@ abstract class RocketChatGroupOperation {
   }
 
   void removeConsultantsFromSessionGroups(Session session, List<Consultant> consultants) {
-    removeConsultantsFromRocketChatGroup(session.getGroupId(), consultants);
+    removeConsultantsFromRocketChatGroup(
+        session.getGroupId(), consultants, rocketChatFacade::removeUserFromGroup);
   }
 
   void removeConsultantsFromSessionGroup(String rcGroupId, List<Consultant> consultants) {

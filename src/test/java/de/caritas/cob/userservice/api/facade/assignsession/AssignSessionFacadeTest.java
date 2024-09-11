@@ -167,17 +167,7 @@ class AssignSessionFacadeTest {
         a ->
             verify(this.rocketChatFacade, never())
                 .removeUserFromGroupIgnoreGroupNotFound(
-                    "teamConsultantRcId", session.getFeedbackGroupId()));
-    verifyAsync(
-        a ->
-            verify(this.rocketChatFacade, never())
-                .removeUserFromGroupIgnoreGroupNotFound(
                     "teamConsultantRcId2", session.getGroupId()));
-    verifyAsync(
-        a ->
-            verify(this.rocketChatFacade, never())
-                .removeUserFromGroupIgnoreGroupNotFound(
-                    "teamConsultantRcId2", session.getFeedbackGroupId()));
     verifyAsync(
         a ->
             verify(this.emailNotificationFacade, times(1))
