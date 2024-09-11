@@ -7,10 +7,8 @@ import static de.caritas.cob.userservice.api.testHelper.TestConstants.CONSULTANT
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.CONSULTANT_2;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.CONSULTANT_SESSION_RESPONSE_DTO;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.CONSULTANT_SESSION_RESPONSE_DTO_2;
-import static de.caritas.cob.userservice.api.testHelper.TestConstants.CONSULTANT_SESSION_RESPONSE_DTO_WITHOUT_FEEDBACK_CHAT;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.FILE_DTO;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.MESSAGES_READ_MAP_WITHOUT_UNREADS;
-import static de.caritas.cob.userservice.api.testHelper.TestConstants.MESSAGES_READ_MAP_WITH_ONE_FEEDBACK_UNREAD;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.MESSAGES_READ_MAP_WITH_UNREADS;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.RC_GROUP_ID;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.RC_TOKEN;
@@ -33,7 +31,6 @@ import de.caritas.cob.userservice.api.container.RocketChatRoomInformation;
 import de.caritas.cob.userservice.api.facade.sessionlist.RocketChatRoomInformationProvider;
 import de.caritas.cob.userservice.api.helper.Helper;
 import de.caritas.cob.userservice.api.helper.SessionListAnalyser;
-import de.caritas.cob.userservice.api.manager.consultingtype.ConsultingTypeManager;
 import de.caritas.cob.userservice.api.service.session.SessionTopicEnrichmentService;
 import java.util.Date;
 import java.util.Map;
@@ -55,8 +52,6 @@ class ConsultantSessionEnricherTest {
   @Mock private SessionListAnalyser sessionListAnalyser;
 
   @Mock private RocketChatRoomInformationProvider rocketChatRoomInformationProvider;
-
-  @Mock private ConsultingTypeManager consultingTypeManager;
 
   @Mock private SessionTopicEnrichmentService sessionTopicEnrichmentService;
 
@@ -229,32 +224,6 @@ class ConsultantSessionEnricherTest {
 
   @Test
   void
-      updateRequiredConsultantSessionValues_ShouldNot_SetIsFeedbackReadToFalse_WhenNoMessageWasPostedInTheFeedbackRoom() {
-    RocketChatRoomInformation rocketChatRoomInformation =
-        RocketChatRoomInformation.builder()
-            .readMessages(MESSAGES_READ_MAP_WITH_ONE_FEEDBACK_UNREAD)
-            .roomsForUpdate(ROOMS_UPDATE_DTO_LIST)
-            .groupIdToLastMessageFallbackDate(emptyMap())
-            .lastMessagesRoom(ROOMS_LAST_MESSAGE_DTO_MAP)
-            .userRooms(USERS_ROOMS_LIST)
-            .build();
-    when(rocketChatRoomInformationProvider.retrieveRocketChatInformation(Mockito.any()))
-        .thenReturn(rocketChatRoomInformation);
-    when(sessionListAnalyser.areMessagesForRocketChatGroupReadByUser(
-            Mockito.eq(rocketChatRoomInformation.getReadMessages()), Mockito.any()))
-        .thenReturn(true);
-
-    ConsultantSessionResponseDTO result =
-        consultantSessionEnricher
-            .updateRequiredConsultantSessionValues(
-                singletonList(CONSULTANT_SESSION_RESPONSE_DTO), RC_TOKEN, CONSULTANT)
-            .get(0);
-
-    assertFalse(result.getSession().getFeedbackRead());
-  }
-
-  @Test
-  void
       updateRequiredConsultantSessionValues_Should_SendListWithMonitoringFalse_When_NoMonitoringSetInConsultingTypeSettings() {
     RocketChatRoomInformation rocketChatRoomInformation =
         RocketChatRoomInformation.builder()
@@ -350,32 +319,6 @@ class ConsultantSessionEnricherTest {
   }
 
   @Test
-  void
-      updateRequiredConsultantSessionValues_Should_ReturnSessionListWithFeedbackReadTrue_WhenThereAreNoUnreadFeedbackMessages() {
-    RocketChatRoomInformation rocketChatRoomInformation =
-        RocketChatRoomInformation.builder()
-            .readMessages(MESSAGES_READ_MAP_WITHOUT_UNREADS)
-            .roomsForUpdate(ROOMS_UPDATE_DTO_LIST)
-            .lastMessagesRoom(ROOMS_LAST_MESSAGE_DTO_MAP)
-            .groupIdToLastMessageFallbackDate(emptyMap())
-            .userRooms(USERS_ROOMS_LIST)
-            .build();
-    when(rocketChatRoomInformationProvider.retrieveRocketChatInformation(Mockito.any()))
-        .thenReturn(rocketChatRoomInformation);
-    when(sessionListAnalyser.areMessagesForRocketChatGroupReadByUser(
-            Mockito.eq(rocketChatRoomInformation.getReadMessages()), Mockito.any()))
-        .thenReturn(true);
-
-    ConsultantSessionResponseDTO result =
-        consultantSessionEnricher
-            .updateRequiredConsultantSessionValues(
-                singletonList(CONSULTANT_SESSION_RESPONSE_DTO), RC_TOKEN, CONSULTANT)
-            .get(0);
-
-    assertTrue(result.getSession().getFeedbackRead());
-  }
-
-  @Test
   void updateRequiredConsultantSessionValues_Should_ReturnMessageDateAsUnixtime0_WhenNoMessages() {
     RocketChatRoomInformation rocketChatRoomInformation =
         RocketChatRoomInformation.builder()
@@ -395,34 +338,6 @@ class ConsultantSessionEnricherTest {
             .get(0);
 
     assertEquals(Long.valueOf(Helper.UNIXTIME_0.getTime()), result.getSession().getMessageDate());
-  }
-
-  @Test
-  void
-      updateRequiredConsultantSessionValues_Should_ReturnSessionListWithFeedbackReadTrue_WhenFeedbackGroupIdIsNull() {
-    RocketChatRoomInformation rocketChatRoomInformation =
-        RocketChatRoomInformation.builder()
-            .readMessages(MESSAGES_READ_MAP_WITHOUT_UNREADS)
-            .roomsForUpdate(ROOMS_UPDATE_DTO_LIST)
-            .lastMessagesRoom(ROOMS_LAST_MESSAGE_DTO_MAP)
-            .groupIdToLastMessageFallbackDate(emptyMap())
-            .userRooms(USERS_ROOMS_LIST)
-            .build();
-    when(rocketChatRoomInformationProvider.retrieveRocketChatInformation(Mockito.any()))
-        .thenReturn(rocketChatRoomInformation);
-    when(sessionListAnalyser.areMessagesForRocketChatGroupReadByUser(
-            Mockito.eq(rocketChatRoomInformation.getReadMessages()), Mockito.any()))
-        .thenReturn(true);
-
-    ConsultantSessionResponseDTO result =
-        consultantSessionEnricher
-            .updateRequiredConsultantSessionValues(
-                singletonList(CONSULTANT_SESSION_RESPONSE_DTO_WITHOUT_FEEDBACK_CHAT),
-                RC_TOKEN,
-                CONSULTANT)
-            .get(0);
-
-    assertTrue(result.getSession().getFeedbackRead());
   }
 
   @Test

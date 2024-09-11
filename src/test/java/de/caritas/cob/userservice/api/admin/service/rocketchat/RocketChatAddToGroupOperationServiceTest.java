@@ -29,7 +29,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class RocketChatAddToGroupOperationServiceTest {
+class RocketChatAddToGroupOperationServiceTest {
 
   private final EasyRandom easyRandom = new EasyRandom();
 
@@ -42,8 +42,7 @@ public class RocketChatAddToGroupOperationServiceTest {
   @Mock private ConsultingTypeManager consultingTypeManager;
 
   @Test
-  public void
-      addToGroupsOrRollbackOnFailure_Should_performRocketChatGroupActions_When_paramsAreValid() {
+  void addToGroupsOrRollbackOnFailure_Should_performRocketChatGroupActions_When_paramsAreValid() {
 
     Session session = easyRandom.nextObject(Session.class);
     session.setStatus(SessionStatus.NEW);
@@ -57,14 +56,11 @@ public class RocketChatAddToGroupOperationServiceTest {
 
     verify(this.rocketChatFacade, times(1))
         .addUserToRocketChatGroup(eq(consultant.getRocketChatId()), eq(session.getGroupId()));
-    verify(this.rocketChatFacade, times(1))
-        .addUserToRocketChatGroup(
-            eq(consultant.getRocketChatId()), eq(session.getFeedbackGroupId()));
-    verify(logMethod, times(2)).accept(anyString());
+    verify(logMethod, times(1)).accept(anyString());
   }
 
   @Test
-  public void
+  void
       addToGroupsOrRollbackOnFailure_Should_throwInternalErrorAndPerformRollback_When_addUserToRocketChatGroupFails() {
 
     Session session = easyRandom.nextObject(Session.class);
@@ -88,14 +84,11 @@ public class RocketChatAddToGroupOperationServiceTest {
     } catch (InternalServerErrorException e) {
       verify(this.rocketChatFacade, times(1))
           .removeUserFromGroup(eq(consultant.getRocketChatId()), eq(session.getGroupId()));
-      verify(this.rocketChatFacade, times(1))
-          .removeUserFromGroup(eq(consultant.getRocketChatId()), eq(session.getFeedbackGroupId()));
     }
   }
 
   @Test
-  public void
-      addToGroupsOrRollbackOnFailure_Should_logErrorMessage_When_removeOfTechnicalUserFailes() {
+  void addToGroupsOrRollbackOnFailure_Should_logErrorMessage_When_removeOfTechnicalUserFailes() {
     assertThrows(
         InternalServerErrorException.class,
         () -> {
@@ -117,7 +110,7 @@ public class RocketChatAddToGroupOperationServiceTest {
   }
 
   @Test
-  public void addToGroupsOrRollbackOnFailure_Should_throwInternalError_When_rollbackFails() {
+  void addToGroupsOrRollbackOnFailure_Should_throwInternalError_When_rollbackFails() {
 
     Session session = easyRandom.nextObject(Session.class);
     session.setStatus(SessionStatus.NEW);

@@ -1,10 +1,6 @@
 package de.caritas.cob.userservice.api.facade.assignsession;
 
-import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS;
-import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.VIEW_ALL_PEER_SESSIONS;
 import static de.caritas.cob.userservice.api.testHelper.FieldConstants.FIELD_NAME_ROCKET_CHAT_SYSTEM_USER_ID;
-import static de.caritas.cob.userservice.api.testHelper.TestConstants.FEEDBACK_SESSION_WITH_ASKER_AND_CONSULTANT;
-import static de.caritas.cob.userservice.api.testHelper.TestConstants.RC_FEEDBACK_GROUP_ID_2;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.RC_GROUP_ID;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.ROCKET_CHAT_SYSTEM_USER_ID;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.SESSION_WITH_ASKER_AND_CONSULTANT;
@@ -14,15 +10,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
-import de.caritas.cob.userservice.api.adapters.keycloak.KeycloakService;
 import de.caritas.cob.userservice.api.adapters.rocketchat.RocketChatCredentials;
 import de.caritas.cob.userservice.api.adapters.rocketchat.RocketChatCredentialsProvider;
 import de.caritas.cob.userservice.api.adapters.rocketchat.dto.group.GroupMemberDTO;
-import de.caritas.cob.userservice.api.exception.httpresponses.InternalServerErrorException;
 import de.caritas.cob.userservice.api.exception.rocketchat.RocketChatUserNotInitializedException;
 import de.caritas.cob.userservice.api.model.Consultant;
 import de.caritas.cob.userservice.api.service.ConsultantService;
@@ -49,8 +42,6 @@ class UnauthorizedMembersProviderTest {
 
   @Mock RocketChatCredentialsProvider rocketChatCredentialsProvider;
 
-  @Mock KeycloakService keycloakService;
-
   EasyRandom easyRandom = new EasyRandom();
   Consultant newConsultant = easyRandom.nextObject(Consultant.class);
   Consultant normalConsultant = easyRandom.nextObject(Consultant.class);
@@ -58,13 +49,11 @@ class UnauthorizedMembersProviderTest {
   Consultant teamConsultant2 = easyRandom.nextObject(Consultant.class);
   Consultant mainConsultant = easyRandom.nextObject(Consultant.class);
   Consultant mainConsultant2 = easyRandom.nextObject(Consultant.class);
-  Consultant peerConsultant = easyRandom.nextObject(Consultant.class);
-  Consultant peerConsultant2 = easyRandom.nextObject(Consultant.class);
   RocketChatCredentials techUserRcCredentials = easyRandom.nextObject(RocketChatCredentials.class);
   List<GroupMemberDTO> initialMemberList;
 
   @BeforeEach
-  void setup() throws NoSuchFieldException, SecurityException {
+  void setup() throws SecurityException {
     setField(
         unauthorizedMembersProvider,
         FIELD_NAME_ROCKET_CHAT_SYSTEM_USER_ID,
@@ -80,10 +69,6 @@ class UnauthorizedMembersProviderTest {
     mainConsultant.setTeamConsultant(true);
     mainConsultant2.setRocketChatId("mainConsultantRcId2");
     mainConsultant2.setTeamConsultant(true);
-    peerConsultant.setRocketChatId("peerConsultantRcId");
-    peerConsultant.setTeamConsultant(true);
-    peerConsultant2.setRocketChatId("peerConsultantRcId2");
-    peerConsultant2.setTeamConsultant(true);
     techUserRcCredentials.setRocketChatUserId("techUserRcId");
     initialMemberList =
         asList(
@@ -96,8 +81,6 @@ class UnauthorizedMembersProviderTest {
             new GroupMemberDTO("teamConsultantRcId2", null, "name", null, null),
             new GroupMemberDTO("mainConsultantRcId", null, "name", null, null),
             new GroupMemberDTO("mainConsultantRcId2", null, "name", null, null),
-            new GroupMemberDTO("peerConsultantRcId", null, "name", null, null),
-            new GroupMemberDTO("peerConsultantRcId2", null, "name", null, null),
             new GroupMemberDTO("rcTechnicalRcId", null, "name", null, null),
             new GroupMemberDTO(ROCKET_CHAT_SYSTEM_USER_ID, null, "name", null, null),
             new GroupMemberDTO("techUserRcId", null, "name", null, null));
@@ -107,9 +90,7 @@ class UnauthorizedMembersProviderTest {
             teamConsultant,
             teamConsultant2,
             mainConsultant,
-            mainConsultant2,
-            peerConsultant,
-            peerConsultant2)
+            mainConsultant2)
         .forEach(
             consultant ->
                 when(consultantService.getConsultantByRcUserId(consultant.getRocketChatId()))
@@ -200,17 +181,11 @@ class UnauthorizedMembersProviderTest {
         unauthorizedMembersProvider.obtainConsultantsToRemove(
             RC_GROUP_ID, SESSION_WITH_ASKER_AND_CONSULTANT, newConsultant, initialMemberList);
 
-    assertThat(result.size(), is(7));
+    assertThat(result.size(), is(5));
     assertThat(
         result,
         contains(
-            normalConsultant,
-            teamConsultant,
-            teamConsultant2,
-            mainConsultant,
-            mainConsultant2,
-            peerConsultant,
-            peerConsultant2));
+            normalConsultant, teamConsultant, teamConsultant2, mainConsultant, mainConsultant2));
   }
 
   @Test
@@ -228,9 +203,7 @@ class UnauthorizedMembersProviderTest {
                 teamConsultant,
                 teamConsultant2,
                 mainConsultant,
-                mainConsultant2,
-                peerConsultant,
-                peerConsultant2));
+                mainConsultant2));
 
     var result =
         unauthorizedMembersProvider.obtainConsultantsToRemove(
@@ -238,102 +211,5 @@ class UnauthorizedMembersProviderTest {
 
     assertThat(result.size(), is(1));
     assertThat(result, contains(normalConsultant));
-  }
-
-  @Test
-  void
-      obtainConsultantsToRemove_Should_ReturnCorrectUnauthorizedMemberList_When_SessionIsFeedbackSessionForNormalGroup()
-          throws RocketChatUserNotInitializedException {
-    newConsultant.setTeamConsultant(true);
-    when(rocketChatCredentialsProvider.getTechnicalUser()).thenReturn(techUserRcCredentials);
-    var consultantList =
-        asList(
-            newConsultant,
-            normalConsultant,
-            teamConsultant,
-            teamConsultant2,
-            mainConsultant,
-            mainConsultant2,
-            peerConsultant,
-            peerConsultant2);
-    when(consultantService.findConsultantsByAgencyId(
-            FEEDBACK_SESSION_WITH_ASKER_AND_CONSULTANT.getAgencyId()))
-        .thenReturn(consultantList);
-    consultantList.forEach(
-        consultant ->
-            when(consultantService.getConsultantByRcUserId(consultant.getRocketChatId()))
-                .thenReturn(Optional.of(consultant)));
-    when(keycloakService.userHasAuthority(mainConsultant.getId(), VIEW_ALL_PEER_SESSIONS))
-        .thenReturn(true);
-    when(keycloakService.userHasAuthority(mainConsultant2.getId(), VIEW_ALL_PEER_SESSIONS))
-        .thenReturn(true);
-
-    List<Consultant> result =
-        unauthorizedMembersProvider.obtainConsultantsToRemove(
-            RC_GROUP_ID,
-            FEEDBACK_SESSION_WITH_ASKER_AND_CONSULTANT,
-            newConsultant,
-            initialMemberList);
-
-    assertThat(result.size(), is(5));
-    assertThat(
-        result,
-        contains(
-            normalConsultant, teamConsultant, teamConsultant2, peerConsultant, peerConsultant2));
-  }
-
-  @Test
-  void
-      obtainConsultantsToRemove_Should_ReturnCorrectUnauthorizedMemberList_When_SessionIsFeedbackSessionForFeedbackGroup()
-          throws RocketChatUserNotInitializedException {
-    newConsultant.setTeamConsultant(true);
-    when(rocketChatCredentialsProvider.getTechnicalUser()).thenReturn(techUserRcCredentials);
-    var consultantList =
-        asList(
-            newConsultant,
-            normalConsultant,
-            teamConsultant,
-            teamConsultant2,
-            mainConsultant,
-            mainConsultant2,
-            peerConsultant,
-            peerConsultant2);
-    when(consultantService.findConsultantsByAgencyId(
-            FEEDBACK_SESSION_WITH_ASKER_AND_CONSULTANT.getAgencyId()))
-        .thenReturn(consultantList);
-    when(keycloakService.userHasAuthority(mainConsultant.getId(), VIEW_ALL_FEEDBACK_SESSIONS))
-        .thenReturn(true);
-    when(keycloakService.userHasAuthority(mainConsultant2.getId(), VIEW_ALL_FEEDBACK_SESSIONS))
-        .thenReturn(true);
-
-    List<Consultant> result =
-        unauthorizedMembersProvider.obtainConsultantsToRemove(
-            RC_FEEDBACK_GROUP_ID_2,
-            FEEDBACK_SESSION_WITH_ASKER_AND_CONSULTANT,
-            newConsultant,
-            initialMemberList);
-
-    assertThat(result.size(), is(5));
-    assertThat(
-        result,
-        contains(
-            normalConsultant, teamConsultant, teamConsultant2, peerConsultant, peerConsultant2));
-  }
-
-  @Test
-  void obtainConsultantsToRemove_Should_ThrowInternalServerError_When_TechUserIsNotInitialized()
-      throws RocketChatUserNotInitializedException {
-    assertThrows(
-        InternalServerErrorException.class,
-        () -> {
-          when(rocketChatCredentialsProvider.getTechnicalUser())
-              .thenThrow(new RocketChatUserNotInitializedException(""));
-
-          unauthorizedMembersProvider.obtainConsultantsToRemove(
-              RC_GROUP_ID,
-              FEEDBACK_SESSION_WITH_ASKER_AND_CONSULTANT,
-              newConsultant,
-              initialMemberList);
-        });
   }
 }

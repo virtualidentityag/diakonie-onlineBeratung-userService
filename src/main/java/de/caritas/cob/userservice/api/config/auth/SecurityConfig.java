@@ -170,8 +170,6 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
         .hasAuthority(TECHNICAL_DEFAULT)
         .antMatchers("/liveproxy/send")
         .hasAnyAuthority(USER_DEFAULT, CONSULTANT_DEFAULT, ANONYMOUS_DEFAULT)
-        .antMatchers("/users/mails/messages/feedback/new")
-        .hasAuthority(USE_FEEDBACK)
         .antMatchers("/users/messages/key")
         .hasAuthority(TECHNICAL_DEFAULT)
         .antMatchers("/users/chat/new", "/users/chat/v2/new")

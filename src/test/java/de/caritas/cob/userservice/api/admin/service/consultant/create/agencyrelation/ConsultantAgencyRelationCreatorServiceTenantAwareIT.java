@@ -57,7 +57,7 @@ import org.springframework.transaction.annotation.Transactional;
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestPropertySource(properties = "multitenancy.enabled=true")
 @Transactional(propagation = Propagation.NEVER)
-public class ConsultantAgencyRelationCreatorServiceTenantAwareIT {
+class ConsultantAgencyRelationCreatorServiceTenantAwareIT {
 
   private final EasyRandom easyRandom = new EasyRandom();
 
@@ -92,7 +92,7 @@ public class ConsultantAgencyRelationCreatorServiceTenantAwareIT {
   }
 
   @Test
-  public void
+  void
       createNewConsultantAgency_Should_addConsultantToEnquiriesRocketChatGroups_When_ParamsAreValidAndMultitenancyEnabled() {
 
     Consultant consultant = createConsultantWithoutAgencyAndSession();
@@ -122,10 +122,6 @@ public class ConsultantAgencyRelationCreatorServiceTenantAwareIT {
     verify(rocketChatFacade, timeout(10000))
         .addUserToRocketChatGroup(
             consultant.getRocketChatId(), enquirySessionWithoutConsultant.getGroupId());
-
-    verify(rocketChatFacade, timeout(10000))
-        .addUserToRocketChatGroup(
-            consultant.getRocketChatId(), enquirySessionWithoutConsultant.getFeedbackGroupId());
 
     List<ConsultantAgency> result =
         this.consultantAgencyRepository.findByConsultantIdAndDeleteDateIsNull(consultant.getId());

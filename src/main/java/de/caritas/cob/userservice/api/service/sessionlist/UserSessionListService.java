@@ -46,11 +46,10 @@ public class UserSessionListService {
   }
 
   /**
-   * Returns a list of {@link UserSessionResponseDTO} for given user ID and rocket chat group or
-   * feedback group IDs.
+   * Returns a list of {@link UserSessionResponseDTO} for given user ID and rocket chat group IDs
    *
    * @param userId the ID of an user
-   * @param rcGroupIds the rocket chat group or feedback group IDs
+   * @param rcGroupIds the rocket chat group IDs
    * @param rocketChatCredentials the credentials for accessing rocket chat
    * @param roles the roles of given user
    * @return {@link UserSessionResponseDTO}
@@ -62,8 +61,7 @@ public class UserSessionListService {
       Set<String> roles) {
 
     var groupIds = new HashSet<>(rcGroupIds);
-    var sessions =
-        sessionService.getSessionsByUserAndGroupOrFeedbackGroupIds(userId, groupIds, roles);
+    var sessions = sessionService.getSessionsByUserAndGroupIds(userId, groupIds, roles);
     var chats = chatService.getChatSessionsByGroupIds(groupIds);
 
     return mergeUserSessionsAndChats(sessions, chats, rocketChatCredentials);

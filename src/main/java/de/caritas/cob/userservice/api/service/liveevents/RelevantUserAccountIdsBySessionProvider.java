@@ -28,10 +28,7 @@ public class RelevantUserAccountIdsBySessionProvider implements UserIdsProvider 
    */
   @Override
   public List<String> collectUserIds(String rcGroupId) {
-    Session session =
-        this.sessionRepository
-            .findByGroupId(rcGroupId)
-            .orElse(this.sessionRepository.findByFeedbackGroupId(rcGroupId).orElse(null));
+    Session session = this.sessionRepository.findByGroupId(rcGroupId).orElse(null);
 
     return extractDependentUserIds(session);
   }

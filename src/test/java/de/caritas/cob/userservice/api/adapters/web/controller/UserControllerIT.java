@@ -17,7 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.neovisionaries.i18n.LanguageCode;
-import de.caritas.cob.userservice.api.actions.registry.ActionsRegistry;
 import de.caritas.cob.userservice.api.adapters.rocketchat.RocketChatCredentials;
 import de.caritas.cob.userservice.api.adapters.rocketchat.RocketChatService;
 import de.caritas.cob.userservice.api.adapters.web.controller.interceptor.ApiResponseEntityExceptionHandler;
@@ -114,7 +113,6 @@ class UserControllerIT {
           true,
           true,
           true,
-          true,
           null,
           null,
           ConsultantStatus.CREATED,
@@ -172,7 +170,6 @@ class UserControllerIT {
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(false)
-          .isPeerChat(false)
           .build();
 
   private final Session SESSION_WITHOUT_CONSULTANT =
@@ -189,7 +186,6 @@ class UserControllerIT {
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(false)
-          .isPeerChat(false)
           .build();
 
   private final Session TEAM_SESSION =
@@ -207,7 +203,6 @@ class UserControllerIT {
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(true)
-          .isPeerChat(false)
           .build();
 
   private final Session TEAM_SESSION_WITHOUT_GROUP_ID =
@@ -224,7 +219,6 @@ class UserControllerIT {
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(true)
-          .isPeerChat(false)
           .build();
 
   private final ConsultantResponseDTO CONSULTANT_RESPONSE_DTO =
@@ -297,7 +291,6 @@ class UserControllerIT {
   @MockBean private ConsultantDataFacade consultantDataFacade;
   @MockBean private SessionDataService sessionDataService;
   @MockBean private SessionArchiveService sessionArchiveService;
-  @MockBean private ActionsRegistry actionsRegistry;
 
   @MockBean
   @SuppressWarnings("unused")
@@ -344,8 +337,6 @@ class UserControllerIT {
   private VideoChatConfig videoChatConfig;
 
   @MockBean private AdminUserFacade adminUserFacade;
-
-  @MockBean private EmailNotificationMapper emailNotificationMapper;
 
   @MockBean private SessionDeleteService sessionDeleteService;
 
@@ -1657,11 +1648,6 @@ class UserControllerIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().is(HttpStatus.INTERNAL_SERVER_ERROR.value()));
-  }
-
-  private String giveValidCreateChatBodyWithAgency(ConsultantAgency consultantAgency) {
-    return VALID_CREATE_CHAT_BODY_WITH_AGENCY_PLACEHOLDER.replace(
-        "${AGENCY_ID}", consultantAgency.getAgencyId().toString());
   }
 
   private String giveValidCreateChatBodyWithAgencyId(Long agencyId) {

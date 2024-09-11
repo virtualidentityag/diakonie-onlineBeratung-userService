@@ -211,7 +211,7 @@ public class ChatService {
   /**
    * Returns an {@link List} of {@link UserSessionResponseDTO} for the provided group IDs.
    *
-   * @param groupIds a list of rocket chat group or feedback group IDs
+   * @param groupIds a list of rocket chat group IDs
    * @return {@link List<UserSessionResponseDTO>}
    */
   public List<UserSessionResponseDTO> getChatSessionsByGroupIds(Set<String> groupIds) {

@@ -4,7 +4,6 @@ import static de.caritas.cob.userservice.api.helper.CustomLocalDateTime.nowInUtc
 import static de.caritas.cob.userservice.api.model.Session.RegistrationType.ANONYMOUS;
 import static de.caritas.cob.userservice.api.model.Session.RegistrationType.REGISTERED;
 import static de.caritas.cob.userservice.api.testHelper.ExceptionConstants.INTERNAL_SERVER_ERROR_EXCEPTION;
-import static de.caritas.cob.userservice.api.testHelper.ExceptionConstants.RC_ADD_USER_TO_GROUP_EXCEPTION;
 import static de.caritas.cob.userservice.api.testHelper.ExceptionConstants.RC_CHAT_REMOVE_SYSTEM_MESSAGES_EXCEPTION;
 import static de.caritas.cob.userservice.api.testHelper.ExceptionConstants.RC_POST_MESSAGE_EXCEPTION;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.AGENCY_ID;
@@ -17,7 +16,6 @@ import static de.caritas.cob.userservice.api.testHelper.TestConstants.EXCEPTION;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.IS_LANGUAGE_FORMAL;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.MESSAGE;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.RC_CREDENTIALS;
-import static de.caritas.cob.userservice.api.testHelper.TestConstants.RC_FEEDBACK_GROUP_ID;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.RC_GROUP_ID;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.RC_USERNAME;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.RC_USER_ID;
@@ -76,8 +74,6 @@ import de.caritas.cob.userservice.api.model.Session.SessionStatus;
 import de.caritas.cob.userservice.api.model.User;
 import de.caritas.cob.userservice.api.service.ConsultantAgencyService;
 import de.caritas.cob.userservice.api.service.LogService;
-import de.caritas.cob.userservice.api.service.agency.AgencyService;
-import de.caritas.cob.userservice.api.service.liveevents.LiveEventNotificationService;
 import de.caritas.cob.userservice.api.service.message.MessageServiceProvider;
 import de.caritas.cob.userservice.api.service.message.RocketChatData;
 import de.caritas.cob.userservice.api.service.session.SessionService;
@@ -113,21 +109,6 @@ class CreateEnquiryMessageFacadeTest {
           RC_GROUP_ID, USERNAME, null, null, 0, 0, ROCKET_CHAT_USER_DTO, null, true, false, null);
   private final GroupResponseDTO GROUP_RESPONSE_DTO =
       new GroupResponseDTO(GROUP_DTO, true, null, null);
-  private final GroupDTO FEEDBACK_GROUP_DTO_2 =
-      new GroupDTO(
-          RC_FEEDBACK_GROUP_ID,
-          USERNAME,
-          null,
-          null,
-          0,
-          0,
-          ROCKET_CHAT_USER_DTO,
-          null,
-          true,
-          false,
-          null);
-  private final GroupResponseDTO FEEDBACK_GROUP_RESPONSE_DTO_2 =
-      new GroupResponseDTO(FEEDBACK_GROUP_DTO_2, true, null, null);
   private final Session SESSION_WITHOUT_ENQUIRY_MESSAGE =
       Session.builder()
           .id(1L)
@@ -168,51 +149,16 @@ class CreateEnquiryMessageFacadeTest {
       new ExtendedConsultingTypeResponseDTO()
           .id(CONSULTING_TYPE_ID_SUCHT)
           .slug("suchtberatung")
-          .excludeNonMainConsultantsFromTeamSessions(true)
           .groupChat(new GroupChatDTO().isGroupChat(false))
           .consultantBoundedToConsultingType(false)
           .welcomeMessage(
               new WelcomeMessageDTO().sendWelcomeMessage(false).welcomeMessageText(null))
           .sendFurtherStepsMessage(false)
           .sessionDataInitializing(SESSION_DATA_INITIALIZING)
-          .initializeFeedbackChat(false)
           .notifications(null)
           .languageFormal(false)
           .roles(null)
           .registration(null);
-  private final ExtendedConsultingTypeResponseDTO CONSULTING_TYPE_SETTINGS_WITH_FEEDBACK_CHAT =
-      new ExtendedConsultingTypeResponseDTO()
-          .id(CONSULTING_TYPE_ID_SUCHT)
-          .slug("suchtberatung")
-          .excludeNonMainConsultantsFromTeamSessions(true)
-          .groupChat(new GroupChatDTO().isGroupChat(false))
-          .consultantBoundedToConsultingType(false)
-          .welcomeMessage(
-              new WelcomeMessageDTO().sendWelcomeMessage(false).welcomeMessageText(null))
-          .sendFurtherStepsMessage(false)
-          .sessionDataInitializing(SESSION_DATA_INITIALIZING)
-          .initializeFeedbackChat(true)
-          .notifications(null)
-          .languageFormal(false)
-          .roles(null)
-          .registration(null);
-  private final ExtendedConsultingTypeResponseDTO
-      CONSULTING_TYPE_SETTINGS_WITH_FEEDBACK_CHAT_AND_WELCOME_MESSAGE =
-          new ExtendedConsultingTypeResponseDTO()
-              .id(CONSULTING_TYPE_ID_SUCHT)
-              .slug("suchtberatung")
-              .excludeNonMainConsultantsFromTeamSessions(true)
-              .groupChat(new GroupChatDTO().isGroupChat(false))
-              .consultantBoundedToConsultingType(false)
-              .welcomeMessage(
-                  new WelcomeMessageDTO().sendWelcomeMessage(true).welcomeMessageText(MESSAGE))
-              .sendFurtherStepsMessage(false)
-              .sessionDataInitializing(SESSION_DATA_INITIALIZING)
-              .initializeFeedbackChat(true)
-              .notifications(null)
-              .languageFormal(false)
-              .roles(null)
-              .registration(null);
 
   private final EasyRandom easyRandom = new EasyRandom();
 
@@ -238,12 +184,6 @@ class CreateEnquiryMessageFacadeTest {
 
   @Mock private UserService userService;
 
-  @Mock private AgencyService agencyService;
-
-  @Mock private LiveEventNotificationService liveEventNotificationService;
-
-  @Mock HttpServletRequest servletRequest;
-
   private Session session;
   private User user;
   private ExtendedConsultingTypeResponseDTO extendedConsultingTypeResponseDTO;
@@ -254,7 +194,7 @@ class CreateEnquiryMessageFacadeTest {
   private RocketChatCredentials rocketChatCredentials;
 
   @BeforeEach
-  void setUp() throws NoSuchFieldException, SecurityException {
+  void setUp() throws SecurityException {
     setField(
         createEnquiryMessageFacade,
         FIELD_NAME_ROCKET_CHAT_SYSTEM_USER_ID,
@@ -313,7 +253,6 @@ class CreateEnquiryMessageFacadeTest {
     session.setAgencyId(AGENCY_ID);
     session.setIsConsultantDirectlySet(false);
     extendedConsultingTypeResponseDTO.getWelcomeMessage().sendWelcomeMessage(false);
-    extendedConsultingTypeResponseDTO.initializeFeedbackChat(false);
     groupDTO.setId(RC_GROUP_ID);
     groupResponseDTO.setSuccess(true);
     groupResponseDTO.setGroup(groupDTO);
@@ -367,7 +306,6 @@ class CreateEnquiryMessageFacadeTest {
     session.setEnquiryMessageDate(null);
     session.setAgencyId(AGENCY_ID);
     extendedConsultingTypeResponseDTO.getWelcomeMessage().sendWelcomeMessage(false);
-    extendedConsultingTypeResponseDTO.initializeFeedbackChat(false);
     groupDTO.setId(RC_GROUP_ID);
     groupResponseDTO.setSuccess(true);
     groupResponseDTO.setGroup(groupDTO);
@@ -471,8 +409,7 @@ class CreateEnquiryMessageFacadeTest {
 
   @Test
   void
-      createEnquiryMessage_Should_ThrowInternalServerErrorException_When_CreationOfRocketChatGroupFailsWithAnException()
-          throws RocketChatCreateGroupException {
+      createEnquiryMessage_Should_ThrowInternalServerErrorException_When_CreationOfRocketChatGroupFailsWithAnException() {
     assertThrows(
         InternalServerErrorException.class,
         () -> {
@@ -556,8 +493,7 @@ class CreateEnquiryMessageFacadeTest {
 
   @Test
   void
-      createEnquiryMessage_Should_ThrowInternalServerErrorException_When_AddConsultantToRocketChatGroupFails()
-          throws Exception {
+      createEnquiryMessage_Should_ThrowInternalServerErrorException_When_AddConsultantToRocketChatGroupFails() {
     assertThrows(
         InternalServerErrorException.class,
         () -> {
@@ -673,7 +609,6 @@ class CreateEnquiryMessageFacadeTest {
     session.setConsultingTypeId(0);
     session.setConsultant(null);
     session.setIsConsultantDirectlySet(false);
-    extendedConsultingTypeResponseDTO.setInitializeFeedbackChat(true);
     rocketChatUserDTO.setUsername(USERNAME);
     userInfoResponseDTO.setUser(rocketChatUserDTO);
     groupDTO.setId(RC_GROUP_ID);
@@ -702,7 +637,6 @@ class CreateEnquiryMessageFacadeTest {
         new EnquiryData(user, SESSION_ID, MESSAGE, null, rocketChatCredentials));
 
     verify(spySession, times(1)).setGroupId(groupResponseDTO.getGroup().getId());
-    verify(spySession, times(1)).setFeedbackGroupId(groupResponseDTO.getGroup().getId());
     assertNotNull(spySession.getEnquiryMessageDate());
     verify(spySession, times(1)).setStatus(SessionStatus.NEW);
     verify(sessionService, times(1)).saveSession(spySession);
@@ -711,15 +645,13 @@ class CreateEnquiryMessageFacadeTest {
 
   @Test
   void
-      createEnquiryMessage_Should_ThrowInternalServerErrorException_When_CreatePrivateGroupWithSystemUserFails()
-          throws RocketChatCreateGroupException {
+      createEnquiryMessage_Should_ThrowInternalServerErrorException_When_CreatePrivateGroupWithSystemUserFails() {
     assertThrows(
         InternalServerErrorException.class,
         () -> {
           session.setUser(user);
           session.setConsultingTypeId(0);
           session.setConsultant(null);
-          extendedConsultingTypeResponseDTO.setInitializeFeedbackChat(true);
           rocketChatUserDTO.setUsername(USERNAME);
           userInfoResponseDTO.setUser(rocketChatUserDTO);
           groupDTO.setId(RC_GROUP_ID);
@@ -736,7 +668,7 @@ class CreateEnquiryMessageFacadeTest {
           when(rocketChatRoomNameGenerator.generateGroupName(any(Session.class)))
               .thenReturn(session.getId().toString());
           when(rocketChatService.createPrivateGroup(anyString(), any()))
-              .thenReturn(Optional.of(groupResponseDTO));
+              .thenThrow(RocketChatCreateGroupException.class);
 
           createEnquiryMessageFacade.createEnquiryMessage(
               new EnquiryData(user, SESSION_ID, MESSAGE, null, rocketChatCredentials));
@@ -746,8 +678,7 @@ class CreateEnquiryMessageFacadeTest {
 
   @Test
   void
-      createEnquiryMessage_Should_ThrowInternalServerErrorException_When_UpdateRocketChatIdForUserFails()
-          throws RocketChatCreateGroupException {
+      createEnquiryMessage_Should_ThrowInternalServerErrorException_When_UpdateRocketChatIdForUserFails() {
     assertThrows(
         InternalServerErrorException.class,
         () -> {
@@ -761,7 +692,6 @@ class CreateEnquiryMessageFacadeTest {
           groupResponseDTO.setGroup(groupDTO);
           rocketChatCredentials.setRocketChatUserId(RC_USER_ID);
           rocketChatCredentials.setRocketChatUsername(RC_USERNAME);
-          extendedConsultingTypeResponseDTO.setInitializeFeedbackChat(true);
 
           when(sessionService.getSession(SESSION_ID)).thenReturn(Optional.of(session));
           when(consultingTypeManager.getConsultingTypeSettings(session.getConsultingTypeId()))
@@ -772,6 +702,9 @@ class CreateEnquiryMessageFacadeTest {
               .thenReturn(session.getId().toString());
           when(rocketChatService.createPrivateGroup(anyString(), any()))
               .thenReturn(Optional.of(groupResponseDTO));
+          doThrow(IllegalArgumentException.class)
+              .when(userService)
+              .updateRocketChatIdInDatabase(any(), anyString());
 
           createEnquiryMessageFacade.createEnquiryMessage(
               new EnquiryData(user, SESSION_ID, MESSAGE, null, rocketChatCredentials));
@@ -780,8 +713,7 @@ class CreateEnquiryMessageFacadeTest {
   }
 
   @Test
-  void createEnquiryMessage_Should_ThrowInternalServerErrorException_When_UpdateOfSessionFails()
-      throws RocketChatCreateGroupException {
+  void createEnquiryMessage_Should_ThrowInternalServerErrorException_When_UpdateOfSessionFails() {
     assertThrows(
         InternalServerErrorException.class,
         () -> {
@@ -795,9 +727,6 @@ class CreateEnquiryMessageFacadeTest {
           groupResponseDTO.setGroup(groupDTO);
           rocketChatCredentials.setRocketChatUserId(RC_USER_ID);
           rocketChatCredentials.setRocketChatUsername(RC_USERNAME);
-          extendedConsultingTypeResponseDTO.setInitializeFeedbackChat(true);
-          InternalServerErrorException internalServerErrorException =
-              new InternalServerErrorException(MESSAGE);
 
           when(sessionService.getSession(SESSION_ID)).thenReturn(Optional.of(session));
           when(consultingTypeManager.getConsultingTypeSettings(session.getConsultingTypeId()))
@@ -808,43 +737,7 @@ class CreateEnquiryMessageFacadeTest {
               .thenReturn(session.getId().toString());
           when(rocketChatService.createPrivateGroup(Mockito.anyString(), any()))
               .thenReturn(Optional.of(groupResponseDTO));
-          createEnquiryMessageFacade.createEnquiryMessage(
-              new EnquiryData(user, SESSION_ID, MESSAGE, null, rocketChatCredentials));
-          resetRequestAttributes();
-        });
-  }
-
-  @Test
-  void
-      createEnquiryMessage_Should_ThrowInternalServerErrorException_When_PrivateGroupWithSystemUserIsNotPresent()
-          throws RocketChatCreateGroupException {
-    assertThrows(
-        InternalServerErrorException.class,
-        () -> {
-          session.setUser(user);
-          session.setConsultingTypeId(0);
-          session.setConsultant(null);
-          extendedConsultingTypeResponseDTO.setInitializeFeedbackChat(true);
-          rocketChatUserDTO.setUsername(USERNAME);
-          userInfoResponseDTO.setUser(rocketChatUserDTO);
-          groupDTO.setId(RC_GROUP_ID);
-          groupResponseDTO.setSuccess(true);
-          groupResponseDTO.setGroup(groupDTO);
-          rocketChatCredentials.setRocketChatUserId(RC_USER_ID);
-          rocketChatCredentials.setRocketChatUsername(RC_USERNAME);
-
-          when(sessionService.getSession(SESSION_ID)).thenReturn(Optional.of(session));
-          when(consultingTypeManager.getConsultingTypeSettings(session.getConsultingTypeId()))
-              .thenReturn(extendedConsultingTypeResponseDTO);
-          when(rocketChatService.getUserInfo(RC_USER_ID)).thenReturn(userInfoResponseDTO);
-          when(userHelper.doUsernamesMatch(anyString(), anyString())).thenReturn(true);
-          when(rocketChatRoomNameGenerator.generateGroupName(any(Session.class)))
-              .thenReturn(session.getId().toString());
-          when(rocketChatService.createPrivateGroup(anyString(), any()))
-              .thenReturn(Optional.of(groupResponseDTO));
-          when(rocketChatService.createPrivateGroupWithSystemUser(any()))
-              .thenReturn(Optional.empty());
-
+          when(sessionService.saveSession(any())).thenThrow(InternalServerErrorException.class);
           createEnquiryMessageFacade.createEnquiryMessage(
               new EnquiryData(user, SESSION_ID, MESSAGE, null, rocketChatCredentials));
           resetRequestAttributes();
@@ -855,9 +748,6 @@ class CreateEnquiryMessageFacadeTest {
   void createEnquiryMessage_Should_DeleteRcGroup_WhenAddSystemUserToGroupFails() {
 
     when(sessionService.getSession(SESSION_ID)).thenReturn(Optional.of(SESSION_WITHOUT_CONSULTANT));
-    when(consultingTypeManager.getConsultingTypeSettings(
-            SESSION_WITHOUT_CONSULTANT.getConsultingTypeId()))
-        .thenReturn(CONSULTING_TYPE_SETTINGS_WITH_FEEDBACK_CHAT);
     when(rocketChatService.getUserInfo(RC_USER_ID)).thenReturn(USER_INFO_RESPONSE_DTO);
     when(userHelper.doUsernamesMatch(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
 
@@ -879,9 +769,6 @@ class CreateEnquiryMessageFacadeTest {
           RocketChatUserNotInitializedException {
 
     when(sessionService.getSession(SESSION_ID)).thenReturn(Optional.of(SESSION_WITHOUT_CONSULTANT));
-    when(consultingTypeManager.getConsultingTypeSettings(
-            SESSION_WITHOUT_CONSULTANT.getConsultingTypeId()))
-        .thenReturn(CONSULTING_TYPE_SETTINGS_WITH_FEEDBACK_CHAT);
     when(rocketChatService.getUserInfo(RC_USER_ID)).thenReturn(USER_INFO_RESPONSE_DTO);
     when(userHelper.doUsernamesMatch(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
     when(rocketChatRoomNameGenerator.generateGroupName(Mockito.any(Session.class)))
@@ -906,129 +793,17 @@ class CreateEnquiryMessageFacadeTest {
   }
 
   @Test
-  void
-      createEnquiryMessage_Should_DeleteRcGroupAndFeedbackGroup_WhenAddSystemUserToFeedbackGroupFails() {
-
-    when(sessionService.getSession(SESSION_ID)).thenReturn(Optional.of(SESSION_WITHOUT_CONSULTANT));
-    when(consultingTypeManager.getConsultingTypeSettings(
-            SESSION_WITHOUT_CONSULTANT.getConsultingTypeId()))
-        .thenReturn(CONSULTING_TYPE_SETTINGS_WITH_FEEDBACK_CHAT);
-    when(rocketChatService.getUserInfo(RC_USER_ID)).thenReturn(USER_INFO_RESPONSE_DTO);
-    when(userHelper.doUsernamesMatch(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
-    when(rocketChatRoomNameGenerator.generateGroupName(Mockito.any(Session.class)))
-        .thenReturn(SESSION_WITHOUT_ENQUIRY_MESSAGE.getId().toString());
-
-    try {
-      createEnquiryMessageFacade.createEnquiryMessage(
-          new EnquiryData(USER, SESSION_ID, MESSAGE, null, RC_CREDENTIALS));
-    } catch (Exception e) {
-      assertThat(e, instanceOf(InternalServerErrorException.class));
-    }
-
-    verify(rocketChatService, atMost(1))
-        .rollbackGroup(GROUP_RESPONSE_DTO.getGroup().getId(), RC_CREDENTIALS);
-    verify(rocketChatService, atMost(1))
-        .rollbackGroup(FEEDBACK_GROUP_RESPONSE_DTO_2.getGroup().getId(), RC_CREDENTIALS);
-    resetRequestAttributes();
-  }
-
-  @Test
-  void
-      createEnquiryMessage_Should_DeleteRcGroupAndFeedbackGroup_When_WhenRemoveSystemMessagesFailsForFeedbackGroup()
-          throws Exception {
-
-    when(consultingTypeManager.getConsultingTypeSettings(
-            SESSION_WITHOUT_CONSULTANT.getConsultingTypeId()))
-        .thenReturn(CONSULTING_TYPE_SETTINGS_WITH_FEEDBACK_CHAT);
-    when(sessionService.getSession(SESSION_ID)).thenReturn(Optional.of(SESSION_WITHOUT_CONSULTANT));
-    when(rocketChatService.getUserInfo(RC_USER_ID)).thenReturn(USER_INFO_RESPONSE_DTO);
-    when(userHelper.doUsernamesMatch(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
-    when(rocketChatService.createPrivateGroup(Mockito.anyString(), Mockito.eq(RC_CREDENTIALS)))
-        .thenReturn(Optional.of(GROUP_RESPONSE_DTO));
-    when(rocketChatRoomNameGenerator.generateGroupName(Mockito.any(Session.class)))
-        .thenReturn(SESSION_WITHOUT_ENQUIRY_MESSAGE.getId().toString());
-    when(consultantAgencyService.findConsultantsByAgencyId(AGENCY_ID))
-        .thenReturn(CONSULTANT_AGENCY_LIST);
-    when(rocketChatService.createPrivateGroupWithSystemUser(Mockito.any()))
-        .thenReturn(Optional.of(FEEDBACK_GROUP_RESPONSE_DTO_2));
-    doThrow(RC_CHAT_REMOVE_SYSTEM_MESSAGES_EXCEPTION)
-        .when(rocketChatService)
-        .removeSystemMessages(
-            Mockito.eq(FEEDBACK_GROUP_RESPONSE_DTO_2.getGroup().getId()),
-            Mockito.any(),
-            Mockito.any());
-
-    try {
-      createEnquiryMessageFacade.createEnquiryMessage(
-          new EnquiryData(USER, SESSION_ID, MESSAGE, null, RC_CREDENTIALS));
-    } catch (Exception e) {
-      assertThat(e, instanceOf(InternalServerErrorException.class));
-    }
-
-    verify(rocketChatService, atMost(1))
-        .rollbackGroup(GROUP_RESPONSE_DTO.getGroup().getId(), RC_CREDENTIALS);
-    verify(rocketChatService, atMost(1))
-        .rollbackGroup(FEEDBACK_GROUP_RESPONSE_DTO_2.getGroup().getId(), RC_CREDENTIALS);
-    resetRequestAttributes();
-  }
-
-  @Test
-  void
-      createEnquiryMessage_Should_DeleteRcGroupAndFeedbackGroup_When_AddConsultantToRocketChatFeedbackGroupFails()
-          throws RocketChatCreateGroupException, RocketChatAddUserToGroupException {
-
-    when(consultingTypeManager.getConsultingTypeSettings(
-            SESSION_WITHOUT_CONSULTANT.getConsultingTypeId()))
-        .thenReturn(CONSULTING_TYPE_SETTINGS_WITH_FEEDBACK_CHAT);
-    when(sessionService.getSession(SESSION_ID)).thenReturn(Optional.of(SESSION_WITHOUT_CONSULTANT));
-    when(rocketChatService.getUserInfo(RC_USER_ID)).thenReturn(USER_INFO_RESPONSE_DTO);
-    when(userHelper.doUsernamesMatch(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
-    when(rocketChatService.createPrivateGroup(Mockito.anyString(), Mockito.eq(RC_CREDENTIALS)))
-        .thenReturn(Optional.of(GROUP_RESPONSE_DTO));
-    when(rocketChatRoomNameGenerator.generateGroupName(Mockito.any(Session.class)))
-        .thenReturn(SESSION_WITHOUT_ENQUIRY_MESSAGE.getId().toString());
-    when(consultantAgencyService.findConsultantsByAgencyId(AGENCY_ID))
-        .thenReturn(CONSULTANT_AGENCY_LIST);
-    when(rocketChatService.createPrivateGroupWithSystemUser(Mockito.any()))
-        .thenReturn(Optional.of(FEEDBACK_GROUP_RESPONSE_DTO_2));
-    Mockito.doThrow(RC_ADD_USER_TO_GROUP_EXCEPTION)
-        .when(rocketChatService)
-        .addUserToGroup(
-            CONSULTANT_AGENCY_LIST.get(0).getConsultant().getRocketChatId(),
-            FEEDBACK_GROUP_RESPONSE_DTO_2.getGroup().getId());
-
-    try {
-      createEnquiryMessageFacade.createEnquiryMessage(
-          new EnquiryData(USER, SESSION_ID, MESSAGE, null, RC_CREDENTIALS));
-    } catch (Exception e) {
-      assertThat(e, instanceOf(InternalServerErrorException.class));
-    }
-
-    verify(rocketChatService, times(1))
-        .rollbackGroup(GROUP_RESPONSE_DTO.getGroup().getId(), RC_CREDENTIALS);
-    verify(rocketChatService, times(1))
-        .deleteGroupAsSystemUser(FEEDBACK_GROUP_RESPONSE_DTO_2.getGroup().getId());
-    resetRequestAttributes();
-  }
-
-  @Test
-  void createEnquiryMessage_Should_DeleteRcGroupFeedbackGroup_When_UpdateOfSessionFails()
-      throws Exception {
+  void createEnquiryMessage_Should_DeleteRcGroup_When_UpdateOfSessionFails() throws Exception {
 
     Session spySession = Mockito.spy(SESSION_WITHOUT_CONSULTANT);
 
     when(sessionService.getSession(SESSION_ID)).thenReturn(Optional.of(spySession));
-    when(consultingTypeManager.getConsultingTypeSettings(
-            SESSION_WITHOUT_CONSULTANT.getConsultingTypeId()))
-        .thenReturn(CONSULTING_TYPE_SETTINGS_WITH_FEEDBACK_CHAT);
     when(rocketChatService.getUserInfo(RC_USER_ID)).thenReturn(USER_INFO_RESPONSE_DTO);
     when(userHelper.doUsernamesMatch(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
     when(rocketChatRoomNameGenerator.generateGroupName(Mockito.any(Session.class)))
         .thenReturn(SESSION_WITHOUT_ENQUIRY_MESSAGE.getId().toString());
     when(rocketChatService.createPrivateGroup(Mockito.anyString(), Mockito.eq(RC_CREDENTIALS)))
         .thenReturn(Optional.of(GROUP_RESPONSE_DTO));
-    when(rocketChatService.createPrivateGroupWithSystemUser(Mockito.any()))
-        .thenReturn(Optional.of(FEEDBACK_GROUP_RESPONSE_DTO_2));
     when(sessionService.saveSession(spySession)).thenThrow(INTERNAL_SERVER_ERROR_EXCEPTION);
 
     try {
@@ -1040,32 +815,23 @@ class CreateEnquiryMessageFacadeTest {
 
     verify(rocketChatService, times(1))
         .rollbackGroup(GROUP_RESPONSE_DTO.getGroup().getId(), RC_CREDENTIALS);
-    verify(rocketChatService, times(1))
-        .deleteGroupAsSystemUser(FEEDBACK_GROUP_RESPONSE_DTO_2.getGroup().getId());
     resetRequestAttributes();
   }
 
   @Test
-  void
-      createEnquiryMessage_Should_DeleteRcGroupFeedbackGroup_When_PostWelcomeMessageFailsWithAnException()
-          throws Exception {
+  void createEnquiryMessage_Should_DeleteRcGroup_When_PostWelcomeMessageFailsWithAnException()
+      throws Exception {
 
     when(sessionService.getSession(SESSION_ID)).thenReturn(Optional.of(SESSION_WITHOUT_CONSULTANT));
-    when(consultingTypeManager.getConsultingTypeSettings(
-            SESSION_WITHOUT_CONSULTANT.getConsultingTypeId()))
-        .thenReturn(CONSULTING_TYPE_SETTINGS_WITH_FEEDBACK_CHAT_AND_WELCOME_MESSAGE);
     when(rocketChatService.getUserInfo(RC_USER_ID)).thenReturn(USER_INFO_RESPONSE_DTO);
     when(userHelper.doUsernamesMatch(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
     when(rocketChatService.createPrivateGroup(Mockito.anyString(), Mockito.eq(RC_CREDENTIALS)))
         .thenReturn(Optional.of(GROUP_RESPONSE_DTO));
-    when(rocketChatService.createPrivateGroupWithSystemUser(Mockito.any()))
-        .thenReturn(Optional.of(FEEDBACK_GROUP_RESPONSE_DTO_2));
     when(rocketChatRoomNameGenerator.generateGroupName(Mockito.any(Session.class)))
         .thenReturn(SESSION_WITHOUT_ENQUIRY_MESSAGE.getId().toString());
     CreateEnquiryExceptionInformation createEnquiryExceptionInformation =
         CreateEnquiryExceptionInformation.builder()
             .rcGroupId(GROUP_RESPONSE_DTO.getGroup().getId())
-            .rcFeedbackGroupId(FEEDBACK_GROUP_RESPONSE_DTO_2.getGroup().getId())
             .session(SESSION_WITHOUT_CONSULTANT)
             .build();
     RocketChatPostWelcomeMessageException rocketChatPostWelcomeMessageException =
@@ -1085,31 +851,23 @@ class CreateEnquiryMessageFacadeTest {
 
     verify(rocketChatService, times(1))
         .rollbackGroup(GROUP_RESPONSE_DTO.getGroup().getId(), RC_CREDENTIALS);
-    verify(rocketChatService, times(1))
-        .deleteGroupAsSystemUser(FEEDBACK_GROUP_RESPONSE_DTO_2.getGroup().getId());
     resetRequestAttributes();
   }
 
   @Test
-  void createEnquiryMessage_Should_DeleteRcGroupFeedbackGroup_When_PostMessageFailsWithAnException()
+  void createEnquiryMessage_Should_DeleteRcGroup_When_PostMessageFailsWithAnException()
       throws Exception {
 
     when(sessionService.getSession(SESSION_ID)).thenReturn(Optional.of(SESSION_WITHOUT_CONSULTANT));
-    when(consultingTypeManager.getConsultingTypeSettings(
-            SESSION_WITHOUT_CONSULTANT.getConsultingTypeId()))
-        .thenReturn(CONSULTING_TYPE_SETTINGS_WITH_FEEDBACK_CHAT);
     when(rocketChatService.getUserInfo(RC_USER_ID)).thenReturn(USER_INFO_RESPONSE_DTO);
     when(userHelper.doUsernamesMatch(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
     when(rocketChatService.createPrivateGroup(Mockito.anyString(), Mockito.eq(RC_CREDENTIALS)))
         .thenReturn(Optional.of(GROUP_RESPONSE_DTO));
-    when(rocketChatService.createPrivateGroupWithSystemUser(Mockito.any()))
-        .thenReturn(Optional.of(FEEDBACK_GROUP_RESPONSE_DTO_2));
     when(rocketChatRoomNameGenerator.generateGroupName(Mockito.any(Session.class)))
         .thenReturn(SESSION_WITHOUT_ENQUIRY_MESSAGE.getId().toString());
     CreateEnquiryExceptionInformation createEnquiryExceptionInformation =
         CreateEnquiryExceptionInformation.builder()
             .rcGroupId(GROUP_RESPONSE_DTO.getGroup().getId())
-            .rcFeedbackGroupId(FEEDBACK_GROUP_RESPONSE_DTO_2.getGroup().getId())
             .session(SESSION_WITHOUT_CONSULTANT)
             .build();
     RocketChatPostMessageException rocketChatPostMessageException =
@@ -1128,25 +886,18 @@ class CreateEnquiryMessageFacadeTest {
 
     verify(rocketChatService, times(1))
         .rollbackGroup(GROUP_RESPONSE_DTO.getGroup().getId(), RC_CREDENTIALS);
-    verify(rocketChatService, times(1))
-        .deleteGroupAsSystemUser(FEEDBACK_GROUP_RESPONSE_DTO_2.getGroup().getId());
     resetRequestAttributes();
   }
 
   @Test
-  void createEnquiryMessage_Should_DeleteRcGroupFeedback_When_UpdateOfUserFailsWithAnException()
+  void createEnquiryMessage_Should_DeleteRcGroup_When_UpdateOfUserFailsWithAnException()
       throws Exception {
 
     when(sessionService.getSession(SESSION_ID)).thenReturn(Optional.of(SESSION_WITHOUT_CONSULTANT));
-    when(consultingTypeManager.getConsultingTypeSettings(
-            SESSION_WITHOUT_CONSULTANT.getConsultingTypeId()))
-        .thenReturn(CONSULTING_TYPE_SETTINGS_WITH_FEEDBACK_CHAT_AND_WELCOME_MESSAGE);
     when(rocketChatService.getUserInfo(RC_USER_ID)).thenReturn(USER_INFO_RESPONSE_DTO);
     when(userHelper.doUsernamesMatch(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
     when(rocketChatService.createPrivateGroup(Mockito.anyString(), Mockito.eq(RC_CREDENTIALS)))
         .thenReturn(Optional.of(GROUP_RESPONSE_DTO));
-    when(rocketChatService.createPrivateGroupWithSystemUser(Mockito.any()))
-        .thenReturn(Optional.of(FEEDBACK_GROUP_RESPONSE_DTO_2));
     when(rocketChatRoomNameGenerator.generateGroupName(Mockito.any(Session.class)))
         .thenReturn(SESSION_WITHOUT_ENQUIRY_MESSAGE.getId().toString());
     doThrow(new IllegalArgumentException())
@@ -1162,8 +913,6 @@ class CreateEnquiryMessageFacadeTest {
 
     verify(rocketChatService, times(1))
         .rollbackGroup(GROUP_RESPONSE_DTO.getGroup().getId(), RC_CREDENTIALS);
-    verify(rocketChatService, times(1))
-        .deleteGroupAsSystemUser(FEEDBACK_GROUP_RESPONSE_DTO_2.getGroup().getId());
     resetRequestAttributes();
   }
 
@@ -1178,7 +927,6 @@ class CreateEnquiryMessageFacadeTest {
     session.setAgencyId(AGENCY_ID);
     extendedConsultingTypeResponseDTO.getWelcomeMessage().setSendWelcomeMessage(true);
     extendedConsultingTypeResponseDTO.setSendFurtherStepsMessage(true);
-    extendedConsultingTypeResponseDTO.setInitializeFeedbackChat(false);
     groupDTO.setId(RC_GROUP_ID);
     groupResponseDTO.setSuccess(true);
     groupResponseDTO.setGroup(groupDTO);
@@ -1223,7 +971,6 @@ class CreateEnquiryMessageFacadeTest {
     when(session.getConsultant()).thenReturn(new Consultant());
     when(session.getAgencyId()).thenReturn(AGENCY_ID);
     when(session.getRegistrationType()).thenReturn(REGISTERED);
-    extendedConsultingTypeResponseDTO.setInitializeFeedbackChat(false);
     groupDTO.setId(RC_GROUP_ID);
     groupResponseDTO.setSuccess(true);
     groupResponseDTO.setGroup(groupDTO);

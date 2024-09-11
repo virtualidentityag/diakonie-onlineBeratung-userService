@@ -2,15 +2,12 @@ package de.caritas.cob.userservice.api.facade.sessionlist;
 
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.RC_CREDENTIALS;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.RC_CREDENTIALS_WITH_EMPTY_USER_VALUES;
-import static de.caritas.cob.userservice.api.testHelper.TestConstants.RC_FEEDBACK_GROUP_ID;
-import static de.caritas.cob.userservice.api.testHelper.TestConstants.RC_FEEDBACK_GROUP_ID_2;
-import static de.caritas.cob.userservice.api.testHelper.TestConstants.RC_FEEDBACK_GROUP_ID_3;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.RC_GROUP_ID;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.RC_GROUP_ID_2;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.RC_GROUP_ID_3;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.ROOMS_LAST_MESSAGE_DTO_MAP;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.ROOMS_UPDATE_DTO_LIST;
-import static de.caritas.cob.userservice.api.testHelper.TestConstants.SUBSCRIPTIONS_UPDATE_LIST_DTO_WITH_ONE_FEEDBACK_UNREAD;
+import static de.caritas.cob.userservice.api.testHelper.TestConstants.SUBSCRIPTIONS_UPDATE_LIST_DTO;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.USERS_ROOMS_LIST;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.USER_DTO_3;
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,30 +27,27 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class RocketChatRoomInformationProviderTest {
+class RocketChatRoomInformationProviderTest {
 
   @InjectMocks private RocketChatRoomInformationProvider rocketChatRoomInformationProvider;
 
   @Mock private RocketChatService rocketChatService;
 
   @Test
-  public void retrieveRocketChatInformation_Should_Return_CorrectMessagesReadMap() {
+  void retrieveRocketChatInformation_Should_Return_CorrectMessagesReadMap() {
 
     when(rocketChatService.getSubscriptionsOfUser(RC_CREDENTIALS))
-        .thenReturn(SUBSCRIPTIONS_UPDATE_LIST_DTO_WITH_ONE_FEEDBACK_UNREAD);
+        .thenReturn(SUBSCRIPTIONS_UPDATE_LIST_DTO);
     RocketChatRoomInformation rocketChatRoomInformation =
         rocketChatRoomInformationProvider.retrieveRocketChatInformation(RC_CREDENTIALS);
 
     assertTrue(rocketChatRoomInformation.getReadMessages().get(RC_GROUP_ID));
     assertTrue(rocketChatRoomInformation.getReadMessages().get(RC_GROUP_ID_2));
     assertTrue(rocketChatRoomInformation.getReadMessages().get(RC_GROUP_ID_3));
-    assertFalse(rocketChatRoomInformation.getReadMessages().get(RC_FEEDBACK_GROUP_ID));
-    assertTrue(rocketChatRoomInformation.getReadMessages().get(RC_FEEDBACK_GROUP_ID_2));
-    assertTrue(rocketChatRoomInformation.getReadMessages().get(RC_FEEDBACK_GROUP_ID_3));
   }
 
   @Test
-  public void retrieveRocketChatInformation_Should_Return_RocketChatRoomsUpdateList() {
+  void retrieveRocketChatInformation_Should_Return_RocketChatRoomsUpdateList() {
 
     when(rocketChatService.getRoomsOfUser(RC_CREDENTIALS)).thenReturn(ROOMS_UPDATE_DTO_LIST);
     RocketChatRoomInformation rocketChatRoomInformation =
@@ -62,7 +56,7 @@ public class RocketChatRoomInformationProviderTest {
   }
 
   @Test
-  public void retrieveRocketChatInformation_Should_Return_CorrectRocketChatUserRoomList() {
+  void retrieveRocketChatInformation_Should_Return_CorrectRocketChatUserRoomList() {
 
     when(rocketChatService.getRoomsOfUser(RC_CREDENTIALS)).thenReturn(ROOMS_UPDATE_DTO_LIST);
     RocketChatRoomInformation rocketChatRoomInformation =
@@ -71,7 +65,7 @@ public class RocketChatRoomInformationProviderTest {
   }
 
   @Test
-  public void retrieveRocketChatInformation_Should_Return_CorrectRocketChatLastMessageRoom() {
+  void retrieveRocketChatInformation_Should_Return_CorrectRocketChatLastMessageRoom() {
 
     when(rocketChatService.getRoomsOfUser(RC_CREDENTIALS)).thenReturn(ROOMS_UPDATE_DTO_LIST);
     RocketChatRoomInformation rocketChatRoomInformation =
@@ -80,7 +74,7 @@ public class RocketChatRoomInformationProviderTest {
   }
 
   @Test
-  public void retrieveRocketChatInformation_Should_Return_EmptyObject_When_RcUserIdNotSet() {
+  void retrieveRocketChatInformation_Should_Return_EmptyObject_When_RcUserIdNotSet() {
 
     RocketChatRoomInformation rocketChatRoomInformation =
         rocketChatRoomInformationProvider.retrieveRocketChatInformation(
@@ -93,7 +87,7 @@ public class RocketChatRoomInformationProviderTest {
   }
 
   @Test
-  public void should_collect_fallback_date_for_rooms_without_last_message() {
+  void should_collect_fallback_date_for_rooms_without_last_message() {
     var fallbackDate = new Date(1655730882738L);
     var roomUpdateWithoutLastMessage =
         new RoomsUpdateDTO(
@@ -121,7 +115,7 @@ public class RocketChatRoomInformationProviderTest {
   }
 
   @Test
-  public void should_not_fail_on_rooms_without_fallback_date() {
+  void should_not_fail_on_rooms_without_fallback_date() {
     var roomUpdateWithoutLastMessage =
         new RoomsUpdateDTO(
             "4711aaGc",

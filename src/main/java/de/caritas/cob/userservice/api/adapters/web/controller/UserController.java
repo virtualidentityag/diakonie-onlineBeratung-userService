@@ -71,7 +71,6 @@ import de.caritas.cob.userservice.api.facade.sessionlist.SessionListFacade;
 import de.caritas.cob.userservice.api.facade.userdata.AskerDataProvider;
 import de.caritas.cob.userservice.api.facade.userdata.ConsultantDataFacade;
 import de.caritas.cob.userservice.api.facade.userdata.ConsultantDataProvider;
-import de.caritas.cob.userservice.api.facade.userdata.EmailNotificationMapper;
 import de.caritas.cob.userservice.api.facade.userdata.KeycloakUserDataProvider;
 import de.caritas.cob.userservice.api.helper.AuthenticatedUser;
 import de.caritas.cob.userservice.api.model.Chat;
@@ -173,8 +172,6 @@ public class UserController implements UsersApi {
   private final @NotNull IdentityClient identityClient;
 
   private final @NotNull AdminUserFacade adminUserFacade;
-
-  private final @NonNull EmailNotificationMapper emailNotificationMapper;
 
   @Value("${feature.topics.enabled}")
   private boolean featureTopicsEnabled;
@@ -340,13 +337,13 @@ public class UserController implements UsersApi {
 
   /**
    * Returns a list of sessions for the currently authenticated/logged in user and given RocketChat
-   * group, or feedback group IDs.
+   * group IDs.
    *
    * @param rcToken Rocket.Chat token (required)
    * @return {@link ResponseEntity} of {@link UserSessionListResponseDTO}
    */
   @Override
-  public ResponseEntity<GroupSessionListResponseDTO> getSessionsForGroupOrFeedbackGroupIds(
+  public ResponseEntity<GroupSessionListResponseDTO> getSessionsForGroupIds(
       @RequestHeader String rcToken, @RequestParam List<String> rcGroupIds) {
     GroupSessionListResponseDTO groupSessionList;
     if (authenticatedUser.isConsultant()) {
@@ -711,26 +708,6 @@ public class UserController implements UsersApi {
     emailNotificationFacade.sendNewMessageNotification(
         newMessageNotificationDTO.getRcGroupId(),
         authenticatedUser.getRoles(),
-        authenticatedUser.getUserId(),
-        TenantContext.getCurrentTenantData());
-
-    return new ResponseEntity<>(HttpStatus.OK);
-  }
-
-  /**
-   * Sends email notifications to the user(s) if there has been a new feedback answer. Uses the
-   * provided Keycloak authorization token for user verification (user role). This means that the
-   * user that wrote the answer should also call this method.
-   *
-   * @param newMessageNotificationDTO (required)
-   * @return {@link ResponseEntity} containing {@link HttpStatus}
-   */
-  @Override
-  public ResponseEntity<Void> sendNewFeedbackMessageNotification(
-      @RequestBody NewMessageNotificationDTO newMessageNotificationDTO) {
-
-    emailNotificationFacade.sendNewFeedbackMessageNotification(
-        newMessageNotificationDTO.getRcGroupId(),
         authenticatedUser.getUserId(),
         TenantContext.getCurrentTenantData());
 

@@ -59,8 +59,6 @@ public class SessionMapper {
         .status(session.getStatus().getValue())
         .postcode(session.getPostcode())
         .groupId(session.getGroupId())
-        .feedbackGroupId(
-            nonNull(session.getFeedbackGroupId()) ? session.getFeedbackGroupId() : null)
         .askerRcId(
             nonNull(session.getUser()) && nonNull(session.getUser().getRcUserId())
                 ? session.getUser().getRcUserId()
@@ -68,7 +66,6 @@ public class SessionMapper {
         .messageDate(toUnixTime(session.getEnquiryMessageDate()))
         .isTeamSession(session.isTeamSession())
         .language(LanguageCode.fromValue(session.getLanguageCode().name()))
-        .isPeerChat(session.isPeerChat())
         .registrationType(session.getRegistrationType().name())
         .createDate(toIsoTime(session.getCreateDate()))
         .topic(new SessionTopicDTO().id(session.getMainTopicId()));

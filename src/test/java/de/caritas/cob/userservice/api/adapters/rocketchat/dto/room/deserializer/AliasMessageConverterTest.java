@@ -5,7 +5,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import de.caritas.cob.userservice.api.adapters.web.dto.AliasMessageDTO;
-import de.caritas.cob.userservice.api.adapters.web.dto.ForwardMessageDTO;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
@@ -16,15 +15,6 @@ class AliasMessageConverterTest {
       convertStringToAliasMessageDTO_Should_returnOptionalEmpty_When_jsonStringCanNotBeConverted() {
     Optional<AliasMessageDTO> result =
         new AliasMessageConverter().convertStringToAliasMessageDTO("alias");
-
-    assertThat(result.isPresent(), is(false));
-  }
-
-  @Test
-  void
-      convertStringToForwardMessageDTO_Should_returnOptionalEmpty_When_jsonStringCanNotBeConverted() {
-    Optional<ForwardMessageDTO> result =
-        new AliasMessageConverter().convertStringToForwardMessageDTO("alias");
 
     assertThat(result.isPresent(), is(false));
   }

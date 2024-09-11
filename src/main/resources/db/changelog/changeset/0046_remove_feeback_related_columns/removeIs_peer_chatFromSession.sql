@@ -1,2 +1,2 @@
 ALTER TABLE `userservice`.`session`
-DROP `rc_feedback_group_id`;
+DROP `is_peer_chat`;

@@ -91,18 +91,14 @@ class AppointmentControllerAuthorizationIT {
         AuthorityValue.ANONYMOUS_DEFAULT,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
-        AuthorityValue.ASSIGN_CONSULTANT_TO_PEER_SESSION,
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.TECHNICAL_DEFAULT,
-        AuthorityValue.USE_FEEDBACK,
         AuthorityValue.USER_DEFAULT,
         AuthorityValue.USER_ADMIN,
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_AGENCY_CONSULTANTS,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
-        AuthorityValue.VIEW_ALL_PEER_SESSIONS
+        AuthorityValue.VIEW_AGENCY_CONSULTANTS
       })
   void putAppointmentsShouldReturnForbiddenWhenNoConsultantAuthority() throws Exception {
     givenAValidAppointment();
@@ -142,18 +138,14 @@ class AppointmentControllerAuthorizationIT {
         AuthorityValue.ANONYMOUS_DEFAULT,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
-        AuthorityValue.ASSIGN_CONSULTANT_TO_PEER_SESSION,
         AuthorityValue.CREATE_NEW_CHAT,
         AuthorityValue.TECHNICAL_DEFAULT,
-        AuthorityValue.USE_FEEDBACK,
         AuthorityValue.USER_DEFAULT,
         AuthorityValue.USER_ADMIN,
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_AGENCY_CONSULTANTS,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
-        AuthorityValue.VIEW_ALL_PEER_SESSIONS
+        AuthorityValue.VIEW_AGENCY_CONSULTANTS
       })
   void deleteAppointmentsShouldReturnForbiddenWhenNoConsultantAuthority() throws Exception {
     mvc.perform(
@@ -189,17 +181,13 @@ class AppointmentControllerAuthorizationIT {
         AuthorityValue.ANONYMOUS_DEFAULT,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
-        AuthorityValue.ASSIGN_CONSULTANT_TO_PEER_SESSION,
         AuthorityValue.CREATE_NEW_CHAT,
-        AuthorityValue.USE_FEEDBACK,
         AuthorityValue.USER_DEFAULT,
         AuthorityValue.USER_ADMIN,
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_AGENCY_CONSULTANTS,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
-        AuthorityValue.VIEW_ALL_PEER_SESSIONS
+        AuthorityValue.VIEW_AGENCY_CONSULTANTS
       })
   void getAppointmentsShouldReturnForbiddenWhenNoConsultantAuthority() throws Exception {
     mvc.perform(
@@ -235,17 +223,13 @@ class AppointmentControllerAuthorizationIT {
         AuthorityValue.ANONYMOUS_DEFAULT,
         AuthorityValue.ASSIGN_CONSULTANT_TO_SESSION,
         AuthorityValue.ASSIGN_CONSULTANT_TO_ENQUIRY,
-        AuthorityValue.ASSIGN_CONSULTANT_TO_PEER_SESSION,
         AuthorityValue.CREATE_NEW_CHAT,
-        AuthorityValue.USE_FEEDBACK,
         AuthorityValue.USER_DEFAULT,
         AuthorityValue.USER_ADMIN,
         AuthorityValue.START_CHAT,
         AuthorityValue.STOP_CHAT,
         AuthorityValue.UPDATE_CHAT,
-        AuthorityValue.VIEW_AGENCY_CONSULTANTS,
-        AuthorityValue.VIEW_ALL_FEEDBACK_SESSIONS,
-        AuthorityValue.VIEW_ALL_PEER_SESSIONS
+        AuthorityValue.VIEW_AGENCY_CONSULTANTS
       })
   void postAppointmentsShouldReturnForbiddenWhenNoConsultantAuthority() throws Exception {
     mvc.perform(

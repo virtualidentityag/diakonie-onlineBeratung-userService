@@ -161,8 +161,6 @@ class ArchivedSessionConversationListProviderTestIT {
     this.sessionRepository.saveAll(sessions);
   }
 
-  private void setupConsultants() {}
-
   private Consultant buildConsultant() {
     Consultant consultant = new Consultant();
     consultant.setId(UUID.randomUUID().toString());
@@ -176,7 +174,6 @@ class ArchivedSessionConversationListProviderTestIT {
     consultant.setEncourage2fa(true);
     consultant.setNotifyEnquiriesRepeating(true);
     consultant.setNotifyNewChatMessageFromAdviceSeeker(true);
-    consultant.setNotifyNewFeedbackMessageFromAdviceSeeker(true);
     consultant.setWalkThroughEnabled(true);
     consultant.setLanguageCode(LanguageCode.de);
 

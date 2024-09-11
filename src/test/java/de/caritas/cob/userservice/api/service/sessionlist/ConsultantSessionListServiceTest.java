@@ -3,15 +3,12 @@ package de.caritas.cob.userservice.api.service.sessionlist;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.CONSULTANT;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.CONSULTANT_SESSION_RESPONSE_DTO_LIST;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.CONSULTANT_SESSION_RESPONSE_DTO_LIST_WITH_ENCRYPTED_CHAT_MESSAGE;
-import static de.caritas.cob.userservice.api.testHelper.TestConstants.CONSULTANT_SESSION_RESPONSE_DTO_WITHOUT_FEEDBACK;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.CONSULTANT_SESSION_RESPONSE_DTO_WITH_ENCRYPTED_CHAT_MESSAGE;
-import static de.caritas.cob.userservice.api.testHelper.TestConstants.CONSULTANT_SESSION_RESPONSE_DTO_WITH_FEEDBACK;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.COUNT_10;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.OFFSET_0;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.RC_TOKEN;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.SESSION_STATUS_IN_PROGRESS;
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.SESSION_STATUS_NEW;
-import static java.util.Arrays.asList;
 import static java.util.Objects.nonNull;
 import static org.jsoup.helper.Validate.fail;
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,7 +24,6 @@ import de.caritas.cob.userservice.api.container.SessionListQueryParameter;
 import de.caritas.cob.userservice.api.service.ChatService;
 import de.caritas.cob.userservice.api.service.session.SessionFilter;
 import de.caritas.cob.userservice.api.service.session.SessionService;
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -142,33 +138,6 @@ class ConsultantSessionListServiceTest {
         fail("ResponseList does not contain all expected sessions");
       }
     }
-  }
-
-  @Test
-  void
-      retrieveTeamSessionsForAuthenticatedConsultant_Should_ReturnFilteredSessionList_WhenFeedbackFilter() {
-    List<ConsultantSessionResponseDTO> responseDTOS =
-        new ArrayList<>(
-            asList(
-                CONSULTANT_SESSION_RESPONSE_DTO_WITH_FEEDBACK,
-                CONSULTANT_SESSION_RESPONSE_DTO_WITHOUT_FEEDBACK,
-                CONSULTANT_SESSION_RESPONSE_DTO_WITH_ENCRYPTED_CHAT_MESSAGE));
-    when(sessionService.getTeamSessionsForConsultant(CONSULTANT)).thenReturn(responseDTOS);
-
-    SessionListQueryParameter sessionListQueryParameter =
-        SessionListQueryParameter.builder()
-            .sessionStatus(SESSION_STATUS_NEW)
-            .offset(OFFSET_0)
-            .count(COUNT_10)
-            .sessionFilter(SessionFilter.FEEDBACK)
-            .build();
-
-    List<ConsultantSessionResponseDTO> result =
-        consultantSessionListService.retrieveTeamSessionsForAuthenticatedConsultant(
-            CONSULTANT, RC_TOKEN, sessionListQueryParameter);
-
-    assertEquals(1, result.size());
-    assertFalse(result.get(0).getSession().getFeedbackRead());
   }
 
   @Test

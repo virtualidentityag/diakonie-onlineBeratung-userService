@@ -141,7 +141,6 @@ public class CreateConsultantSagaTenantAwareIT {
     consultant.setEncourage2fa(true);
     consultant.setNotifyEnquiriesRepeating(true);
     consultant.setNotifyNewChatMessageFromAdviceSeeker(true);
-    consultant.setNotifyNewFeedbackMessageFromAdviceSeeker(true);
     consultant.setWalkThroughEnabled(true);
     consultant.setLanguageCode(LanguageCode.de);
 
