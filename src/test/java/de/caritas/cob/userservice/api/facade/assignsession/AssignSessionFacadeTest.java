@@ -105,11 +105,13 @@ class AssignSessionFacadeTest {
     verifyAsync(
         a ->
             verify(this.rocketChatFacade, atLeastOnce())
-                .removeUserFromGroup(consultantToRemove.getRocketChatId(), session.getGroupId()));
+                .removeUserFromGroupIgnoreGroupNotFound(
+                    consultantToRemove.getRocketChatId(), session.getGroupId()));
     verifyAsync(
         a ->
             verify(this.rocketChatFacade, atLeastOnce())
-                .removeUserFromGroup(consultantToRemove.getRocketChatId(), session.getGroupId()));
+                .removeUserFromGroupIgnoreGroupNotFound(
+                    consultantToRemove.getRocketChatId(), session.getGroupId()));
     verify(this.emailNotificationFacade, times(1))
         .sendAssignEnquiryEmailNotification(any(), any(), any(), any());
   }
@@ -154,15 +156,28 @@ class AssignSessionFacadeTest {
     verifyAsync(
         a ->
             verify(this.rocketChatFacade, atLeastOnce())
-                .removeUserFromGroup(consultantToRemove.getRocketChatId(), session.getGroupId()));
+                .removeUserFromGroupIgnoreGroupNotFound(
+                    consultantToRemove.getRocketChatId(), session.getGroupId()));
     verifyAsync(
         a ->
             verify(this.rocketChatFacade, never())
-                .removeUserFromGroup("teamConsultantRcId", session.getGroupId()));
+                .removeUserFromGroupIgnoreGroupNotFound(
+                    "teamConsultantRcId", session.getGroupId()));
     verifyAsync(
         a ->
             verify(this.rocketChatFacade, never())
-                .removeUserFromGroup("teamConsultantRcId2", session.getGroupId()));
+                .removeUserFromGroupIgnoreGroupNotFound(
+                    "teamConsultantRcId", session.getFeedbackGroupId()));
+    verifyAsync(
+        a ->
+            verify(this.rocketChatFacade, never())
+                .removeUserFromGroupIgnoreGroupNotFound(
+                    "teamConsultantRcId2", session.getGroupId()));
+    verifyAsync(
+        a ->
+            verify(this.rocketChatFacade, never())
+                .removeUserFromGroupIgnoreGroupNotFound(
+                    "teamConsultantRcId2", session.getFeedbackGroupId()));
     verifyAsync(
         a ->
             verify(this.emailNotificationFacade, times(1))

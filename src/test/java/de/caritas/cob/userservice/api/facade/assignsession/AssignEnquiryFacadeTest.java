@@ -225,7 +225,8 @@ class AssignEnquiryFacadeTest {
     verifyAsync(
         (a) ->
             verify(this.rocketChatFacade, atLeastOnce())
-                .removeUserFromGroup(consultantToRemove.getRocketChatId(), session.getGroupId()));
+                .removeUserFromGroupIgnoreGroupNotFound(
+                    consultantToRemove.getRocketChatId(), session.getGroupId()));
     verifyAsync(
         (a) ->
             verify(this.rocketChatFacade, never())
