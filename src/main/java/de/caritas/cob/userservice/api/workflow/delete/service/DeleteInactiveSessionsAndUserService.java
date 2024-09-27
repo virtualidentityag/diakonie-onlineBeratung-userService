@@ -116,7 +116,12 @@ public class DeleteInactiveSessionsAndUserService {
       String rcGroupId, List<Session> userSessionList) {
     List<DeletionWorkflowError> workflowErrors = new ArrayList<>();
     Optional<Session> session = findSessionInUserSessionList(rcGroupId, userSessionList);
-    session.ifPresent(s -> workflowErrors.addAll(deleteSessionService.performSessionDeletion(s)));
+    session.ifPresentOrElse(
+        s -> workflowErrors.addAll(deleteSessionService.performSessionDeletion(s)),
+        () ->
+            workflowErrors.addAll(
+                deleteSessionService.performRocketchatSessionDeletion(rcGroupId)));
+
     return workflowErrors;
   }
 
