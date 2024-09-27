@@ -39,7 +39,7 @@ public class SessionTopicEnrichmentService {
   }
 
   private void enrichSession(Map<Long, TopicDTO> availableTopics, SessionDTO sessionDTO) {
-    var topicData = availableTopics.get(Long.valueOf(sessionDTO.getTopic().getId()));
+    var topicData = availableTopics.get(sessionDTO.getTopic().getId());
     if (topicData != null) {
       log.debug("Enriching session with id {} with topicData {}", sessionDTO.getId(), topicData);
       sessionDTO.setTopic(convertToSessionTopicDTO(topicData));
