@@ -136,6 +136,7 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
             "/users/sessions/{sessionId:[0-9]+}/enquiry/new",
             "/appointments/sessions/{sessionId:[0-9]+}/enquiry/new",
             "/users/askers/consultingType/new",
+            "/users/askers/session/new",
             "/users/account",
             "/users/mobiletoken",
             "/users/sessions/{sessionId:[0-9]+}/data")
