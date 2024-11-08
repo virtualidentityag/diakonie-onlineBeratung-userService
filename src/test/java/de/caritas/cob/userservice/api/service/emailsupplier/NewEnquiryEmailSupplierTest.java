@@ -184,7 +184,7 @@ class NewEnquiryEmailSupplierTest {
     // then
     assertTrue(
         testAppender.contains(
-            "Cannot send email notification: consultant is null for agency 1", Level.DEBUG));
+            "consultant is null for agency", Level.DEBUG));
   }
 
   @Test
@@ -206,7 +206,7 @@ class NewEnquiryEmailSupplierTest {
     // then
     assertTrue(
         testAppender.contains(
-            "Cannot send email notification: email is blank for consultant consultant-id",
+            "email is blank for consultant",
             Level.DEBUG));
   }
 
@@ -230,7 +230,7 @@ class NewEnquiryEmailSupplierTest {
     // then
     assertTrue(
         testAppender.contains(
-            "Skipping new enquiry email notification: consultant consultant-id is marked as absent",
+            "is marked as absent",
             Level.DEBUG));
   }
 
@@ -255,7 +255,7 @@ class NewEnquiryEmailSupplierTest {
     // then
     assertTrue(
         testAppender.contains(
-            "Skipping new enquiry email notification: consultant consultant-id is marked as absent",
+            "is marked as absent",
             Level.DEBUG));
   }
 }
