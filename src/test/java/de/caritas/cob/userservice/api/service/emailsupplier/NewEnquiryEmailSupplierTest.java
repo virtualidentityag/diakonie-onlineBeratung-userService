@@ -7,10 +7,13 @@ import static de.caritas.cob.userservice.api.testHelper.TestConstants.CONSULTANT
 import static de.caritas.cob.userservice.api.testHelper.TestConstants.CONSULTANT_2;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 import de.caritas.cob.userservice.api.model.Consultant;
 import de.caritas.cob.userservice.api.model.ConsultantAgency;
 import de.caritas.cob.userservice.api.model.Session;
@@ -18,15 +21,18 @@ import de.caritas.cob.userservice.api.port.out.ConsultantAgencyRepository;
 import de.caritas.cob.userservice.api.service.agency.AgencyService;
 import de.caritas.cob.userservice.api.service.consultingtype.ReleaseToggle;
 import de.caritas.cob.userservice.api.service.consultingtype.ReleaseToggleService;
+import de.caritas.cob.userservice.api.testHelper.TestLogAppender;
 import de.caritas.cob.userservice.mailservice.generated.web.model.LanguageCode;
 import de.caritas.cob.userservice.mailservice.generated.web.model.MailDTO;
 import de.caritas.cob.userservice.mailservice.generated.web.model.TemplateDataDTO;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.LoggerFactory;
 
 @ExtendWith(MockitoExtension.class)
 class NewEnquiryEmailSupplierTest {
@@ -41,12 +47,22 @@ class NewEnquiryEmailSupplierTest {
 
   @Mock private ReleaseToggleService releaseToggleService;
 
+  @Mock private Logger log;
+
+  private TestLogAppender testAppender;
+
   @BeforeEach
   void setup() {
     this.newEnquiryEmailSupplier =
         new NewEnquiryEmailSupplier(
             consultantAgencyRepository, agencyService, releaseToggleService, null);
     this.newEnquiryEmailSupplier.setCurrentSession(session);
+
+    // Attach a custom appender to the logger
+    Logger logger = (Logger) LoggerFactory.getLogger(NewEnquiryEmailSupplier.class);
+    testAppender = new TestLogAppender();
+    testAppender.start();
+    logger.addAppender(testAppender);
   }
 
   @Test
@@ -148,10 +164,98 @@ class NewEnquiryEmailSupplierTest {
                     0L, CONSULTANT, 0L, nowInUtc(), nowInUtc(), nowInUtc(), null, null),
                 new ConsultantAgency(
                     1L, CONSULTANT, 1L, nowInUtc(), nowInUtc(), nowInUtc(), null, null)));
-    when(agencyService.getAgency(any())).thenReturn(AGENCY_DTO_U25);
 
     List<MailDTO> generatedMails = newEnquiryEmailSupplier.generateEmails();
 
     assertThat(generatedMails).isEmpty();
+  }
+
+  @Test
+  void generateEmails_Should_LogDebugMessage_When_ConsultantIsNull() {
+    // given
+    ConsultantAgency consultantAgency = new ConsultantAgency();
+    consultantAgency.setId(1L);
+    when(consultantAgencyRepository.findByAgencyIdAndDeleteDateIsNull(anyLong()))
+        .thenReturn(Collections.singletonList(consultantAgency));
+
+    // when
+    newEnquiryEmailSupplier.generateEmails();
+
+    // then
+    assertTrue(
+        testAppender.contains(
+            "Cannot send email notification: consultant is null for agency 1", Level.DEBUG));
+  }
+
+  @Test
+  void generateEmails_Should_LogDebugMessage_When_ConsultantEmailIsBlank() {
+    // given
+    Consultant consultant = new Consultant();
+    consultant.setId("consultant-id");
+    consultant.setEmail("");
+
+    ConsultantAgency consultantAgency = new ConsultantAgency();
+    consultantAgency.setConsultant(consultant);
+
+    when(consultantAgencyRepository.findByAgencyIdAndDeleteDateIsNull(anyLong()))
+        .thenReturn(Collections.singletonList(consultantAgency));
+
+    // when
+    newEnquiryEmailSupplier.generateEmails();
+
+    // then
+    assertTrue(
+        testAppender.contains(
+            "Cannot send email notification: email is blank for consultant consultant-id",
+            Level.DEBUG));
+  }
+
+  @Test
+  void generateEmails_Should_LogDebugMessage_When_ConsultantIsAbsent() {
+    // given
+    Consultant consultant = new Consultant();
+    consultant.setId("consultant-id");
+    consultant.setEmail("test@test.de");
+    consultant.setAbsent(true);
+
+    ConsultantAgency consultantAgency = new ConsultantAgency();
+    consultantAgency.setConsultant(consultant);
+
+    when(consultantAgencyRepository.findByAgencyIdAndDeleteDateIsNull(anyLong()))
+        .thenReturn(Collections.singletonList(consultantAgency));
+
+    // when
+    newEnquiryEmailSupplier.generateEmails();
+
+    // then
+    assertTrue(
+        testAppender.contains(
+            "Skipping new enquiry email notification: consultant consultant-id is marked as absent",
+            Level.DEBUG));
+  }
+
+  @Test
+  void generateEmails_Should_LogDebugMessage_When_NotificationsAreEnabledAndConsultantAbsent() {
+    // given
+    Consultant consultant = new Consultant();
+    consultant.setId("consultant-id");
+    consultant.setEmail("test@test.de");
+    consultant.setAbsent(true);
+    consultant.setNotificationsEnabled(true);
+
+    ConsultantAgency consultantAgency = new ConsultantAgency();
+    consultantAgency.setConsultant(consultant);
+
+    when(consultantAgencyRepository.findByAgencyIdAndDeleteDateIsNull(anyLong()))
+        .thenReturn(Collections.singletonList(consultantAgency));
+
+    // when
+    newEnquiryEmailSupplier.generateEmails();
+
+    // then
+    assertTrue(
+        testAppender.contains(
+            "Skipping new enquiry email notification: consultant consultant-id is marked as absent",
+            Level.DEBUG));
   }
 }
