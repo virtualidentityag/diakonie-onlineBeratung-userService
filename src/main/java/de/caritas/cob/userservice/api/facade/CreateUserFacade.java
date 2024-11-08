@@ -65,8 +65,7 @@ public class CreateUserFacade {
     var user = updateIdentityAndCreateAccount(response.getUserId(), userDTO, UserRole.USER);
     var consultingTypeSettings = obtainConsultingTypeSettings(userDTO);
     var registration =
-        createNewConsultingTypeFacade.initializeNewConsultingType(
-            userDTO, user, consultingTypeSettings);
+        createNewConsultingTypeFacade.initializeNewSession(userDTO, user, consultingTypeSettings);
 
     try {
       RegistrationStatisticsEvent registrationEvent =

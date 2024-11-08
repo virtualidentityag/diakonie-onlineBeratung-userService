@@ -47,6 +47,50 @@ paths:
           description: INTERNAL SERVER ERROR - server encountered unexpected condition
       security:
         - Bearer: [ ]
+  /users/askers/session/new:
+    post:
+      tags:
+        - user-controller
+      summary: 'Register a new session for an existing asker [Authorization: Role: user]'
+      operationId: registerNewSession
+      parameters:
+        - name: RCToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: RCUserId
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/NewRegistrationDto'
+        required: true
+      responses:
+        201:
+          description: CREATED - session was registered successfully
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/NewRegistrationResponseDto'
+        400:
+          description: BAD REQUEST - invalid/incomplete request or body object
+        403:
+          description: FORBIDDEN - no/invalid role/authorization or CSRF token
+        409:
+          description: CONFLICT - user is already registered for provided topic
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/NewRegistrationResponseDto'
+        500:
+          description: INTERNAL SERVER ERROR - server encountered unexpected condition
+      security:
+        - Bearer: [ ]
   /users/askers/consultingType/new:
     post:
       tags:
@@ -2859,6 +2903,9 @@ components:
             type: integer
             format: int64
           example: [ 12,15 ]
+        mainTopicId:
+          type: integer
+          example: 15
         counsellingRelation:
           type: string
           example: 'SELF_COUNSELLING'

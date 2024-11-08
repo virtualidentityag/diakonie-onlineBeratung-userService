@@ -235,10 +235,34 @@ public class UserController implements UsersApi {
         RocketChatCredentials.builder().rocketChatToken(rcToken).rocketChatUserId(rcUserId).build();
 
     var registrationResponse =
-        createNewConsultingTypeFacade.initializeNewConsultingType(
+        createNewConsultingTypeFacade.initializeNewSession(
             newRegistrationDto, user, rocketChatCredentials);
 
     return new ResponseEntity<>(registrationResponse, registrationResponse.getStatus());
+  }
+
+  /**
+   * Creates a new session or chat-agency relation depending on the provided topic.
+   *
+   * @param rcToken Rocket.Chat token (required)
+   * @param rcUserId Rocket.Chat user ID (required)
+   * @param newRegistrationDto {@link NewRegistrationDto}
+   * @return {@link ResponseEntity} containing {@link NewRegistrationResponseDto}
+   */
+  @Override
+  public ResponseEntity<NewRegistrationResponseDto> registerNewSession(
+      @RequestHeader String rcToken,
+      @RequestHeader(value = "RCUserId", required = true) String rcUserId,
+      de.caritas.cob.userservice.api.adapters.web.dto.NewRegistrationDto newRegistrationDto) {
+    var user = this.userAccountProvider.retrieveValidatedUser();
+    var rocketChatCredentials =
+        RocketChatCredentials.builder().rocketChatToken(rcToken).rocketChatUserId(rcUserId).build();
+
+    var response =
+        createNewConsultingTypeFacade.initializeNewSession(
+            newRegistrationDto, user, rocketChatCredentials);
+
+    return new ResponseEntity<>(response, response.getStatus());
   }
 
   /**

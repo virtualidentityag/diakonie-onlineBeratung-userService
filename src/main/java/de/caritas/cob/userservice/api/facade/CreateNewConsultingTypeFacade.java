@@ -42,7 +42,7 @@ public class CreateNewConsultingTypeFacade {
    * @return session ID of created session (if not consulting id refers to a group only consulting
    *     type)
    */
-  public NewRegistrationResponseDto initializeNewConsultingType(
+  public NewRegistrationResponseDto initializeNewSession(
       UserRegistrationDTO userRegistrationDTO,
       User user,
       RocketChatCredentials rocketChatCredentials) {
@@ -65,7 +65,7 @@ public class CreateNewConsultingTypeFacade {
    * @param user {@link User}
    * @param extendedConsultingTypeResponseDTO {@link ExtendedConsultingTypeResponseDTO}
    */
-  public NewRegistrationResponseDto initializeNewConsultingType(
+  public NewRegistrationResponseDto initializeNewSession(
       UserRegistrationDTO userRegistrationDTO,
       User user,
       ExtendedConsultingTypeResponseDTO extendedConsultingTypeResponseDTO) {
@@ -83,7 +83,7 @@ public class CreateNewConsultingTypeFacade {
       NewRegistrationResponseDto newRegistrationResponseDto =
           createSessionFacade.createDirectUserSession(
               userRegistrationDTO.getConsultantId(),
-              fromUserRegistrationDTO(userRegistrationDTO),
+              convertToUserDTO(userRegistrationDTO),
               user,
               extendedConsultingTypeResponseDTO);
       statisticsService.fireEvent(
@@ -99,19 +99,17 @@ public class CreateNewConsultingTypeFacade {
     var groupChat = extendedConsultingTypeResponseDTO.getGroupChat();
     if (nonNull(groupChat) && isTrue(groupChat.getIsGroupChat())) {
       createUserChatRelationFacade.initializeUserChatAgencyRelation(
-          fromUserRegistrationDTO(userRegistrationDTO), user, rocketChatCredentials);
+          convertToUserDTO(userRegistrationDTO), user, rocketChatCredentials);
     } else {
       sessionId =
           createSessionFacade.createUserSession(
-              fromUserRegistrationDTO(userRegistrationDTO),
-              user,
-              extendedConsultingTypeResponseDTO);
+              convertToUserDTO(userRegistrationDTO), user, extendedConsultingTypeResponseDTO);
     }
 
     return new NewRegistrationResponseDto().sessionId(sessionId).status(HttpStatus.CREATED);
   }
 
-  private UserDTO fromUserRegistrationDTO(UserRegistrationDTO userRegistrationDTO) {
+  private UserDTO convertToUserDTO(UserRegistrationDTO userRegistrationDTO) {
     if (userRegistrationDTO instanceof NewRegistrationDto) {
       var userDTO = new UserDTO();
       userDTO.setAgencyId(userRegistrationDTO.getAgencyId());
@@ -122,6 +120,7 @@ public class CreateNewConsultingTypeFacade {
       userDTO.setAge(String.valueOf(userRegistrationDTO.getUserAge()));
       userDTO.setCounsellingRelation(userRegistrationDTO.getCounsellingRelation());
       userDTO.setTopicIds(userRegistrationDTO.getTopicIds());
+      userDTO.setMainTopicId(userRegistrationDTO.getMainTopicId());
       return userDTO;
     }
 

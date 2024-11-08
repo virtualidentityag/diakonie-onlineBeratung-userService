@@ -142,7 +142,7 @@ public class CreateUserFacadeTest {
         .thenReturn(KEYCLOAK_CREATE_USER_RESPONSE_DTO_WITH_USER_ID);
     doNothing().when(keycloakService).updatePassword(anyString(), anyString());
 
-    when(createNewConsultingTypeFacade.initializeNewConsultingType(
+    when(createNewConsultingTypeFacade.initializeNewSession(
             any(), any(), any(ExtendedConsultingTypeResponseDTO.class)))
         .thenReturn(mock(NewRegistrationResponseDto.class));
 
@@ -161,7 +161,7 @@ public class CreateUserFacadeTest {
         .thenReturn(KEYCLOAK_CREATE_USER_RESPONSE_DTO_WITH_USER_ID);
     doNothing().when(keycloakService).updatePassword(anyString(), anyString());
 
-    when(createNewConsultingTypeFacade.initializeNewConsultingType(
+    when(createNewConsultingTypeFacade.initializeNewSession(
             any(), any(), any(ExtendedConsultingTypeResponseDTO.class)))
         .thenReturn(mock(NewRegistrationResponseDto.class));
     when(tenantService.getRestrictedTenantData(Mockito.anyLong()))
@@ -174,7 +174,7 @@ public class CreateUserFacadeTest {
     verify(keycloakService, times(1)).updateRole(any(), any(UserRole.class));
     verify(keycloakService, times(1)).updatePassword(anyString(), anyString());
     verify(createNewConsultingTypeFacade, times(1))
-        .initializeNewConsultingType(any(), any(), any(ExtendedConsultingTypeResponseDTO.class));
+        .initializeNewSession(any(), any(), any(ExtendedConsultingTypeResponseDTO.class));
     verify(rollbackFacade, times(0)).rollBackUserAccount(any());
     verify(statisticsService, times(1)).fireEvent(any());
   }

@@ -1652,6 +1652,28 @@ class UserControllerE2EIT {
   }
 
   @Test
+  @WithMockUser(authorities = {AuthorityValue.USER_DEFAULT})
+  void registerNewSession_Should_ReturnCreated_When_ProvidedWithValidRequestBody()
+      throws Exception {
+    givenAValidUser();
+    givenAValidTopicServiceResponse();
+    givenConsultingTypeServiceResponse(2);
+    givenARealmResource();
+    givenAUserDTOWithMainTopic();
+
+    mockMvc
+        .perform(
+            post("/users/askers/session/new")
+                .cookie(CSRF_COOKIE)
+                .header(CSRF_HEADER, CSRF_VALUE)
+                .header("RCToken", "token")
+                .header("RCUserId", "userId")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userDTO)))
+        .andExpect(status().isCreated());
+  }
+
+  @Test
   @WithMockUser(authorities = {AuthorityValue.CONSULTANT_DEFAULT, AuthorityValue.USER_DEFAULT})
   void sendReassignmentNotificationShouldSendEmailAndRespondWithOk() throws Exception {
     var apiClientMock = mock(de.caritas.cob.userservice.mailservice.generated.ApiClient.class);

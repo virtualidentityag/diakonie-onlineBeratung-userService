@@ -241,7 +241,7 @@ class UserControllerIT {
 
   @Autowired private MockMvc mvc;
 
-  @MockBean private UserAccountService accountProvider;
+  @MockBean private UserAccountService userAccountService;
   @MockBean private SessionService sessionService;
   @MockBean private AuthenticatedUser authenticatedUser;
   @MockBean private CreateEnquiryMessageFacade createEnquiryMessageFacade;
@@ -691,8 +691,8 @@ class UserControllerIT {
   void registerNewConsultingTyp_Should_ReturnCreated_When_ProvidedWithValidRequestBody()
       throws Exception {
 
-    when(accountProvider.retrieveValidatedUser()).thenReturn(USER);
-    when(createNewConsultingTypeFacade.initializeNewConsultingType(
+    when(userAccountService.retrieveValidatedUser()).thenReturn(USER);
+    when(createNewConsultingTypeFacade.initializeNewSession(
             any(), any(), any(RocketChatCredentials.class)))
         .thenReturn(new NewRegistrationResponseDto().sessionId(1L).status(HttpStatus.CREATED));
     when(consultingTypeManager.getConsultingTypeSettings(any()))
@@ -714,7 +714,7 @@ class UserControllerIT {
 
     when(sessionService.getSession(SESSION_ID)).thenReturn(Optional.of(SESSION));
     when(authenticatedUser.getUserId()).thenReturn(CONSULTANT_ID);
-    when(accountProvider.retrieveValidatedConsultant())
+    when(userAccountService.retrieveValidatedConsultant())
         .thenThrow(new InternalServerErrorException(""));
 
     mvc.perform(
@@ -732,7 +732,7 @@ class UserControllerIT {
 
     when(sessionService.getSession(SESSION_ID)).thenReturn(Optional.empty());
     when(authenticatedUser.getUserId()).thenReturn(CONSULTANT_ID);
-    when(accountProvider.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
+    when(userAccountService.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
 
     mvc.perform(
             put(PATH_ACCEPT_ENQUIRY + SESSION_ID)
@@ -751,7 +751,7 @@ class UserControllerIT {
     when(sessionService.getSession(SESSION_ID))
         .thenReturn(Optional.of(TEAM_SESSION_WITHOUT_GROUP_ID));
     when(authenticatedUser.getUserId()).thenReturn(CONSULTANT_ID);
-    when(accountProvider.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
+    when(userAccountService.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
 
     mvc.perform(
             put(PATH_ACCEPT_ENQUIRY + SESSION_ID)
@@ -768,7 +768,7 @@ class UserControllerIT {
 
     when(sessionService.getSession(SESSION_ID)).thenReturn(Optional.of(TEAM_SESSION));
     when(authenticatedUser.getUserId()).thenReturn(CONSULTANT_ID);
-    when(accountProvider.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
+    when(userAccountService.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
 
     mvc.perform(
             put(PATH_ACCEPT_ENQUIRY + SESSION_ID)
@@ -783,7 +783,7 @@ class UserControllerIT {
 
     when(sessionService.getSession(SESSION_ID)).thenReturn(Optional.of(TEAM_SESSION));
     when(authenticatedUser.getUserId()).thenReturn(CONSULTANT_ID);
-    when(accountProvider.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
+    when(userAccountService.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
     doThrow(new ConflictException(""))
         .when(assignEnquiryFacade)
         .assignRegisteredEnquiry(TEAM_SESSION, TEAM_CONSULTANT);
@@ -802,7 +802,8 @@ class UserControllerIT {
           throws Exception {
 
     when(authenticatedUser.getUserId()).thenReturn(USER_ID);
-    when(accountProvider.retrieveValidatedUser()).thenThrow(new InternalServerErrorException(""));
+    when(userAccountService.retrieveValidatedUser())
+        .thenThrow(new InternalServerErrorException(""));
 
     mvc.perform(
             post(PATH_CREATE_ENQUIRY_MESSAGE)
@@ -818,7 +819,7 @@ class UserControllerIT {
   void createEnquiryMessage_Should_ReturnConflict_WhenMessageIsAlreadyCreated() throws Exception {
 
     when(authenticatedUser.getUserId()).thenReturn(USER_ID);
-    when(accountProvider.retrieveValidatedUser()).thenReturn(USER);
+    when(userAccountService.retrieveValidatedUser()).thenReturn(USER);
     doThrow(new ConflictException(ERROR))
         .when(createEnquiryMessageFacade)
         .createEnquiryMessage(any(EnquiryData.class));
@@ -836,7 +837,7 @@ class UserControllerIT {
   @Test
   void createEnquiryMessage_Should_ReturnCreated_WhenMessageWasCreated() throws Exception {
     when(authenticatedUser.getUserId()).thenReturn(USER_ID);
-    when(accountProvider.retrieveValidatedUser()).thenReturn(USER);
+    when(userAccountService.retrieveValidatedUser()).thenReturn(USER);
     var expectedRCCredentials =
         RocketChatCredentials.builder()
             .rocketChatToken(RC_TOKEN)
@@ -866,7 +867,8 @@ class UserControllerIT {
           throws Exception {
 
     when(authenticatedUser.getUserId()).thenReturn(USER_ID);
-    when(accountProvider.retrieveValidatedUser()).thenThrow(new InternalServerErrorException(""));
+    when(userAccountService.retrieveValidatedUser())
+        .thenThrow(new InternalServerErrorException(""));
 
     mvc.perform(
             post(PATH_CREATE_ENQUIRY_MESSAGE)
@@ -888,7 +890,7 @@ class UserControllerIT {
     UserSessionListResponseDTO response = new UserSessionListResponseDTO().sessions(sessions);
 
     when(authenticatedUser.getUserId()).thenReturn(USER_ID);
-    when(accountProvider.retrieveValidatedUser()).thenReturn(USER);
+    when(userAccountService.retrieveValidatedUser()).thenReturn(USER);
 
     when(sessionListFacade.retrieveSortedSessionsForAuthenticatedUser(anyString(), Mockito.any()))
         .thenReturn(response);
@@ -910,7 +912,7 @@ class UserControllerIT {
         .andExpect(jsonPath("sessions[0].consultant.displayName", is(displayName)))
         .andExpect(content().json(sessionsJson));
 
-    verify(accountProvider, atLeastOnce()).retrieveValidatedUser();
+    verify(userAccountService, atLeastOnce()).retrieveValidatedUser();
   }
 
   @Test
@@ -919,7 +921,8 @@ class UserControllerIT {
           throws Exception {
 
     when(authenticatedUser.getUserId()).thenReturn(USER_ID);
-    when(accountProvider.retrieveValidatedUser()).thenThrow(new InternalServerErrorException(""));
+    when(userAccountService.retrieveValidatedUser())
+        .thenThrow(new InternalServerErrorException(""));
 
     mvc.perform(
             get(PATH_GET_SESSIONS_FOR_AUTHENTICATED_USER)
@@ -940,7 +943,7 @@ class UserControllerIT {
     UserSessionListResponseDTO response = new UserSessionListResponseDTO().sessions(session);
 
     when(authenticatedUser.getUserId()).thenReturn(USER_ID);
-    when(accountProvider.retrieveValidatedUser()).thenReturn(USER);
+    when(userAccountService.retrieveValidatedUser()).thenReturn(USER);
 
     when(sessionListFacade.retrieveSortedSessionsForAuthenticatedUser(anyString(), Mockito.any()))
         .thenReturn(response);
@@ -968,7 +971,7 @@ class UserControllerIT {
   void updateAbsence_Should_ReturnOk_When_Saved() throws Exception {
 
     when(authenticatedUser.getUserId()).thenReturn(CONSULTANT_ID);
-    when(accountProvider.retrieveValidatedTeamConsultant()).thenReturn(TEAM_CONSULTANT);
+    when(userAccountService.retrieveValidatedTeamConsultant()).thenReturn(TEAM_CONSULTANT);
 
     var validAbsentMessageBody = "{\"absent\": true, \"message\": \"" + MESSAGE + "\"}";
     mvc.perform(
@@ -1008,7 +1011,7 @@ class UserControllerIT {
           throws Exception {
     var runtimeException = easyRandom.nextObject(RuntimeException.class);
     var unauthorizedException = new RocketChatUnauthorizedException("userId", runtimeException);
-    when(accountProvider.retrieveValidatedConsultant()).thenThrow(unauthorizedException);
+    when(userAccountService.retrieveValidatedConsultant()).thenThrow(unauthorizedException);
 
     mvc.perform(
             get(PATH_GET_SESSIONS_FOR_AUTHENTICATED_CONSULTANT)
@@ -1045,7 +1048,7 @@ class UserControllerIT {
           throws Exception {
 
     when(authenticatedUser.getUserId()).thenReturn(CONSULTANT_ID);
-    when(accountProvider.retrieveValidatedConsultant())
+    when(userAccountService.retrieveValidatedConsultant())
         .thenThrow(new InternalServerErrorException(""));
 
     mvc.perform(
@@ -1061,7 +1064,7 @@ class UserControllerIT {
       getSessionsForAuthenticatedConsultant_Should_ReturnSuccess_WhenAuthorizedAndSessionAvailable()
           throws Exception {
     when(authenticatedUser.getUserId()).thenReturn(CONSULTANT_ID);
-    when(accountProvider.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
+    when(userAccountService.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
 
     mvc.perform(
             get(PATH_GET_SESSIONS_FOR_AUTHENTICATED_CONSULTANT)
@@ -1077,7 +1080,7 @@ class UserControllerIT {
           throws Exception {
 
     when(authenticatedUser.getUserId()).thenReturn(CONSULTANT_ID);
-    when(accountProvider.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
+    when(userAccountService.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
 
     mvc.perform(
             get(PATH_GET_SESSIONS_FOR_AUTHENTICATED_CONSULTANT)
@@ -1093,7 +1096,7 @@ class UserControllerIT {
           throws Exception {
 
     when(authenticatedUser.getUserId()).thenReturn(CONSULTANT_ID);
-    when(accountProvider.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
+    when(userAccountService.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
 
     mvc.perform(
             get(PATH_GET_SESSIONS_FOR_AUTHENTICATED_CONSULTANT)
@@ -1158,7 +1161,7 @@ class UserControllerIT {
       throws Exception {
 
     when(authenticatedUser.getUserId()).thenReturn(CONSULTANT_ID);
-    when(accountProvider.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
+    when(userAccountService.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
 
     mvc.perform(
             get(PATH_GET_SESSIONS_FOR_AUTHENTICATED_CONSULTANT_WITH_INVALID_FILTER)
@@ -1178,7 +1181,8 @@ class UserControllerIT {
     when(authenticatedUser.getGrantedAuthorities())
         .thenReturn(new HashSet<>(Authority.getAuthoritiesByUserRole(UserRole.USER)));
     when(authenticatedUser.getUserId()).thenReturn(USER_ID);
-    when(accountProvider.retrieveValidatedUser()).thenThrow(new InternalServerErrorException(""));
+    when(userAccountService.retrieveValidatedUser())
+        .thenThrow(new InternalServerErrorException(""));
 
     mvc.perform(
             get(PATH_USER_DATA)
@@ -1262,7 +1266,7 @@ class UserControllerIT {
           throws Exception {
 
     when(authenticatedUser.getUserId()).thenReturn(CONSULTANT_ID);
-    when(accountProvider.retrieveValidatedTeamConsultant())
+    when(userAccountService.retrieveValidatedTeamConsultant())
         .thenThrow(new InternalServerErrorException(""));
 
     mvc.perform(
@@ -1279,7 +1283,8 @@ class UserControllerIT {
           throws Exception {
 
     when(authenticatedUser.getUserId()).thenReturn(CONSULTANT_ID);
-    when(accountProvider.retrieveValidatedTeamConsultant()).thenThrow(new ForbiddenException(""));
+    when(userAccountService.retrieveValidatedTeamConsultant())
+        .thenThrow(new ForbiddenException(""));
 
     mvc.perform(
             get(PATH_GET_TEAM_SESSIONS_FOR_AUTHENTICATED_CONSULTANT)
@@ -1297,7 +1302,7 @@ class UserControllerIT {
           throws Exception {
 
     when(authenticatedUser.getUserId()).thenReturn(CONSULTANT_ID);
-    when(accountProvider.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
+    when(userAccountService.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
 
     mvc.perform(
             get(PATH_GET_TEAM_SESSIONS_FOR_AUTHENTICATED_CONSULTANT)
@@ -1313,7 +1318,7 @@ class UserControllerIT {
           throws Exception {
 
     when(authenticatedUser.getUserId()).thenReturn(CONSULTANT_ID);
-    when(accountProvider.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
+    when(userAccountService.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
 
     mvc.perform(
             get(PATH_GET_TEAM_SESSIONS_FOR_AUTHENTICATED_CONSULTANT)
@@ -1374,7 +1379,7 @@ class UserControllerIT {
       throws Exception {
 
     when(authenticatedUser.getUserId()).thenReturn(CONSULTANT_ID);
-    when(accountProvider.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
+    when(userAccountService.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
 
     mvc.perform(
             get(PATH_GET_TEAM_SESSIONS_FOR_AUTHENTICATED_CONSULTANT_WITH_INVALID_FILTER)
@@ -1490,7 +1495,7 @@ class UserControllerIT {
   @Test
   void assignSession_Should_ReturnHttpStatusOfAssignSessionFacade() throws Exception {
 
-    when(accountProvider.retrieveValidatedConsultantById(any())).thenReturn(TEAM_CONSULTANT);
+    when(userAccountService.retrieveValidatedConsultantById(any())).thenReturn(TEAM_CONSULTANT);
     when(sessionService.getSession(Mockito.anyLong())).thenReturn(Optional.of(SESSION));
     when(authenticatedUser.getGrantedAuthorities())
         .thenReturn(AUTHORITIES_ASSIGN_SESSION_AND_ENQUIRY);
@@ -1511,7 +1516,7 @@ class UserControllerIT {
   void assignSession_Should_ReturnInternalServerErrorAndLogError_WhenConsultantIsNotFoundInDb()
       throws Exception {
 
-    when(accountProvider.retrieveValidatedConsultantById(anyString()))
+    when(userAccountService.retrieveValidatedConsultantById(anyString()))
         .thenThrow(new InternalServerErrorException(""));
 
     mvc.perform(
@@ -1527,7 +1532,7 @@ class UserControllerIT {
   void assignSession_Should_ReturnInternalServerErrorAndLogError_WhenSessionIsNotFoundInDb()
       throws Exception {
 
-    when(accountProvider.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
+    when(userAccountService.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
     when(sessionService.getSession(Mockito.anyLong())).thenReturn(Optional.empty());
 
     mvc.perform(
@@ -1544,7 +1549,7 @@ class UserControllerIT {
       assignSession_Should_ReturnForbiddenAndLogError_WhenCallerDoesNotHaveTheRightToAssignEnquiries()
           throws Exception {
 
-    when(accountProvider.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
+    when(userAccountService.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
     when(sessionService.getSession(Mockito.anyLong()))
         .thenReturn(Optional.of(SESSION_WITHOUT_CONSULTANT));
     when(authenticatedUser.getGrantedAuthorities()).thenReturn(AUTHORITY_ASSIGN_SESSION);
@@ -1630,7 +1635,7 @@ class UserControllerIT {
         .andExpect(status().isBadRequest());
 
     verifyNoMoreInteractions(chatService);
-    verifyNoMoreInteractions(accountProvider);
+    verifyNoMoreInteractions(userAccountService);
   }
 
   @Test
@@ -1638,7 +1643,7 @@ class UserControllerIT {
       throws Exception {
 
     when(authenticatedUser.getUserId()).thenReturn(CONSULTANT_ID);
-    when(accountProvider.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
+    when(userAccountService.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
     when(createChatFacade.createChatV1(Mockito.any(), Mockito.any()))
         .thenThrow(new InternalServerErrorException(""));
 
@@ -1659,7 +1664,7 @@ class UserControllerIT {
   void createChat_Should_ReturnCreated_When_ChatWasCreated() throws Exception {
 
     when(authenticatedUser.getUserId()).thenReturn(CONSULTANT_ID);
-    when(accountProvider.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
+    when(userAccountService.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
     when(createChatFacade.createChatV1(Mockito.any(), Mockito.any()))
         .thenReturn(CREATE_CHAT_RESPONSE_DTO);
 
@@ -1681,7 +1686,7 @@ class UserControllerIT {
         .andExpect(status().isBadRequest());
 
     verifyNoMoreInteractions(chatService);
-    verifyNoMoreInteractions(accountProvider);
+    verifyNoMoreInteractions(userAccountService);
   }
 
   @Test
@@ -1689,7 +1694,7 @@ class UserControllerIT {
       throws Exception {
 
     when(authenticatedUser.getUserId()).thenReturn(CONSULTANT_ID);
-    when(accountProvider.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
+    when(userAccountService.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
     when(createChatFacade.createChatV2(Mockito.any(), Mockito.any()))
         .thenThrow(new InternalServerErrorException(""));
 
@@ -1705,7 +1710,7 @@ class UserControllerIT {
   void createChatV2_Should_ReturnCreated_When_ChatWasCreated() throws Exception {
 
     when(authenticatedUser.getUserId()).thenReturn(CONSULTANT_ID);
-    when(accountProvider.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
+    when(userAccountService.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
     when(createChatFacade.createChatV2(Mockito.any(), Mockito.any()))
         .thenReturn(CREATE_CHAT_RESPONSE_DTO);
 
@@ -1737,7 +1742,7 @@ class UserControllerIT {
   void startChat_Should_ReturnOK_When_ChatWasStarted() throws Exception {
 
     when(authenticatedUser.getUserId()).thenReturn(CONSULTANT_ID);
-    when(accountProvider.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
+    when(userAccountService.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
     when(chatService.getChat(Mockito.any())).thenReturn(Optional.of(INACTIVE_CHAT));
 
     mvc.perform(
@@ -1766,7 +1771,7 @@ class UserControllerIT {
   void startChat_Should_ReturnBadRequest_When_ChatWasNotFound() throws Exception {
 
     when(authenticatedUser.getUserId()).thenReturn(CONSULTANT_ID);
-    when(accountProvider.retrieveValidatedConsultant())
+    when(userAccountService.retrieveValidatedConsultant())
         .thenThrow(new InternalServerErrorException(""));
     when(chatService.getChat(Mockito.any())).thenReturn(Optional.empty());
 
@@ -1789,7 +1794,7 @@ class UserControllerIT {
 
     verifyNoMoreInteractions(getChatFacade);
     verifyNoMoreInteractions(chatService);
-    verifyNoMoreInteractions(accountProvider);
+    verifyNoMoreInteractions(userAccountService);
     verifyNoMoreInteractions(chatPermissionVerifier);
   }
 
@@ -1828,7 +1833,7 @@ class UserControllerIT {
 
     verifyNoMoreInteractions(joinAndLeaveChatFacade);
     verifyNoMoreInteractions(chatService);
-    verifyNoMoreInteractions(accountProvider);
+    verifyNoMoreInteractions(userAccountService);
     verifyNoMoreInteractions(chatPermissionVerifier);
   }
 
@@ -1854,7 +1859,7 @@ class UserControllerIT {
         .andExpect(status().isBadRequest());
 
     verifyNoMoreInteractions(chatService);
-    verifyNoMoreInteractions(accountProvider);
+    verifyNoMoreInteractions(userAccountService);
     verifyNoMoreInteractions(stopChatFacade);
   }
 
@@ -1863,7 +1868,7 @@ class UserControllerIT {
       throws Exception {
 
     when(chatService.getChat(any())).thenReturn(Optional.of(mock(Chat.class)));
-    when(accountProvider.retrieveValidatedConsultant())
+    when(userAccountService.retrieveValidatedConsultant())
         .thenThrow(new InternalServerErrorException(""));
 
     mvc.perform(put(PATH_PUT_CHAT_STOP).accept(MediaType.APPLICATION_JSON))
@@ -1875,7 +1880,7 @@ class UserControllerIT {
   @Test
   void stopChat_Should_ReturnBadRequest_When_ChatNotFound() throws Exception {
 
-    when(accountProvider.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
+    when(userAccountService.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
     when(chatService.getChat(Mockito.anyLong())).thenReturn(Optional.empty());
 
     mvc.perform(put(PATH_PUT_CHAT_STOP).accept(MediaType.APPLICATION_JSON))
@@ -1885,7 +1890,7 @@ class UserControllerIT {
   @Test
   void stopChat_Should_ReturnOk_When_ChatWasStopped() throws Exception {
 
-    when(accountProvider.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
+    when(userAccountService.retrieveValidatedConsultant()).thenReturn(TEAM_CONSULTANT);
     when(chatService.getChat(Mockito.anyLong())).thenReturn(Optional.of(chat));
 
     mvc.perform(put(PATH_PUT_CHAT_STOP).accept(MediaType.APPLICATION_JSON))
@@ -1904,7 +1909,7 @@ class UserControllerIT {
 
     verifyNoMoreInteractions(getChatMembersFacade);
     verifyNoMoreInteractions(chatService);
-    verifyNoMoreInteractions(accountProvider);
+    verifyNoMoreInteractions(userAccountService);
     verifyNoMoreInteractions(chatPermissionVerifier);
     verifyNoMoreInteractions(userHelper);
     verifyNoMoreInteractions(rocketChatService);
@@ -1967,7 +1972,7 @@ class UserControllerIT {
       throws Exception {
 
     when(authenticatedUser.getUserId()).thenReturn(CONSULTANT_ID);
-    when(accountProvider.retrieveValidatedConsultant())
+    when(userAccountService.retrieveValidatedConsultant())
         .thenThrow(new InternalServerErrorException(""));
 
     mvc.perform(
@@ -1989,7 +1994,7 @@ class UserControllerIT {
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk());
 
-    verify(accountProvider).changeUserAccountEmailAddress(Optional.of("email"));
+    verify(userAccountService).changeUserAccountEmailAddress(Optional.of("email"));
   }
 
   @Test
@@ -1997,7 +2002,7 @@ class UserControllerIT {
     mvc.perform(delete("/users/email").accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk());
 
-    verify(accountProvider).changeUserAccountEmailAddress(Optional.empty());
+    verify(userAccountService).changeUserAccountEmailAddress(Optional.empty());
   }
 
   @Test
@@ -2008,7 +2013,7 @@ class UserControllerIT {
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest());
 
-    verifyNoMoreInteractions(accountProvider);
+    verifyNoMoreInteractions(userAccountService);
   }
 
   @Test
@@ -2055,7 +2060,7 @@ class UserControllerIT {
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk());
 
-    verify(accountProvider, times(1)).updateUserMobileToken("token");
+    verify(userAccountService, times(1)).updateUserMobileToken("token");
   }
 
   @Test
@@ -2066,7 +2071,7 @@ class UserControllerIT {
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest());
 
-    verifyNoMoreInteractions(accountProvider);
+    verifyNoMoreInteractions(userAccountService);
   }
 
   @Test
@@ -2271,12 +2276,43 @@ class UserControllerIT {
         .andExpect(status().isInternalServerError());
   }
 
+  @Test
+  void
+      registerNewSession_Should_ReturnResponseStatusFromConsultingTypeFasade_When_ProvidedWithValidRequestBody()
+          throws Exception {
+    var newRegistrationDto = new NewRegistrationDto();
+    newRegistrationDto.setMainTopicId(1L);
+    newRegistrationDto.setPostcode("00001");
+    newRegistrationDto.setAgencyId(1L);
+    newRegistrationDto.setConsultingType("1");
+    when(userAccountService.retrieveValidatedUser()).thenReturn(new User());
+    when(createNewConsultingTypeFacade.initializeNewSession(
+            Mockito.any(UserRegistrationDTO.class),
+            Mockito.any(),
+            Mockito.any(RocketChatCredentials.class)))
+        .thenReturn(new NewRegistrationResponseDto().status(HttpStatus.CREATED));
+
+    // when
+    var result =
+        mvc.perform(
+                post("/users/askers/session/new")
+                    .header("RCToken", "token")
+                    .header("RCUserId", "userId")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(new ObjectMapper().writeValueAsString(newRegistrationDto)))
+            .andExpect(status().isCreated())
+            .andReturn();
+
+    // then
+    assertEquals(HttpStatus.CREATED.value(), result.getResponse().getStatus());
+  }
+
   private void givenAdviceSeekerWithoutInitializedSession(boolean wasUpdated) {
     var user = new User();
     user.setCreateDate(nowInUtc());
     var updateDate = wasUpdated ? nowInUtc().plusDays(1) : user.getCreateDate();
     user.setUpdateDate(updateDate);
-    when(accountProvider.retrieveValidatedUser()).thenReturn(user);
+    when(userAccountService.retrieveValidatedUser()).thenReturn(user);
     when(accountManager.findAdviceSeeker(any())).thenReturn(Optional.of(new HashMap<>()));
     when(authenticatedUser.isAdviceSeeker()).thenReturn(true);
   }
