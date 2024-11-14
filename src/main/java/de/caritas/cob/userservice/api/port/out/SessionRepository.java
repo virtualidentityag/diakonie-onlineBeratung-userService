@@ -29,7 +29,7 @@ public interface SessionRepository extends CrudRepository<Session, Long> {
    * Find a {@link Session} by a consultant id and a session statuses.
    *
    * @param consultant {@link Consultant}
-   * @param sessionStatus {@link SessionStatus}
+   * @param statuses {@link SessionStatus}
    * @return A list of {@link Session}s for the specific consultant id and status
    */
   List<Session> findByConsultantAndStatusIn(Consultant consultant, List<SessionStatus> statuses);
@@ -223,4 +223,6 @@ public interface SessionRepository extends CrudRepository<Session, Long> {
    * @return an {@link List} of the result
    */
   List<Session> findByConsultantAndUser(Consultant consultant, User user);
+
+  List<Session> findByUserAndMainTopicId(User user, Long topicId);
 }

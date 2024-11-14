@@ -106,7 +106,7 @@ public class NewMessageEmailSupplier implements EmailSupplier {
     List<ConsultantAgency> consultantList = retrieveDependentConsultantAgencies();
     if (isNotEmpty(consultantList)) {
       return consultantList.stream()
-          .filter(agency -> !agency.getConsultant().getEmail().isEmpty())
+          .filter(agency -> checkThatConsultantEmailNotEmpty(agency))
           .filter(agency -> wantsToReceiveNotifications(agency.getConsultant()))
           .filter(isConsultantLoggedOut())
           .map(this::toNewConsultantMessageMailDTO)
@@ -115,12 +115,35 @@ public class NewMessageEmailSupplier implements EmailSupplier {
     return emptyList();
   }
 
+  private static boolean checkThatConsultantEmailNotEmpty(ConsultantAgency agency) {
+    var isEmpty = agency.getConsultant().getEmail().isEmpty();
+    if (isEmpty) {
+      log.debug(
+          "Skipping email notification: consultant email is empty {}",
+          agency.getConsultant().getId());
+    }
+    return !isEmpty;
+  }
+
   private boolean wantsToReceiveNotifications(Consultant consultant) {
 
     if (isNewNotificationToggleEnabled()) {
-      return wantsToReceiveNotificationsAboutNewMessage(consultant);
+      var wantsToReceiveNotifications = wantsToReceiveNotificationsAboutNewMessage(consultant);
+      if (!wantsToReceiveNotifications) {
+        log.debug(
+            "Skipping email notification: new message notification setting is disabled for consultant {}",
+            consultant.getId());
+      }
+      return wantsToReceiveNotifications;
     } else {
-      return consultant.getNotifyNewChatMessageFromAdviceSeeker();
+      var notifyNewChatMessageFromAdviceSeeker =
+          consultant.getNotifyNewChatMessageFromAdviceSeeker();
+      if (!notifyNewChatMessageFromAdviceSeeker) {
+        log.debug(
+            "Skipping email notification: new message notification setting is disabled for consultant {}",
+            consultant.getId());
+      }
+      return notifyNewChatMessageFromAdviceSeeker;
     }
   }
 
@@ -132,8 +155,9 @@ public class NewMessageEmailSupplier implements EmailSupplier {
       NotificationsAware notificationsAware) {
     NotificationSettings notificationSettings =
         deserializeNotificationSettingsOrDefaultIfNull(notificationsAware);
-    return notificationsAware.isNotificationsEnabled()
-        && notificationSettings.isNewChatMessageNotificationEnabled();
+    boolean notificationsEnabled = notificationsAware.isNotificationsEnabled();
+
+    return notificationsEnabled && notificationSettings.isNewChatMessageNotificationEnabled();
   }
 
   private boolean isNotTheFirstMessage() {
@@ -211,12 +235,24 @@ public class NewMessageEmailSupplier implements EmailSupplier {
   }
 
   private Predicate<ConsultantAgency> isConsultantLoggedOut() {
-    return agency ->
+    return this::checkIfConsultantIsLoggedIn;
+  }
+
+  private boolean checkIfConsultantIsLoggedIn(ConsultantAgency agency) {
+    var isLoggedOut =
         !messageClient.isLoggedIn(agency.getConsultant().getRocketChatId()).orElse(false);
+    if (!isLoggedOut) {
+      log.debug("Skipping send email notification for new message: consultant is logged in");
+    }
+    return isLoggedOut;
   }
 
   private boolean isAdviceSeekerLoggedOut() {
-    return !messageClient.isLoggedIn(session.getUser().getRcUserId()).orElse(false);
+    var isLoggedOut = !messageClient.isLoggedIn(session.getUser().getRcUserId()).orElse(false);
+    if (!isLoggedOut) {
+      log.debug("Skipping send email notification for new message: advice seeker is logged in");
+    }
+    return isLoggedOut;
   }
 
   private List<MailDTO> buildMailForAskerList() {
