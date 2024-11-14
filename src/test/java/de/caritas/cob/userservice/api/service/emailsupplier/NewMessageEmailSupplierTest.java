@@ -47,9 +47,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Ignore;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -399,7 +399,7 @@ class NewMessageEmailSupplierTest {
   }
 
   @Test
-  @Ignore("TODO this is passing locally but failing in mvn. Fix in CARITAS-285")
+  @Disabled("TODO this is passing locally but failing in mvn. Fix in CARITAS-285")
   void
       generateEmails_Should_LogDebugMessage_When_ConsultantIsOfflineAndNotificationsDisabledWithLogAppender() {
     when(roles.contains(UserRole.USER.getValue())).thenReturn(true);
@@ -418,7 +418,7 @@ class NewMessageEmailSupplierTest {
   }
 
   @Test
-  @Ignore("TODO this is passing locally but failing in mvn. Fix in CARITAS-285")
+  @Disabled("TODO this is passing locally but failing in mvn. Fix in CARITAS-285")
   void generateEmails_Should_LogDebugMessage_When_UserIsOnlineWithLogAppender() {
     when(roles.contains(UserRole.CONSULTANT.getValue())).thenReturn(true);
     when(session.getUser()).thenReturn(USER);
@@ -433,7 +433,7 @@ class NewMessageEmailSupplierTest {
   }
 
   @Test
-  @Ignore("TODO this is passing locally but failing in mvn. Fix in CARITAS-285")
+  @Disabled("TODO this is passing locally but failing in mvn. Fix in CARITAS-285")
   void generateEmails_Should_LogDebugMessage_When_ConsultantIsOnlineWithLogAppender() {
     when(roles.contains(UserRole.USER.getValue())).thenReturn(true);
     when(session.getConsultant()).thenReturn(CONSULTANT);

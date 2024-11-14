@@ -27,8 +27,8 @@ import de.caritas.cob.userservice.mailservice.generated.web.model.MailDTO;
 import de.caritas.cob.userservice.mailservice.generated.web.model.TemplateDataDTO;
 import java.util.Collections;
 import java.util.List;
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -172,7 +172,7 @@ class NewEnquiryEmailSupplierTest {
   }
 
   @Test
-  @Ignore("TODO this is passing locally but failing in mvn. Fix in CARITAS-285")
+  @Disabled("TODO this is passing locally but failing in mvn. Fix in CARITAS-285")
   void generateEmails_Should_LogDebugMessage_When_ConsultantIsNull() {
     // given
     ConsultantAgency consultantAgency = new ConsultantAgency();
@@ -188,7 +188,7 @@ class NewEnquiryEmailSupplierTest {
   }
 
   @Test
-  @Ignore("TODO this is passing locally but failing in mvn. Fix in CARITAS-285")
+  @Disabled("TODO this is passing locally but failing in mvn. Fix in CARITAS-285")
   void generateEmails_Should_LogDebugMessage_When_ConsultantEmailIsBlank() {
     // given
     Consultant consultant = new Consultant();
@@ -209,7 +209,7 @@ class NewEnquiryEmailSupplierTest {
   }
 
   @Test
-  @Ignore("TODO this is passing locally but failing in mvn. Fix in CARITAS-285")
+  @Disabled("TODO this is passing locally but failing in mvn. Fix in CARITAS-285")
   void generateEmails_Should_LogDebugMessage_When_ConsultantIsAbsent() {
     // given
     Consultant consultant = new Consultant();
