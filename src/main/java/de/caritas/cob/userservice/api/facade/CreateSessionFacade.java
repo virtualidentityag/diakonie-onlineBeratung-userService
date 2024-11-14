@@ -16,6 +16,7 @@ import de.caritas.cob.userservice.api.facade.rollback.RollbackFacade;
 import de.caritas.cob.userservice.api.facade.rollback.RollbackUserAccountInformation;
 import de.caritas.cob.userservice.api.helper.AgencyVerifier;
 import de.caritas.cob.userservice.api.model.Consultant;
+import de.caritas.cob.userservice.api.model.NewSessionValidationConstraint;
 import de.caritas.cob.userservice.api.model.Session;
 import de.caritas.cob.userservice.api.model.User;
 import de.caritas.cob.userservice.api.service.SessionDataService;
@@ -23,6 +24,7 @@ import de.caritas.cob.userservice.api.service.session.SessionService;
 import de.caritas.cob.userservice.api.service.user.UserAccountService;
 import de.caritas.cob.userservice.consultingtypeservice.generated.web.model.ExtendedConsultingTypeResponseDTO;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
@@ -46,17 +48,41 @@ public class CreateSessionFacade {
    * @param userDTO {@link UserDTO}
    * @param user {@link User}
    * @param extendedConsultingTypeResponseDTO {@link ExtendedConsultingTypeResponseDTO}
+   * @param validationConstraints
    */
   public Long createUserSession(
       UserDTO userDTO,
       User user,
-      ExtendedConsultingTypeResponseDTO extendedConsultingTypeResponseDTO) {
+      ExtendedConsultingTypeResponseDTO extendedConsultingTypeResponseDTO,
+      List<NewSessionValidationConstraint> validationConstraints) {
 
-    checkIfAlreadyRegisteredToConsultingType(user, extendedConsultingTypeResponseDTO.getId());
     var agencyDTO = obtainVerifiedAgency(userDTO, extendedConsultingTypeResponseDTO);
+    validateConstraints(
+        user,
+        extendedConsultingTypeResponseDTO,
+        userDTO.getMainTopicId(),
+        agencyDTO,
+        validationConstraints);
     var session = initializeSession(userDTO, user, agencyDTO);
 
     return session != null ? session.getId() : null;
+  }
+
+  private void validateConstraints(
+      User user,
+      ExtendedConsultingTypeResponseDTO extendedConsultingTypeResponseDTO,
+      Long mainTopicId,
+      AgencyDTO agencyDTO,
+      List<NewSessionValidationConstraint> validationConstraints) {
+    if (validationConstraints.contains(
+        NewSessionValidationConstraint.ONE_SESSION_PER_CONSULTING_TYPE)) {
+      checkIfAlreadyRegisteredToConsultingType(user, extendedConsultingTypeResponseDTO.getId());
+    }
+
+    if (validationConstraints.contains(
+        NewSessionValidationConstraint.ONE_SESSION_PER_TOPIC_ID_AND_AGENCY_ID)) {
+      checkIfAlreadyRegisteredToTopicAndSameAgency(user, mainTopicId, agencyDTO.getId());
+    }
   }
 
   /**
@@ -142,6 +168,24 @@ public class CreateSessionFacade {
     }
 
     return agencyDTO;
+  }
+
+  private void checkIfAlreadyRegisteredToTopicAndSameAgency(
+      User user, Long topicId, Long agencyId) {
+    List<Session> sessions = sessionService.getSessionsForUserByMainTopicId(user, topicId);
+
+    var sessionsWithSameAgencyAndTopic =
+        sessions.stream()
+            .filter(
+                session -> session.getAgencyId() != null && session.getAgencyId().equals(agencyId))
+            .collect(Collectors.toList());
+
+    if (CollectionUtils.isNotEmpty(sessionsWithSameAgencyAndTopic)) {
+      throw new ConflictException(
+          String.format(
+              "User %s is already registered to topic %d and agency %d",
+              user.getUserId(), topicId, agencyId));
+    }
   }
 
   private void checkIfAlreadyRegisteredToConsultingType(User user, int consultingTypeId) {

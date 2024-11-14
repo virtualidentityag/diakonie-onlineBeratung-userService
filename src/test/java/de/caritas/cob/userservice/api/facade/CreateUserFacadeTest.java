@@ -60,7 +60,7 @@ public class CreateUserFacadeTest {
   @Mock private RollbackFacade rollbackFacade;
   @Mock private ConsultingTypeManager consultingTypeManager;
   @Mock private AgencyVerifier agencyVerifier;
-  @Mock private CreateNewConsultingTypeFacade createNewConsultingTypeFacade;
+  @Mock private CreateNewSessionFacade createNewSessionFacade;
   @Mock private UserVerifier userVerifier;
   @Mock private StatisticsService statisticsService;
   @Mock private TopicService topicService;
@@ -142,7 +142,7 @@ public class CreateUserFacadeTest {
         .thenReturn(KEYCLOAK_CREATE_USER_RESPONSE_DTO_WITH_USER_ID);
     doNothing().when(keycloakService).updatePassword(anyString(), anyString());
 
-    when(createNewConsultingTypeFacade.initializeNewSession(
+    when(createNewSessionFacade.initializeNewSession(
             any(), any(), any(ExtendedConsultingTypeResponseDTO.class)))
         .thenReturn(mock(NewRegistrationResponseDto.class));
 
@@ -161,7 +161,7 @@ public class CreateUserFacadeTest {
         .thenReturn(KEYCLOAK_CREATE_USER_RESPONSE_DTO_WITH_USER_ID);
     doNothing().when(keycloakService).updatePassword(anyString(), anyString());
 
-    when(createNewConsultingTypeFacade.initializeNewSession(
+    when(createNewSessionFacade.initializeNewSession(
             any(), any(), any(ExtendedConsultingTypeResponseDTO.class)))
         .thenReturn(mock(NewRegistrationResponseDto.class));
     when(tenantService.getRestrictedTenantData(Mockito.anyLong()))
@@ -173,7 +173,7 @@ public class CreateUserFacadeTest {
     verify(keycloakService, times(1)).createKeycloakUser(any(UserDTO.class));
     verify(keycloakService, times(1)).updateRole(any(), any(UserRole.class));
     verify(keycloakService, times(1)).updatePassword(anyString(), anyString());
-    verify(createNewConsultingTypeFacade, times(1))
+    verify(createNewSessionFacade, times(1))
         .initializeNewSession(any(), any(), any(ExtendedConsultingTypeResponseDTO.class));
     verify(rollbackFacade, times(0)).rollBackUserAccount(any());
     verify(statisticsService, times(1)).fireEvent(any());

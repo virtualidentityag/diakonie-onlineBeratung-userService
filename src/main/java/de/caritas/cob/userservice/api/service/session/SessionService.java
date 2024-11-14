@@ -96,6 +96,10 @@ public class SessionService {
     return sessionRepository.findByUserAndConsultingTypeId(user, consultingTypeId);
   }
 
+  public List<Session> getSessionsForUserByMainTopicId(User user, Long topicId) {
+    return sessionRepository.findByUserAndMainTopicId(user, topicId);
+  }
+
   /**
    * Updates the given session by assigning the provided consultant and {@link SessionStatus}.
    *

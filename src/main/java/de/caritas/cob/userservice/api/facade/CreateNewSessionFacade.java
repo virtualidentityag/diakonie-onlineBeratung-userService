@@ -4,6 +4,7 @@ import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.BooleanUtils.isTrue;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+import com.google.common.collect.Lists;
 import de.caritas.cob.userservice.api.adapters.rocketchat.RocketChatCredentials;
 import de.caritas.cob.userservice.api.adapters.web.dto.NewRegistrationDto;
 import de.caritas.cob.userservice.api.adapters.web.dto.NewRegistrationResponseDto;
@@ -12,11 +13,13 @@ import de.caritas.cob.userservice.api.adapters.web.dto.UserRegistrationDTO;
 import de.caritas.cob.userservice.api.exception.MissingConsultingTypeException;
 import de.caritas.cob.userservice.api.exception.httpresponses.BadRequestException;
 import de.caritas.cob.userservice.api.manager.consultingtype.ConsultingTypeManager;
+import de.caritas.cob.userservice.api.model.NewSessionValidationConstraint;
 import de.caritas.cob.userservice.api.model.User;
 import de.caritas.cob.userservice.api.service.statistics.StatisticsService;
 import de.caritas.cob.userservice.api.service.statistics.event.AssignSessionStatisticsEvent;
 import de.caritas.cob.userservice.consultingtypeservice.generated.web.model.ExtendedConsultingTypeResponseDTO;
 import de.caritas.cob.userservice.statisticsservice.generated.web.model.UserRole;
+import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,13 +28,23 @@ import org.springframework.stereotype.Service;
 /** Facade to encapsulate the steps to initialize a new consulting type. */
 @Service
 @RequiredArgsConstructor
-public class CreateNewConsultingTypeFacade {
+public class CreateNewSessionFacade {
 
   private final @NonNull ConsultingTypeManager consultingTypeManager;
   private final @NonNull CreateUserChatRelationFacade createUserChatRelationFacade;
   private final @NonNull CreateSessionFacade createSessionFacade;
   private final @NonNull StatisticsService statisticsService;
 
+  public NewRegistrationResponseDto initializeNewSession(
+      UserRegistrationDTO userRegistrationDTO,
+      User user,
+      RocketChatCredentials rocketChatCredentials) {
+    return initializeNewSession(
+        userRegistrationDTO,
+        user,
+        rocketChatCredentials,
+        Lists.newArrayList(NewSessionValidationConstraint.ONE_SESSION_PER_CONSULTING_TYPE));
+  }
   /**
    * Initializes the new consulting type settings and creates a session or a chat-agency relation
    * depending on its type. This method should be used for new consulting type registrations.
@@ -45,13 +58,18 @@ public class CreateNewConsultingTypeFacade {
   public NewRegistrationResponseDto initializeNewSession(
       UserRegistrationDTO userRegistrationDTO,
       User user,
-      RocketChatCredentials rocketChatCredentials) {
+      RocketChatCredentials rocketChatCredentials,
+      List<NewSessionValidationConstraint> validationConstraints) {
     try {
       var extendedConsultingTypeResponseDTO =
           consultingTypeManager.getConsultingTypeSettings(userRegistrationDTO.getConsultingType());
 
       return createSessionOrChat(
-          userRegistrationDTO, user, extendedConsultingTypeResponseDTO, rocketChatCredentials);
+          userRegistrationDTO,
+          user,
+          extendedConsultingTypeResponseDTO,
+          rocketChatCredentials,
+          validationConstraints);
     } catch (MissingConsultingTypeException | IllegalArgumentException e) {
       throw new BadRequestException(e.getMessage(), e);
     }
@@ -70,14 +88,20 @@ public class CreateNewConsultingTypeFacade {
       User user,
       ExtendedConsultingTypeResponseDTO extendedConsultingTypeResponseDTO) {
 
-    return createSessionOrChat(userRegistrationDTO, user, extendedConsultingTypeResponseDTO, null);
+    return createSessionOrChat(
+        userRegistrationDTO,
+        user,
+        extendedConsultingTypeResponseDTO,
+        null,
+        Lists.newArrayList(NewSessionValidationConstraint.ONE_SESSION_PER_CONSULTING_TYPE));
   }
 
   private NewRegistrationResponseDto createSessionOrChat(
       UserRegistrationDTO userRegistrationDTO,
       User user,
       ExtendedConsultingTypeResponseDTO extendedConsultingTypeResponseDTO,
-      RocketChatCredentials rocketChatCredentials) {
+      RocketChatCredentials rocketChatCredentials,
+      List<NewSessionValidationConstraint> validationConstraints) {
 
     if (isNotBlank(userRegistrationDTO.getConsultantId())) {
       NewRegistrationResponseDto newRegistrationResponseDto =
@@ -103,7 +127,10 @@ public class CreateNewConsultingTypeFacade {
     } else {
       sessionId =
           createSessionFacade.createUserSession(
-              convertToUserDTO(userRegistrationDTO), user, extendedConsultingTypeResponseDTO);
+              convertToUserDTO(userRegistrationDTO),
+              user,
+              extendedConsultingTypeResponseDTO,
+              validationConstraints);
     }
 
     return new NewRegistrationResponseDto().sessionId(sessionId).status(HttpStatus.CREATED);

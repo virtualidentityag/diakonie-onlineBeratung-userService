@@ -286,7 +286,7 @@ class UserControllerIT {
   @SuppressWarnings("unused")
   private LinkDiscoverers linkDiscoverers;
 
-  @MockBean private CreateNewConsultingTypeFacade createNewConsultingTypeFacade;
+  @MockBean private CreateNewSessionFacade createNewSessionFacade;
   @MockBean private MandatoryFieldsProvider mandatoryFieldsProvider;
   @MockBean private ConsultantDataFacade consultantDataFacade;
   @MockBean private SessionDataService sessionDataService;
@@ -692,7 +692,7 @@ class UserControllerIT {
       throws Exception {
 
     when(userAccountService.retrieveValidatedUser()).thenReturn(USER);
-    when(createNewConsultingTypeFacade.initializeNewSession(
+    when(createNewSessionFacade.initializeNewSession(
             any(), any(), any(RocketChatCredentials.class)))
         .thenReturn(new NewRegistrationResponseDto().sessionId(1L).status(HttpStatus.CREATED));
     when(consultingTypeManager.getConsultingTypeSettings(any()))
@@ -2286,7 +2286,7 @@ class UserControllerIT {
     newRegistrationDto.setAgencyId(1L);
     newRegistrationDto.setConsultingType("1");
     when(userAccountService.retrieveValidatedUser()).thenReturn(new User());
-    when(createNewConsultingTypeFacade.initializeNewSession(
+    when(createNewSessionFacade.initializeNewSession(
             Mockito.any(UserRegistrationDTO.class),
             Mockito.any(),
             Mockito.any(RocketChatCredentials.class)))
