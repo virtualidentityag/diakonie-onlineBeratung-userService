@@ -693,7 +693,7 @@ class UserControllerIT {
 
     when(userAccountService.retrieveValidatedUser()).thenReturn(USER);
     when(createNewSessionFacade.initializeNewSession(
-            any(), any(), any(RocketChatCredentials.class)))
+            any(), any(), any(RocketChatCredentials.class), Mockito.any()))
         .thenReturn(new NewRegistrationResponseDto().sessionId(1L).status(HttpStatus.CREATED));
     when(consultingTypeManager.getConsultingTypeSettings(any()))
         .thenReturn(CONSULTING_TYPE_SETTINGS_SUCHT);
@@ -2289,7 +2289,8 @@ class UserControllerIT {
     when(createNewSessionFacade.initializeNewSession(
             Mockito.any(UserRegistrationDTO.class),
             Mockito.any(),
-            Mockito.any(RocketChatCredentials.class)))
+            Mockito.any(RocketChatCredentials.class),
+            Mockito.any()))
         .thenReturn(new NewRegistrationResponseDto().status(HttpStatus.CREATED));
 
     // when
