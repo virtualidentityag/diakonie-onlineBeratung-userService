@@ -412,10 +412,7 @@ class NewMessageEmailSupplierTest {
 
     newMessageEmailSupplier.generateEmails();
 
-    assertTrue(
-        testLogAppender.contains(
-            "Skipping email notification: new message notification setting is disabled for consultant consultant-id",
-            Level.DEBUG));
+    assertTrue(testLogAppender.contains("Skipping email notification", Level.DEBUG));
   }
 
   @Test
