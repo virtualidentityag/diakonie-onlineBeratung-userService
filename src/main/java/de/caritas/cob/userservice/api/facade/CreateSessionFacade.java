@@ -56,33 +56,21 @@ public class CreateSessionFacade {
       ExtendedConsultingTypeResponseDTO extendedConsultingTypeResponseDTO,
       List<NewSessionValidationConstraint> validationConstraints) {
 
-    var agencyDTO = obtainVerifiedAgency(userDTO, extendedConsultingTypeResponseDTO);
-    validateConstraints(
-        user,
-        extendedConsultingTypeResponseDTO,
-        userDTO.getMainTopicId(),
-        agencyDTO,
-        validationConstraints);
-    var session = initializeSession(userDTO, user, agencyDTO);
-
-    return session != null ? session.getId() : null;
-  }
-
-  private void validateConstraints(
-      User user,
-      ExtendedConsultingTypeResponseDTO extendedConsultingTypeResponseDTO,
-      Long mainTopicId,
-      AgencyDTO agencyDTO,
-      List<NewSessionValidationConstraint> validationConstraints) {
     if (validationConstraints.contains(
         NewSessionValidationConstraint.ONE_SESSION_PER_CONSULTING_TYPE)) {
       checkIfAlreadyRegisteredToConsultingType(user, extendedConsultingTypeResponseDTO.getId());
     }
 
+    var agencyDTO = obtainVerifiedAgency(userDTO, extendedConsultingTypeResponseDTO);
+
     if (validationConstraints.contains(
         NewSessionValidationConstraint.ONE_SESSION_PER_TOPIC_ID_AND_AGENCY_ID)) {
-      checkIfAlreadyRegisteredToTopicAndSameAgency(user, mainTopicId, agencyDTO.getId());
+      checkIfAlreadyRegisteredToTopicAndSameAgency(
+          user, userDTO.getMainTopicId(), agencyDTO.getId());
     }
+    var session = initializeSession(userDTO, user, agencyDTO);
+
+    return session != null ? session.getId() : null;
   }
 
   /**
