@@ -11,6 +11,7 @@ import de.caritas.cob.userservice.api.facade.sessionlist.RocketChatRoomInformati
 import de.caritas.cob.userservice.api.helper.SessionListAnalyser;
 import de.caritas.cob.userservice.api.service.ChatService;
 import de.caritas.cob.userservice.api.service.session.SessionService;
+import de.caritas.cob.userservice.api.service.session.SessionTopicEnrichmentService;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -29,6 +30,8 @@ public class UserSessionListService {
   private final @NonNull RocketChatRoomInformationProvider rocketChatRoomInformationProvider;
   private final @NonNull SessionListAnalyser sessionListAnalyser;
 
+  private final @NonNull SessionTopicEnrichmentService sessionTopicEnrichmentService;
+
   /**
    * Returns a list of {@link UserSessionResponseDTO} for the specified user ID.
    *
@@ -42,7 +45,15 @@ public class UserSessionListService {
     List<UserSessionResponseDTO> sessions = sessionService.getSessionsForUserId(userId);
     List<UserSessionResponseDTO> chats = chatService.getChatsForUserId(userId);
 
-    return mergeUserSessionsAndChats(sessions, chats, rocketChatCredentials);
+    var mergedSessions = mergeUserSessionsAndChats(sessions, chats, rocketChatCredentials);
+    enrichSessionsWithTopics(mergedSessions);
+    return mergedSessions;
+  }
+
+  private void enrichSessionsWithTopics(List<UserSessionResponseDTO> mergedSessions) {
+    mergedSessions.stream()
+        .map(UserSessionResponseDTO::getSession)
+        .forEach(sessionTopicEnrichmentService::enrichSessionWithTopicData);
   }
 
   /**
