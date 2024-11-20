@@ -34,6 +34,7 @@ import de.caritas.cob.userservice.api.conversation.facade.CreateAnonymousEnquiry
 import de.caritas.cob.userservice.api.conversation.facade.FinishAnonymousConversationFacade;
 import de.caritas.cob.userservice.api.conversation.service.ConversationListResolver;
 import de.caritas.cob.userservice.api.helper.UsernameTranscoder;
+import de.caritas.cob.userservice.api.service.session.SessionTopicEnrichmentService;
 import javax.servlet.http.Cookie;
 import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.Test;
@@ -66,6 +67,8 @@ class ConversationControllerAuthorizationIT {
   @MockBean private CreateAnonymousEnquiryFacade createAnonymousEnquiryFacade;
 
   @MockBean private FinishAnonymousConversationFacade finishAnonymousConversationFacade;
+
+  @MockBean private SessionTopicEnrichmentService sessionTopicEnrichmentService;
 
   @MockBean
   @SuppressWarnings("unused")

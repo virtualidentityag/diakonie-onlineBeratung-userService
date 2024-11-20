@@ -25,6 +25,7 @@ import de.caritas.cob.userservice.api.helper.AuthenticatedUser;
 import de.caritas.cob.userservice.api.model.Consultant;
 import de.caritas.cob.userservice.api.port.out.AppointmentRepository;
 import de.caritas.cob.userservice.api.port.out.ConsultantRepository;
+import de.caritas.cob.userservice.api.service.session.SessionTopicEnrichmentService;
 import java.lang.reflect.Method;
 import java.time.Clock;
 import java.time.Instant;
@@ -84,6 +85,8 @@ class AppointmentControllerE2EIT {
   @MockBean private Clock clock;
 
   @MockBean private KeycloakConfigResolver keycloakConfigResolver;
+
+  @MockBean private SessionTopicEnrichmentService sessionTopicEnrichmentService;
 
   private Appointment appointment;
 

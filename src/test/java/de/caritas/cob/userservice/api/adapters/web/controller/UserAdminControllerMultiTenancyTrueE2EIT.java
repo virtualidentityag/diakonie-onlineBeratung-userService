@@ -20,6 +20,7 @@ import de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue;
 import de.caritas.cob.userservice.api.config.auth.IdentityConfig;
 import de.caritas.cob.userservice.api.helper.AuthenticatedUser;
 import de.caritas.cob.userservice.api.port.out.IdentityClient;
+import de.caritas.cob.userservice.api.service.session.SessionTopicEnrichmentService;
 import de.caritas.cob.userservice.api.tenant.TenantResolverService;
 import de.caritas.cob.userservice.tenantservice.generated.web.model.RestrictedTenantDTO;
 import javax.servlet.http.Cookie;
@@ -67,6 +68,8 @@ class UserAdminControllerMultiTenancyTrueE2EIT {
   @MockBean TenantResolverService tenantResolverService;
 
   @MockBean AuthenticatedUser authenticatedUser;
+
+  @MockBean SessionTopicEnrichmentService sessionTopicEnrichmentService;
 
   @AfterEach
   void reset() {
