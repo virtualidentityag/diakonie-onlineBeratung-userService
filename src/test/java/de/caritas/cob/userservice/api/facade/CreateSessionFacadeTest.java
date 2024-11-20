@@ -33,11 +33,13 @@ import de.caritas.cob.userservice.api.adapters.web.dto.AgencyDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.UserDTO;
 import de.caritas.cob.userservice.api.exception.httpresponses.BadRequestException;
 import de.caritas.cob.userservice.api.exception.httpresponses.ConflictException;
+import de.caritas.cob.userservice.api.exception.httpresponses.CustomValidationHttpStatusException;
 import de.caritas.cob.userservice.api.exception.httpresponses.InternalServerErrorException;
 import de.caritas.cob.userservice.api.facade.rollback.RollbackFacade;
 import de.caritas.cob.userservice.api.helper.AgencyVerifier;
 import de.caritas.cob.userservice.api.model.NewSessionValidationConstraint;
 import de.caritas.cob.userservice.api.model.Session;
+import de.caritas.cob.userservice.api.port.out.ConsultantAgencyRepository;
 import de.caritas.cob.userservice.api.service.LogService;
 import de.caritas.cob.userservice.api.service.SessionDataService;
 import de.caritas.cob.userservice.api.service.session.SessionService;
@@ -56,7 +58,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-public class CreateSessionFacadeTest {
+class CreateSessionFacadeTest {
 
   @InjectMocks private CreateSessionFacade createSessionFacade;
   @Mock private SessionService sessionService;
@@ -65,6 +67,8 @@ public class CreateSessionFacadeTest {
   @Mock private RollbackFacade rollbackFacade;
   @Mock private UserAccountService userAccountProvider;
   @Mock private Logger logger;
+
+  @Mock private ConsultantAgencyRepository consultantAgencyRepository;
 
   List<NewSessionValidationConstraint> validationConstraints =
       Lists.newArrayList(NewSessionValidationConstraint.ONE_SESSION_PER_CONSULTING_TYPE);
@@ -78,7 +82,7 @@ public class CreateSessionFacadeTest {
   @Test
   public void createUserSession_Should_ReturnConflict_When_AlreadyRegisteredToConsultingType() {
     assertThrows(
-        ConflictException.class,
+        CustomValidationHttpStatusException.class,
         () -> {
           when(sessionService.getSessionsForUserByConsultingTypeId(any(), anyInt()))
               .thenReturn(SESSION_LIST);
