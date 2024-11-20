@@ -11,6 +11,7 @@ import de.caritas.cob.userservice.api.facade.sessionlist.RocketChatRoomInformati
 import de.caritas.cob.userservice.api.helper.SessionListAnalyser;
 import de.caritas.cob.userservice.api.service.ChatService;
 import de.caritas.cob.userservice.api.service.session.SessionService;
+import de.caritas.cob.userservice.api.service.session.SessionTopicEnrichmentService;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -18,6 +19,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -28,6 +31,12 @@ public class UserSessionListService {
   private final @NonNull ChatService chatService;
   private final @NonNull RocketChatRoomInformationProvider rocketChatRoomInformationProvider;
   private final @NonNull SessionListAnalyser sessionListAnalyser;
+
+  @Value("${feature.topics.enabled}")
+  private boolean featureTopicsEnabled;
+
+  @Autowired(required = false)
+  private SessionTopicEnrichmentService sessionTopicEnrichmentService;
 
   /**
    * Returns a list of {@link UserSessionResponseDTO} for the specified user ID.
@@ -42,7 +51,17 @@ public class UserSessionListService {
     List<UserSessionResponseDTO> sessions = sessionService.getSessionsForUserId(userId);
     List<UserSessionResponseDTO> chats = chatService.getChatsForUserId(userId);
 
-    return mergeUserSessionsAndChats(sessions, chats, rocketChatCredentials);
+    var mergedSessions = mergeUserSessionsAndChats(sessions, chats, rocketChatCredentials);
+    if (featureTopicsEnabled) {
+      enrichSessionsWithTopics(mergedSessions);
+    }
+    return mergedSessions;
+  }
+
+  private void enrichSessionsWithTopics(List<UserSessionResponseDTO> mergedSessions) {
+    mergedSessions.stream()
+        .map(UserSessionResponseDTO::getSession)
+        .forEach(sessionTopicEnrichmentService::enrichSessionWithTopicData);
   }
 
   /**
@@ -192,5 +211,10 @@ public class UserSessionListService {
 
   private boolean isRocketChatRoomSubscribedByUser(List<String> userRoomsList, String groupId) {
     return nonNull(userRoomsList) && userRoomsList.contains(groupId);
+  }
+
+  void setSessionTopicEnrichmentService(
+      SessionTopicEnrichmentService sessionTopicEnrichmentService) {
+    this.sessionTopicEnrichmentService = sessionTopicEnrichmentService;
   }
 }

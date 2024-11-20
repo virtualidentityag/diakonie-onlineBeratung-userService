@@ -73,6 +73,7 @@ import de.caritas.cob.userservice.api.port.out.ConsultantRepository;
 import de.caritas.cob.userservice.api.port.out.UserAgencyRepository;
 import de.caritas.cob.userservice.api.port.out.UserChatRepository;
 import de.caritas.cob.userservice.api.port.out.UserRepository;
+import de.caritas.cob.userservice.api.service.session.SessionTopicEnrichmentService;
 import de.caritas.cob.userservice.api.testConfig.TestAgencyControllerApi;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -154,6 +155,8 @@ class UserControllerChatE2EIT {
   @MockBean private RocketChatCredentialsProvider rocketChatCredentialsProvider;
 
   @MockBean private AgencyServiceApiControllerFactory agencyServiceApiControllerFactory;
+
+  @MockBean private SessionTopicEnrichmentService sessionTopicEnrichmentService;
 
   @Autowired private CacheManager cacheManager;
 

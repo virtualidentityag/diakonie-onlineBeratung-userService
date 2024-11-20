@@ -92,6 +92,7 @@ import de.caritas.cob.userservice.api.service.LogService;
 import de.caritas.cob.userservice.api.service.SessionDataService;
 import de.caritas.cob.userservice.api.service.archive.SessionArchiveService;
 import de.caritas.cob.userservice.api.service.session.SessionService;
+import de.caritas.cob.userservice.api.service.session.SessionTopicEnrichmentService;
 import de.caritas.cob.userservice.api.service.user.UserAccountService;
 import de.caritas.cob.userservice.api.service.user.UserService;
 import java.util.Optional;
@@ -156,6 +157,8 @@ class UserControllerAuthorizationIT {
   @MockBean private ConsultantUpdateService consultantUpdateService;
   @MockBean private ConsultantService consultantService;
   @MockBean private AskerDataProvider askerDataProvider;
+
+  @MockBean private SessionTopicEnrichmentService sessionTopicEnrichmentService;
 
   @MockBean
   @SuppressWarnings("unused")

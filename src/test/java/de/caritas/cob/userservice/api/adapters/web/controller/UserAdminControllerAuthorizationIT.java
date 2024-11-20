@@ -32,6 +32,7 @@ import de.caritas.cob.userservice.api.admin.facade.ConsultantAdminFacade;
 import de.caritas.cob.userservice.api.admin.report.service.ViolationReportGenerator;
 import de.caritas.cob.userservice.api.admin.service.session.SessionAdminService;
 import de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue;
+import de.caritas.cob.userservice.api.service.session.SessionTopicEnrichmentService;
 import java.util.List;
 import java.util.UUID;
 import javax.servlet.http.Cookie;
@@ -71,6 +72,8 @@ class UserAdminControllerAuthorizationIT {
   @MockBean private ConsultantAdminFacade consultantAdminFacade;
 
   @MockBean private AskerUserAdminFacade askerUserAdminFacade;
+
+  @MockBean private SessionTopicEnrichmentService sessionTopicEnrichmentService;
 
   @Test
   void getSessions_Should_ReturnUnauthorizedAndCallNoMethods_When_noKeycloakAuthorizationIsPresent()

@@ -43,6 +43,7 @@ import de.caritas.cob.userservice.api.port.out.ConsultantAgencyRepository;
 import de.caritas.cob.userservice.api.port.out.ConsultantRepository;
 import de.caritas.cob.userservice.api.port.out.UserAgencyRepository;
 import de.caritas.cob.userservice.api.port.out.UserRepository;
+import de.caritas.cob.userservice.api.service.session.SessionTopicEnrichmentService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -111,6 +112,8 @@ class UserController2faE2EIT {
   @Autowired private IdentityConfig identityConfig;
 
   @MockBean private AuthenticatedUser authenticatedUser;
+
+  @MockBean private SessionTopicEnrichmentService sessionTopicEnrichmentService;
 
   @MockBean
   @Qualifier("keycloakRestTemplate")
