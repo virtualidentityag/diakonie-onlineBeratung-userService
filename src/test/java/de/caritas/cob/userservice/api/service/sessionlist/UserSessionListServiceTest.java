@@ -37,12 +37,14 @@ import de.caritas.cob.userservice.api.service.session.SessionService;
 import de.caritas.cob.userservice.api.service.session.SessionTopicEnrichmentService;
 import java.util.Collections;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 class UserSessionListServiceTest {
@@ -55,10 +57,17 @@ class UserSessionListServiceTest {
 
   @Mock private SessionTopicEnrichmentService sessionTopicEnrichmentService;
 
+  @BeforeEach
+  public void setUp() {
+    ReflectionTestUtils.setField(userSessionListService, "featureTopicsEnabled", false);
+  }
+
   @Test
   void
       retrieveSessionsForAuthenticatedUser_Should_ReturnValidSessionListWithSessionMessagesReadTrue_WhenThereAreNoUnreadMessages() {
 
+    ReflectionTestUtils.setField(userSessionListService, "featureTopicsEnabled", true);
+    userSessionListService.setSessionTopicEnrichmentService(sessionTopicEnrichmentService);
     when(sessionService.getSessionsForUserId(USER_ID)).thenReturn(USER_SESSION_RESPONSE_DTO_LIST);
     RocketChatRoomInformation rocketChatRoomInformation =
         RocketChatRoomInformation.builder()

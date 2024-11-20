@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -30,6 +31,9 @@ public class UserSessionListService {
   private final @NonNull ChatService chatService;
   private final @NonNull RocketChatRoomInformationProvider rocketChatRoomInformationProvider;
   private final @NonNull SessionListAnalyser sessionListAnalyser;
+
+  @Value("${feature.topics.enabled}")
+  private boolean featureTopicsEnabled;
 
   @Autowired(required = false)
   private SessionTopicEnrichmentService sessionTopicEnrichmentService;
@@ -48,7 +52,9 @@ public class UserSessionListService {
     List<UserSessionResponseDTO> chats = chatService.getChatsForUserId(userId);
 
     var mergedSessions = mergeUserSessionsAndChats(sessions, chats, rocketChatCredentials);
-    enrichSessionsWithTopics(mergedSessions);
+    if (featureTopicsEnabled) {
+      enrichSessionsWithTopics(mergedSessions);
+    }
     return mergedSessions;
   }
 
@@ -205,5 +211,10 @@ public class UserSessionListService {
 
   private boolean isRocketChatRoomSubscribedByUser(List<String> userRoomsList, String groupId) {
     return nonNull(userRoomsList) && userRoomsList.contains(groupId);
+  }
+
+  void setSessionTopicEnrichmentService(
+      SessionTopicEnrichmentService sessionTopicEnrichmentService) {
+    this.sessionTopicEnrichmentService = sessionTopicEnrichmentService;
   }
 }
