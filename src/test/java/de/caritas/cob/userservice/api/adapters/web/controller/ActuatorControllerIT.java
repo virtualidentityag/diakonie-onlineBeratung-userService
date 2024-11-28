@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -38,10 +39,33 @@ class ActuatorControllerIT {
 
   @Test
   void getHealtcheck_Should_returnHealtcheck() throws Exception {
+
+    // when // then
     mockMvc
         .perform(get("/actuator/health").contentType(APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("status", is("UP")));
+  }
+
+  @Test
+  void updateLoggerLevel_Should_ChangeLogLevel() throws Exception {
+    // given
+    String loggerName = "de.caritas.cob.userservice.api.adapters.web.controller";
+    String newLevel = "DEBUG";
+
+    // when
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.post("/actuator/loggers/" + loggerName)
+                .contentType(APPLICATION_JSON)
+                .content("{\"configuredLevel\": \"" + newLevel + "\"}"))
+        .andExpect(status().isNoContent());
+
+    // then
+    mockMvc
+        .perform(get("/actuator/loggers/" + loggerName).contentType(APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.configuredLevel", is(newLevel)));
   }
 
   @Test
