@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.1.1](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/compare/v3.1.0...v3.1.1) (2024-12-04)
+
+
+### Bug Fixes
+
+* deletion routine changes ([d5a0030](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/d5a003014d8a5f78a50230d55f2b8b76064589c1))
+* update download artifact version to v4 ([1012ef1](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/1012ef1ef6491251eaaa8203ff84745ee98f42d5))
+* update upload artifact version to v4 ([6fd1c9a](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/6fd1c9a67329b8e4869eb0008f89b89945f54687))
+
 ## [3.1.0](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/compare/v3.0.2...v3.1.0) (2024-09-04)
 
 
