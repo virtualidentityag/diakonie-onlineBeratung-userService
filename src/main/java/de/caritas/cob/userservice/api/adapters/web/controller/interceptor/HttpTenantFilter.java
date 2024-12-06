@@ -31,7 +31,14 @@ public class HttpTenantFilter extends OncePerRequestFilter {
   private final @Nullable TenantService tenantService;
 
   private static final String[] TENANCY_FILTER_WHITELIST =
-      new String[] {"/actuator/health", "/actuator/health/**", "/actuator/loggers/**", "/actuator/loggers", "/swagger-ui.html", "/favicon.ico"};
+      new String[] {
+        "/actuator/health",
+        "/actuator/health/**",
+        "/actuator/loggers/**",
+        "/actuator/loggers",
+        "/swagger-ui.html",
+        "/favicon.ico"
+      };
 
   private final DefaultRequiresTenantFilterMatcher requiresTenantFilterMatcher =
       new DefaultRequiresTenantFilterMatcher();
