@@ -239,7 +239,8 @@ class DeleteInactiveSessionsAndUserServiceTest {
   }
 
   @Test
-  void deleteInactiveSessionsAndUsers_Should_deleteSessionFromRocketChat_WhenSessionDoesNotExistOnMariaDB() {
+  void
+      deleteInactiveSessionsAndUsers_Should_deleteSessionFromRocketChat_WhenSessionDoesNotExistOnMariaDB() {
     // given
     EasyRandom easyRandom = new EasyRandom();
     User user = easyRandom.nextObject(User.class);
@@ -264,7 +265,8 @@ class DeleteInactiveSessionsAndUserServiceTest {
   }
 
   @Test
-  void deleteInactiveSessionsAndUsers_Should_catchAndLogNonUniqueResultException_WhenThrownByFindByRcUserIdAndDeleteDateIsNull() {
+  void
+      deleteInactiveSessionsAndUsers_Should_catchAndLogNonUniqueResultException_WhenThrownByFindByRcUserIdAndDeleteDateIsNull() {
     // given
     EasyRandom easyRandom = new EasyRandom();
     User user = easyRandom.nextObject(User.class);
@@ -285,6 +287,13 @@ class DeleteInactiveSessionsAndUserServiceTest {
 
     // then
     List<ILoggingEvent> logEvents = listAppender.list;
-    assertTrue(logEvents.stream().anyMatch(event -> event.getFormattedMessage().contains("Non unique result for findByRcUserIdAndDeleteDateIsNull found")));
+    assertTrue(
+        logEvents.stream()
+            .anyMatch(
+                event ->
+                    event
+                        .getFormattedMessage()
+                        .contains(
+                            "Non unique result for findByRcUserIdAndDeleteDateIsNull found")));
   }
 }
