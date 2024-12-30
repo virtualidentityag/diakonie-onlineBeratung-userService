@@ -27,15 +27,19 @@ public class SessionTopicEnrichmentService {
       log.debug("Available topics list has size: {} ", availableTopics.size());
       enrichSession(availableTopics, session);
     } else {
-      log.debug(
-          "Skipping topic enrichment, topic id is not set for session with id: {}",
-          session.getId());
+      if (session != null) {
+        log.debug(
+            "Skipping topic enrichment, topic id is not set for session with id: {}",
+            session.getId());
+      } else {
+        log.debug("Skipping topic enrichment, session is null");
+      }
     }
     return session;
   }
 
   private boolean shouldEnrichTopic(SessionDTO session) {
-    return session.getTopic() != null && session.getTopic().getId() != null;
+    return session != null && session.getTopic() != null && session.getTopic().getId() != null;
   }
 
   private void enrichSession(Map<Long, TopicDTO> availableTopics, SessionDTO sessionDTO) {
