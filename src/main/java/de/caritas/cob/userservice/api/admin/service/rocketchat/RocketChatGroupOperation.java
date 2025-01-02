@@ -36,15 +36,6 @@ abstract class RocketChatGroupOperation {
               "Consultant added to rc group %s (%s).",
               session.getGroupId(), resolveTypeOfSession(session)));
     }
-
-    if (operationConditionProvider.canAddToRocketChatFeedbackGroup()) {
-      rocketChatFacade.addUserToRocketChatGroup(
-          consultant.getRocketChatId(), session.getFeedbackGroupId());
-      logMethod.accept(
-          String.format(
-              "Consultant added to rc feedback group %s (%s).",
-              session.getFeedbackGroupId(), resolveTypeOfSession(session)));
-    }
   }
 
   String resolveTypeOfSession(Session session) {
@@ -57,8 +48,6 @@ abstract class RocketChatGroupOperation {
   void removeConsultantsFromSessionGroups(Session session, List<Consultant> consultants) {
     removeConsultantsFromRocketChatGroup(
         session.getGroupId(), consultants, rocketChatFacade::removeUserFromGroup);
-    removeConsultantsFromRocketChatGroup(
-        session.getFeedbackGroupId(), consultants, rocketChatFacade::removeUserFromGroup);
   }
 
   void removeConsultantsFromSessionGroup(String rcGroupId, List<Consultant> consultants) {

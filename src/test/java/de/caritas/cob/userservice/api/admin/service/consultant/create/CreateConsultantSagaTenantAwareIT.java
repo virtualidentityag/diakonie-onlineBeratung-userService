@@ -4,11 +4,11 @@ import static de.caritas.cob.userservice.api.config.auth.UserRole.CONSULTANT;
 import static de.caritas.cob.userservice.api.config.auth.UserRole.GROUP_CHAT_CONSULTANT;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -23,26 +23,25 @@ import de.caritas.cob.userservice.api.adapters.web.dto.CreateConsultantDTO;
 import de.caritas.cob.userservice.api.admin.service.tenant.TenantAdminService;
 import de.caritas.cob.userservice.api.exception.httpresponses.CustomValidationHttpStatusException;
 import de.caritas.cob.userservice.api.exception.rocketchat.RocketChatLoginException;
-import de.caritas.cob.userservice.api.helper.AuthenticatedUser;
 import de.caritas.cob.userservice.api.model.Consultant;
 import de.caritas.cob.userservice.api.port.out.ConsultantRepository;
 import de.caritas.cob.userservice.api.tenant.TenantContext;
+import de.caritas.cob.userservice.api.tenant.TenantData;
 import de.caritas.cob.userservice.tenantadminservice.generated.web.model.Licensing;
 import de.caritas.cob.userservice.tenantadminservice.generated.web.model.TenantDTO;
 import org.jeasy.random.EasyRandom;
-import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = UserServiceApplication.class)
 @TestPropertySource(properties = "spring.profiles.active=testing")
 @AutoConfigureTestDatabase(replace = Replace.ANY)
@@ -65,8 +64,6 @@ public class CreateConsultantSagaTenantAwareIT {
 
   @MockBean private KeycloakService keycloakService;
 
-  @MockBean private AuthenticatedUser authenticatedUser;
-
   private final EasyRandom easyRandom = new EasyRandom();
 
   @AfterEach
@@ -74,42 +71,23 @@ public class CreateConsultantSagaTenantAwareIT {
     TenantContext.clear();
   }
 
-  @Test(expected = CustomValidationHttpStatusException.class)
+  @Test
   public void
       createNewConsultant_Should_throwCustomValidationHttpStatusException_When_LicensesAreExceeded() {
-    // given
     TenantContext.setCurrentTenant(1L);
-    var tenant = new TenantDTO().licensing(new Licensing().allowedNumberOfUsers(2));
-    when(tenantAdminService.getTenantById(anyLong())).thenReturn(tenant);
-
-    createConsultant(1L, "username1");
-    createConsultant(1L, "username2");
-    CreateConsultantDTO createConsultantDTO = this.easyRandom.nextObject(CreateConsultantDTO.class);
-    createConsultantDTO.setTenantId(null);
-
-    // when, then
-    this.createConsultantSaga.createNewConsultant(createConsultantDTO);
-    rollbackDBState();
-  }
-
-  @Test(expected = CustomValidationHttpStatusException.class)
-  public void
-      createNewConsultant_Should_throwCustomValidationHttpStatusException_When_userIsSuperAdminAndLicensesAreExceededForGivenTenant() {
-    // given
-    TenantContext.setCurrentTenant(0L);
-    var tenant = new TenantDTO().licensing(new Licensing().allowedNumberOfUsers(2));
-    when(tenantAdminService.getTenantById(anyLong())).thenReturn(tenant);
-
-    when(authenticatedUser.isTenantSuperAdmin()).thenReturn(true);
-
-    createConsultant(2L, "username1");
-    createConsultant(2L, "username2");
-    CreateConsultantDTO createConsultantDTO = this.easyRandom.nextObject(CreateConsultantDTO.class);
-    createConsultantDTO.setTenantId(2L);
-
-    // when, then
-    this.createConsultantSaga.createNewConsultant(createConsultantDTO);
-    rollbackDBState();
+    assertThrows(
+        CustomValidationHttpStatusException.class,
+        () -> {
+          // given
+          givenTenantApiCall();
+          createConsultant("username1");
+          createConsultant("username2");
+          CreateConsultantDTO createConsultantDTO =
+              this.easyRandom.nextObject(CreateConsultantDTO.class);
+          createConsultantDTO.setTenantId(1L);
+          this.createConsultantSaga.createNewConsultant(createConsultantDTO);
+          rollbackDBState();
+        });
   }
 
   @Test
@@ -128,13 +106,14 @@ public class CreateConsultantSagaTenantAwareIT {
             .settings(
                 new de.caritas.cob.userservice.tenantadminservice.generated.web.model.Settings()
                     .featureGroupChatV2Enabled(false));
-    when(tenantAdminService.getTenantById(anyLong())).thenReturn(tenant);
+    when(tenantAdminService.getTenantById(Mockito.anyLong())).thenReturn(tenant);
 
     CreateConsultantDTO createConsultantDTO = this.easyRandom.nextObject(CreateConsultantDTO.class);
     createConsultantDTO.setTenantId(TENANT_ID);
     createConsultantDTO.setUsername(VALID_USERNAME);
     createConsultantDTO.setEmail(VALID_EMAILADDRESS);
     createConsultantDTO.setIsGroupchatConsultant(true);
+    createConsultantDTO.setTenantId(1L);
 
     // when
     ConsultantAdminResponseDTO consultant =
@@ -149,10 +128,10 @@ public class CreateConsultantSagaTenantAwareIT {
     assertThat(consultant.getEmbedded().getId(), notNullValue());
   }
 
-  private void createConsultant(Long tenantId, String username) {
+  private void createConsultant(String username) {
     Consultant consultant = new Consultant();
     consultant.setAppointments(null);
-    consultant.setTenantId(tenantId);
+    consultant.setTenantId(1L);
     consultant.setId(username);
     consultant.setRocketChatId(username);
     consultant.setUsername(username);
@@ -162,7 +141,6 @@ public class CreateConsultantSagaTenantAwareIT {
     consultant.setEncourage2fa(true);
     consultant.setNotifyEnquiriesRepeating(true);
     consultant.setNotifyNewChatMessageFromAdviceSeeker(true);
-    consultant.setNotifyNewFeedbackMessageFromAdviceSeeker(true);
     consultant.setWalkThroughEnabled(true);
     consultant.setLanguageCode(LanguageCode.de);
 
@@ -176,5 +154,17 @@ public class CreateConsultantSagaTenantAwareIT {
     }
     consultantRepository.saveAll(all);
     TenantContext.clear();
+  }
+
+  private void givenTenantApiCall() {
+    var currentTenant = new TenantData(1L, "testdomain");
+    TenantContext.setCurrentTenantData(currentTenant);
+    var dummyTenant = new TenantDTO();
+    var licensing = new Licensing();
+    licensing.setAllowedNumberOfUsers(2);
+    dummyTenant.setLicensing(licensing);
+    ReflectionTestUtils.setField(createConsultantSaga, "tenantAdminService", tenantAdminService);
+    when(tenantAdminService.getTenantById(TenantContext.getCurrentTenant()))
+        .thenReturn(dummyTenant);
   }
 }

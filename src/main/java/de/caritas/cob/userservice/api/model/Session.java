@@ -1,7 +1,6 @@
 package de.caritas.cob.userservice.api.model;
 
 import static java.util.Objects.nonNull;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -154,9 +153,6 @@ public class Session implements TenantAware {
   @Column(name = "rc_group_id")
   private String groupId;
 
-  @Column(name = "rc_feedback_group_id")
-  private String feedbackGroupId;
-
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "session")
   @Exclude
   private List<SessionData> sessionData;
@@ -164,15 +160,8 @@ public class Session implements TenantAware {
   @Column(name = "is_team_session", columnDefinition = "tinyint(4) default '0'")
   private boolean teamSession;
 
-  @Column(name = "is_peer_chat", columnDefinition = "tinyint(4) unsigned default '0'")
-  private boolean isPeerChat;
-
   @Column(nullable = false, columnDefinition = "bit default false")
   private Boolean isConsultantDirectlySet;
-
-  public boolean hasFeedbackChat() {
-    return isNotBlank(feedbackGroupId);
-  }
 
   @Column(name = "create_date", columnDefinition = "datetime")
   private LocalDateTime createDate;

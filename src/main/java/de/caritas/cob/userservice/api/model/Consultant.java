@@ -171,12 +171,6 @@ public class Consultant implements TenantAware, NotificationsAware {
       columnDefinition = "bit default true")
   private Boolean notifyNewChatMessageFromAdviceSeeker;
 
-  @Column(
-      name = "notify_new_feedback_message_from_advice_seeker",
-      nullable = false,
-      columnDefinition = "bit default true")
-  private Boolean notifyNewFeedbackMessageFromAdviceSeeker;
-
   @Column(name = "tenant_id")
   @Field
   private Long tenantId;

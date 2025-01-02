@@ -12,8 +12,6 @@ public enum UserRole {
   USER("user"),
   CONSULTANT("consultant"),
   TECHNICAL("technical"),
-  PEER_CONSULTANT("peer-consultant"),
-  MAIN_CONSULTANT("main-consultant"),
   GROUP_CHAT_CONSULTANT("group-chat-consultant"),
   USER_ADMIN("user-admin"),
   SINGLE_TENANT_ADMIN("single-tenant-admin"),

@@ -17,7 +17,6 @@ import de.caritas.cob.userservice.api.model.Consultant;
 import de.caritas.cob.userservice.api.model.NotificationsAware;
 import de.caritas.cob.userservice.api.model.Session;
 import de.caritas.cob.userservice.api.model.User;
-import de.caritas.cob.userservice.api.port.out.IdentityClient;
 import de.caritas.cob.userservice.api.port.out.IdentityClientConfig;
 import de.caritas.cob.userservice.api.service.ConsultantAgencyService;
 import de.caritas.cob.userservice.api.service.ConsultantService;
@@ -27,7 +26,6 @@ import de.caritas.cob.userservice.api.service.emailsupplier.AssignEnquiryEmailSu
 import de.caritas.cob.userservice.api.service.emailsupplier.EmailSupplier;
 import de.caritas.cob.userservice.api.service.emailsupplier.NewDirectEnquiryEmailSupplier;
 import de.caritas.cob.userservice.api.service.emailsupplier.NewEnquiryEmailSupplier;
-import de.caritas.cob.userservice.api.service.emailsupplier.NewFeedbackEmailSupplier;
 import de.caritas.cob.userservice.api.service.emailsupplier.NewMessageEmailSupplier;
 import de.caritas.cob.userservice.api.service.emailsupplier.ReassignmentConfirmationEmailSupplier;
 import de.caritas.cob.userservice.api.service.emailsupplier.ReassignmentRequestEmailSupplier;
@@ -66,7 +64,6 @@ public class EmailNotificationFacade {
   private final @NonNull ConsultantService consultantService;
   private final @NonNull RocketChatService messageClient;
   private final @NonNull ConsultingTypeManager consultingTypeManager;
-  private final @NonNull IdentityClient identityClient;
   private final @NonNull IdentityClientConfig identityClientConfig;
   private final @NonNull NewEnquiryEmailSupplier newEnquiryEmailSupplier;
   private final @NonNull NewDirectEnquiryEmailSupplier newDirectEnquiryEmailSupplier;
@@ -184,39 +181,6 @@ public class EmailNotificationFacade {
           rcGroupId,
           userId,
           ex);
-    }
-    TenantContext.clear();
-  }
-
-  /**
-   * Sends email notifications according to the corresponding consultant(s) when a new feedback
-   * message was written.
-   *
-   * @param rcFeedbackGroupId group id of feedback chat
-   * @param userId regarding user id
-   */
-  @Async
-  public void sendNewFeedbackMessageNotification(
-      String rcFeedbackGroupId, String userId, TenantData tenantData) {
-    TenantContext.setCurrentTenantData(tenantData);
-    try {
-      Session session = sessionService.getSessionByFeedbackGroupId(rcFeedbackGroupId);
-      EmailSupplier newFeedbackMessages =
-          new NewFeedbackEmailSupplier(
-              session,
-              rcFeedbackGroupId,
-              userId,
-              applicationBaseUrl,
-              consultantService,
-              messageClient,
-              rocketChatSystemUserId,
-              identityClient);
-      sendMailTasksToMailService(newFeedbackMessages);
-    } catch (Exception e) {
-      log.error(
-          "EmailNotificationFacade error: List of members for rocket chat feedback group id {} is empty.",
-          rcFeedbackGroupId,
-          e);
     }
     TenantContext.clear();
   }

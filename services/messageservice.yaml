@@ -82,54 +82,6 @@ paths:
         - Bearer: []
       x-codegen-request-body-name: Message
 
-  /messages/feedback/new:
-    post:
-      tags:
-        - message-controller
-      summary: 'Add new Rocket.Chat message to feedback chat [Authorization: authority
-        for feedback chat]'
-      operationId: createFeedbackMessage
-      parameters:
-        - name: rcToken
-          in: header
-          required: true
-          schema:
-            type: string
-        - name: rcUserId
-          in: header
-          required: true
-          schema:
-            type: string
-        - name: rcFeedbackGroupId
-          in: header
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          'application/json':
-            schema:
-              $ref: '#/components/schemas/MessageDTO'
-        required: true
-      responses:
-        201:
-          description: CREATED - message was successfully created
-          content:
-            'application/json':
-              schema:
-                $ref: '#/components/schemas/MessageResponseDTO'
-        400:
-          description: BAD REQUEST - invalid/incomplete request or body object
-        401:
-          description: UNAUTHORIZED - no/invalid Keycloak token
-        403:
-          description: FORBIDDEN - no/invalid role/authorization
-        500:
-          description: INTERNAL SERVER ERROR - server encountered unexpected condition
-      security:
-        - Bearer: []
-      x-codegen-request-body-name: Message
-
   /messages/videohint/new:
     post:
       tags:
@@ -198,54 +150,6 @@ paths:
                 $ref: '#/components/schemas/MessageStreamDTO'
         204:
           description: NO CONTENT - no messages available
-        400:
-          description: BAD REQUEST - invalid/incomplete request or body object
-        401:
-          description: UNAUTHORIZED - no/invalid Keycloak token
-        403:
-          description: FORBIDDEN - no/invalid role/authorization
-        500:
-          description: INTERNAL SERVER ERROR - server encountered unexpected condition
-      security:
-        - Bearer: []
-
-  /messages/forward:
-    post:
-      tags:
-        - message-controller
-      summary: 'Forward a Rocket.Chat message to another group [Authorization: Role:
-        u25-consultant]'
-      operationId: forwardMessage
-      parameters:
-        - name: rcToken
-          in: header
-          required: true
-          schema:
-            type: string
-        - name: rcUserId
-          in: header
-          required: true
-          schema:
-            type: string
-        - name: rcGroupId
-          in: header
-          required: true
-          schema:
-            type: string
-      requestBody:
-        description: Body description
-        content:
-          'application/json':
-            schema:
-              $ref: '#/components/schemas/ForwardMessageDTO'
-        required: true
-      responses:
-        201:
-          description: CREATED - message was successfully created
-          content:
-            'application/json':
-              schema:
-                $ref: '#/components/schemas/MessageResponseDTO'
         400:
           description: BAD REQUEST - invalid/incomplete request or body object
         401:
@@ -522,42 +426,11 @@ components:
     AliasMessageDTO:
       type: object
       properties:
-        forwardMessageDTO:
-          $ref: '#/components/schemas/ForwardMessageDTO'
         videoCallMessageDTO:
           $ref: '#/components/schemas/VideoCallMessageDTO'
         messageType:
           $ref: '#/components/schemas/MessageType'
         content:
-          type: string
-
-    ForwardMessageDTO:
-      type: object
-      required:
-        - message
-        - timestamp
-        - username
-        - rcUserId
-      properties:
-        message:
-          type: string
-          example: "Lorem ipsum dolor sit amet, consetetur..."
-        org:
-          type: string
-          example: "Lorem ipsum dolor sit amet, consetetur..."
-        timestamp:
-          type: string
-          description: "Full qualified timestamp"
-          example: "2018-11-15T09:33:00.057Z"
-        username:
-          type: string
-          example: "asker23"
-        displayName:
-          type: string
-        rcUserId:
-          type: string
-          example: "ag89h3tjkerg94t"
-        t:
           type: string
 
     VideoCallMessageDTO:
@@ -592,7 +465,6 @@ components:
       type: string
       enum:
         - "FINISHED_CONVERSATION"
-        - "FORWARD"
         - "FURTHER_STEPS"
         - "UPDATE_SESSION_DATA"
         - "VIDEOCALL"

@@ -140,9 +140,6 @@ public class TestConstants {
   public static final String RC_GROUP_ID_7 = "juuuzte";
   public static final String RC_STATUS_ONLINE = "online";
   public static final String RC_UTC_OFFSET = "1";
-  public static final String RC_FEEDBACK_GROUP_ID = "yyyZZZ";
-  public static final String RC_FEEDBACK_GROUP_ID_2 = "gggasaa";
-  public static final String RC_FEEDBACK_GROUP_ID_3 = "llldkdks";
   public static final String RC_ATTACHMENT_TITLE = "filename.jpg";
   public static final String RC_ATTACHMENT_FILE_TYPE = "image/jpeg";
   public static final String RC_ATTACHMENT_IMAGE_PREVIEW =
@@ -172,112 +169,60 @@ public class TestConstants {
       new ResponseEntity<>(LOGIN_RESPONSE_DTO, HttpStatus.OK);
   public static final ResponseEntity<LoginResponseDTO> LOGIN_RESPONSE_ENTITY_OK_NO_TOKEN =
       new ResponseEntity<>(LOGIN_RESPONSE_DTO_NO_TOKEN, HttpStatus.OK);
-  public static final List<SubscriptionsUpdateDTO>
-      SUBSCRIPTIONS_UPDATE_LIST_DTO_WITH_ONE_FEEDBACK_UNREAD =
-          Arrays.asList(
-              new SubscriptionsUpdateDTO(
-                  "A",
-                  true,
-                  false,
-                  0,
-                  0,
-                  0,
-                  NOW,
-                  RC_GROUP_ID,
-                  "A",
-                  "A",
-                  "P",
-                  null,
-                  null,
-                  null,
-                  null,
-                  null),
-              new SubscriptionsUpdateDTO(
-                  "A",
-                  true,
-                  false,
-                  0,
-                  0,
-                  0,
-                  NOW,
-                  RC_GROUP_ID_2,
-                  "A",
-                  "A",
-                  "P",
-                  null,
-                  null,
-                  null,
-                  null,
-                  null),
-              new SubscriptionsUpdateDTO(
-                  "A",
-                  true,
-                  false,
-                  0,
-                  0,
-                  0,
-                  NOW,
-                  RC_GROUP_ID_3,
-                  "A",
-                  "A",
-                  "P",
-                  null,
-                  null,
-                  null,
-                  null,
-                  null),
-              new SubscriptionsUpdateDTO(
-                  "A",
-                  true,
-                  false,
-                  1,
-                  0,
-                  0,
-                  NOW,
-                  RC_FEEDBACK_GROUP_ID,
-                  "A",
-                  "A",
-                  "P",
-                  null,
-                  null,
-                  null,
-                  null,
-                  null),
-              new SubscriptionsUpdateDTO(
-                  "A",
-                  true,
-                  false,
-                  0,
-                  0,
-                  0,
-                  NOW,
-                  RC_FEEDBACK_GROUP_ID_2,
-                  "A",
-                  "A",
-                  "P",
-                  null,
-                  null,
-                  null,
-                  null,
-                  null),
-              new SubscriptionsUpdateDTO(
-                  "A",
-                  true,
-                  false,
-                  0,
-                  0,
-                  0,
-                  NOW,
-                  RC_FEEDBACK_GROUP_ID_3,
-                  "A",
-                  "A",
-                  "P",
-                  null,
-                  null,
-                  null,
-                  null,
-                  null));
 
+  public static final List<SubscriptionsUpdateDTO> SUBSCRIPTIONS_UPDATE_LIST_DTO =
+      Arrays.asList(
+          new SubscriptionsUpdateDTO(
+              "A",
+              true,
+              false,
+              0,
+              0,
+              0,
+              NOW,
+              RC_GROUP_ID,
+              "A",
+              "A",
+              "P",
+              null,
+              null,
+              null,
+              null,
+              null),
+          new SubscriptionsUpdateDTO(
+              "A",
+              true,
+              false,
+              0,
+              0,
+              0,
+              NOW,
+              RC_GROUP_ID_2,
+              "A",
+              "A",
+              "P",
+              null,
+              null,
+              null,
+              null,
+              null),
+          new SubscriptionsUpdateDTO(
+              "A",
+              true,
+              false,
+              0,
+              0,
+              0,
+              NOW,
+              RC_GROUP_ID_3,
+              "A",
+              "A",
+              "P",
+              null,
+              null,
+              null,
+              null,
+              null));
   /** Rocket.Chat credentials */
   public static final String TECHNICAL_USER_A_USERNAME = "techUserAName";
 
@@ -375,7 +320,6 @@ public class TestConstants {
   public static final AgencyDTO EMPTY_AGENCY_DTO = new AgencyDTO();
   public static final String DESCRIPTION = "description";
   public static final boolean IS_TEAM_AGENCY = true;
-  public static final boolean IS_NO_TEAM_AGENCY = false;
   public static final boolean IS_NOT_OFFLINE = false;
   public static final AgencyDTO AGENCY_DTO_SUCHT =
       new AgencyDTO()
@@ -417,9 +361,6 @@ public class TestConstants {
   public static final String USER_ID_3 = "df3322-fd33-asdf-3333-2332jk23j32j";
   public static final String CONSULTANT_ID = "87ddcss-650d-42bb-8299-f8e3f6j8dk3";
   public static final String CONSULTANT_ID_2 = "kd93kd-fd33-asdf-3333-2332jkkk39d";
-  public static final String CONSULTANT_ID_3 = "ksf93j-3344-32gg-2344-93kd93jaf";
-  public static final String MAIN_CONSULTANT_ID = "asdj78wfjsdf";
-  public static final String RC_USER_ID_MAIN_CONSULTANT = "xxxyyy";
   public static final String ENCODING_PREFIX = "enc.";
   public static final String USERNAME_CONSULTANT_DECODED = "Consultantname!#123";
   public static final String USERNAME_CONSULTANT_ENCODED =
@@ -464,7 +405,6 @@ public class TestConstants {
           true,
           true,
           true,
-          true,
           null,
           null,
           ConsultantStatus.CREATED,
@@ -494,74 +434,6 @@ public class TestConstants {
           null,
           null,
           null,
-          true,
-          true,
-          true,
-          true,
-          null,
-          null,
-          ConsultantStatus.CREATED,
-          false,
-          LanguageCode.de,
-          null,
-          null,
-          false,
-          null);
-  public static final Consultant MAIN_CONSULTANT =
-      new Consultant(
-          MAIN_CONSULTANT_ID,
-          RC_USER_ID_MAIN_CONSULTANT,
-          USERNAME,
-          "first name",
-          "last name",
-          EMAIL,
-          false,
-          false,
-          null,
-          false,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          true,
-          true,
-          true,
-          true,
-          null,
-          null,
-          ConsultantStatus.CREATED,
-          false,
-          LanguageCode.de,
-          null,
-          null,
-          false,
-          null);
-
-  public static final Consultant MAIN_CONSULTANT_WITH_NEW_EMAIL_NOTIFICATIONS =
-      new Consultant(
-          MAIN_CONSULTANT_ID,
-          RC_USER_ID_MAIN_CONSULTANT,
-          USERNAME,
-          "first name",
-          "last name",
-          EMAIL,
-          false,
-          false,
-          null,
-          false,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          true,
           true,
           true,
           true,
@@ -797,7 +669,6 @@ public class TestConstants {
           true,
           true,
           true,
-          true,
           null,
           null,
           ConsultantStatus.CREATED,
@@ -827,7 +698,6 @@ public class TestConstants {
           null,
           null,
           null,
-          true,
           true,
           true,
           true,
@@ -866,24 +736,6 @@ public class TestConstants {
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(false)
-          .isPeerChat(false)
-          .build();
-
-  public static final Session SESSION_WITH_CONSULTANT =
-      Session.builder()
-          .id(SESSION_ID)
-          .consultant(CONSULTANT_2)
-          .consultingTypeId(CONSULTING_TYPE_ID_SUCHT)
-          .registrationType(REGISTERED)
-          .agencyId(AGENCY_ID)
-          .enquiryMessageDate(nowInUtc())
-          .groupId(RC_GROUP_ID)
-          .postcode(POSTCODE)
-          .status(IN_PROGRESS)
-          .createDate(nowInUtc())
-          .updateDate(nowInUtc())
-          .teamSession(false)
-          .isPeerChat(false)
           .build();
 
   public static final Session SESSION_WITH_ASKER_AND_CONSULTANT =
@@ -901,7 +753,6 @@ public class TestConstants {
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(false)
-          .isPeerChat(false)
           .build();
 
   public static final Session TEAM_SESSION_WITH_ASKER_AND_CONSULTANT =
@@ -919,26 +770,6 @@ public class TestConstants {
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(true)
-          .isPeerChat(false)
-          .build();
-
-  public static final Session FEEDBACK_SESSION_WITH_ASKER_AND_CONSULTANT =
-      Session.builder()
-          .id(SESSION_ID)
-          .user(USER_WITH_RC_ID)
-          .consultant(CONSULTANT_2)
-          .consultingTypeId(CONSULTING_TYPE_ID_SUCHT)
-          .registrationType(REGISTERED)
-          .agencyId(AGENCY_ID)
-          .enquiryMessageDate(nowInUtc())
-          .groupId(RC_GROUP_ID)
-          .feedbackGroupId(RC_FEEDBACK_GROUP_ID_2)
-          .postcode(POSTCODE)
-          .status(IN_PROGRESS)
-          .createDate(nowInUtc())
-          .updateDate(nowInUtc())
-          .teamSession(true)
-          .isPeerChat(false)
           .build();
 
   public static final Session ANONYMOUS_ENQUIRY_WITHOUT_CONSULTANT =
@@ -949,13 +780,11 @@ public class TestConstants {
           .agencyId(AGENCY_ID)
           .enquiryMessageDate(nowInUtc())
           .groupId(RC_GROUP_ID)
-          .feedbackGroupId(RC_FEEDBACK_GROUP_ID_2)
           .postcode(POSTCODE)
           .status(NEW)
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(false)
-          .isPeerChat(false)
           .build();
 
   public static final Session SESSION_WITHOUT_CONSULTANT =
@@ -972,43 +801,6 @@ public class TestConstants {
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(true)
-          .isPeerChat(false)
-          .build();
-
-  public static final Session FEEDBACKSESSION_WITHOUT_CONSULTANT =
-      Session.builder()
-          .id(SESSION_ID)
-          .user(USER_WITH_RC_ID)
-          .consultingTypeId(CONSULTING_TYPE_ID_U25)
-          .registrationType(REGISTERED)
-          .agencyId(AGENCY_ID)
-          .enquiryMessageDate(nowInUtc())
-          .groupId(RC_GROUP_ID)
-          .feedbackGroupId(RC_FEEDBACK_GROUP_ID)
-          .postcode(POSTCODE)
-          .status(NEW)
-          .createDate(nowInUtc())
-          .updateDate(nowInUtc())
-          .teamSession(true)
-          .isPeerChat(false)
-          .build();
-  public static final Session FEEDBACKSESSION_WITH_CONSULTANT =
-      Session.builder()
-          .id(SESSION_ID)
-          .user(USER_WITH_RC_ID)
-          .consultant(CONSULTANT_2)
-          .consultingTypeId(CONSULTING_TYPE_ID_U25)
-          .registrationType(REGISTERED)
-          .agencyId(AGENCY_ID)
-          .enquiryMessageDate(nowInUtc())
-          .groupId(RC_GROUP_ID)
-          .feedbackGroupId(RC_FEEDBACK_GROUP_ID)
-          .postcode(POSTCODE)
-          .status(NEW)
-          .createDate(nowInUtc())
-          .updateDate(nowInUtc())
-          .teamSession(true)
-          .isPeerChat(false)
           .build();
 
   public static final Session SESSION_WITHOUT_CONSULTANT_NO_RC_USER_ID =
@@ -1020,13 +812,11 @@ public class TestConstants {
           .agencyId(AGENCY_ID)
           .enquiryMessageDate(nowInUtc())
           .groupId(RC_GROUP_ID)
-          .feedbackGroupId(RC_FEEDBACK_GROUP_ID)
           .postcode(POSTCODE)
           .status(NEW)
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(false)
-          .isPeerChat(false)
           .build();
 
   public static final Session U25_SESSION_WITHOUT_CONSULTANT =
@@ -1038,13 +828,11 @@ public class TestConstants {
           .agencyId(AGENCY_ID)
           .enquiryMessageDate(nowInUtc())
           .groupId(RC_GROUP_ID)
-          .feedbackGroupId(RC_FEEDBACK_GROUP_ID)
           .postcode(POSTCODE)
           .status(NEW)
           .createDate(nowInUtc())
           .updateDate(nowInUtc())
           .teamSession(true)
-          .isPeerChat(false)
           .build();
   public static final List<Session> SESSION_LIST = Collections.singletonList(SESSION);
   public static final Set<Session> SESSION_SET =
@@ -1072,19 +860,6 @@ public class TestConstants {
           null,
           false,
           null);
-
-  public static final SessionDTO SESSION_DTO_SUCHT =
-      new SessionDTO()
-          .id(SESSION_ID)
-          .agencyId(AGENCY_ID)
-          .consultingType(CONSULTING_TYPE_ID_SUCHT)
-          .status(SESSION_STATUS_IN_PROGRESS)
-          .postcode(POSTCODE)
-          .groupId(RC_GROUP_ID)
-          .feedbackGroupId(RC_FEEDBACK_GROUP_ID)
-          .askerRcId(RC_USER_ID)
-          .messageDate(MESSAGE_DATE)
-          .isTeamSession(IS_TEAM_SESSION);
   public static final SessionDTO SESSION_DTO_U25 =
       new SessionDTO()
           .id(SESSION_ID)
@@ -1093,22 +868,14 @@ public class TestConstants {
           .status(SESSION_STATUS_IN_PROGRESS)
           .postcode(POSTCODE)
           .groupId(RC_GROUP_ID)
-          .feedbackGroupId(RC_FEEDBACK_GROUP_ID)
           .askerRcId(RC_USER_ID)
           .messageDate(MESSAGE_DATE)
           .isTeamSession(IS_TEAM_SESSION);
-  public static final UserSessionResponseDTO USER_SESSION_RESPONSE_DTO_SUCHT =
-      new UserSessionResponseDTO()
-          .session(SESSION_DTO_SUCHT)
-          .agency(AGENCY_DTO_SUCHT)
-          .consultant(SESSION_CONSULTANT_FOR_USER_DTO);
   public static final UserSessionResponseDTO USER_SESSION_RESPONSE_DTO_U25 =
       new UserSessionResponseDTO()
           .session(SESSION_DTO_U25)
           .agency(AGENCY_DTO_U25)
           .consultant(SESSION_CONSULTANT_FOR_USER_DTO);
-  public static final List<UserSessionResponseDTO> USER_SESSION_RESPONSE_DTO_LIST_SUCHT =
-      Collections.singletonList(USER_SESSION_RESPONSE_DTO_SUCHT);
   public static final List<UserSessionResponseDTO> USER_SESSION_RESPONSE_DTO_LIST_U25 =
       Collections.singletonList(USER_SESSION_RESPONSE_DTO_U25);
   public static final SessionDTO SESSION_DTO_1 =
@@ -1118,7 +885,6 @@ public class TestConstants {
           .consultingType(0)
           .status(0)
           .groupId(RC_GROUP_ID)
-          .feedbackGroupId(RC_FEEDBACK_GROUP_ID)
           .askerRcId(RC_USER_ID)
           .messageDate(Helper.getUnixTimestampFromDate(NOW))
           .isTeamSession(IS_NO_TEAM_SESSION);
@@ -1129,7 +895,6 @@ public class TestConstants {
           .consultingType(0)
           .status(0)
           .groupId(RC_GROUP_ID_2)
-          .feedbackGroupId(RC_FEEDBACK_GROUP_ID_2)
           .askerRcId(RC_USER_ID_2)
           .messageDate(Helper.getUnixTimestampFromDate(new Date(NOW.getTime() + 86400000)))
           .isTeamSession(IS_NO_TEAM_SESSION);
@@ -1140,34 +905,10 @@ public class TestConstants {
           .consultingType(0)
           .status(0)
           .groupId(RC_GROUP_ID_3)
-          .feedbackGroupId(RC_FEEDBACK_GROUP_ID_3)
           .askerRcId(RC_USER_ID_3)
           .messageDate(Helper.getUnixTimestampFromDate(new Date(NOW.getTime() + 8640000)))
           .isTeamSession(IS_NO_TEAM_SESSION);
-  public static final SessionDTO SESSION_DTO_WITH_FEEDBACK =
-      new SessionDTO()
-          .id(SESSION_ID)
-          .agencyId(AGENCY_ID)
-          .consultingType(0)
-          .status(0)
-          .groupId(RC_GROUP_ID_3)
-          .feedbackGroupId(RC_FEEDBACK_GROUP_ID_3)
-          .askerRcId(RC_USER_ID_3)
-          .messageDate(Helper.getUnixTimestampFromDate(new Date(NOW.getTime() + 8640000)))
-          .isTeamSession(IS_NO_TEAM_SESSION)
-          .feedbackRead(true);
-  public static final SessionDTO SESSION_DTO_WITHOUT_FEEDBACK =
-      new SessionDTO()
-          .id(SESSION_ID)
-          .agencyId(AGENCY_ID)
-          .consultingType(0)
-          .status(0)
-          .groupId(RC_GROUP_ID_3)
-          .feedbackGroupId(RC_FEEDBACK_GROUP_ID_3)
-          .askerRcId(RC_USER_ID_3)
-          .messageDate(Helper.getUnixTimestampFromDate(new Date(NOW.getTime() + 8640000)))
-          .isTeamSession(IS_NO_TEAM_SESSION)
-          .feedbackRead(false);
+
   /** Chat */
   public static final String CHAT_TOPIC = "Pregnancy";
 
@@ -1398,9 +1139,6 @@ public class TestConstants {
           put(RC_GROUP_ID_4, false);
           put(RC_GROUP_ID_5, false);
           put(RC_GROUP_ID_6, false);
-          put(RC_FEEDBACK_GROUP_ID, false);
-          put(RC_FEEDBACK_GROUP_ID_2, false);
-          put(RC_FEEDBACK_GROUP_ID_3, false);
         }
       };
   public static final Map<String, Boolean> MESSAGES_READ_MAP_WITHOUT_UNREADS =
@@ -1412,23 +1150,6 @@ public class TestConstants {
           put(RC_GROUP_ID_4, true);
           put(RC_GROUP_ID_5, true);
           put(RC_GROUP_ID_6, true);
-          put(RC_FEEDBACK_GROUP_ID, true);
-          put(RC_FEEDBACK_GROUP_ID_2, true);
-          put(RC_FEEDBACK_GROUP_ID_3, true);
-        }
-      };
-  public static final Map<String, Boolean> MESSAGES_READ_MAP_WITH_ONE_FEEDBACK_UNREAD =
-      new HashMap<>() {
-        {
-          put(RC_GROUP_ID, true);
-          put(RC_GROUP_ID_2, true);
-          put(RC_GROUP_ID_3, true);
-          put(RC_GROUP_ID_4, true);
-          put(RC_GROUP_ID_5, true);
-          put(RC_GROUP_ID_6, true);
-          put(RC_FEEDBACK_GROUP_ID, false);
-          put(RC_FEEDBACK_GROUP_ID_2, true);
-          put(RC_FEEDBACK_GROUP_ID_3, true);
         }
       };
   public static final List<UserSessionResponseDTO> USER_CHAT_RESPONSE_DTO_LIST =
@@ -1561,39 +1282,6 @@ public class TestConstants {
               ROOMS_LAST_MESSAGE_DTO_3,
               new Date()),
           new RoomsUpdateDTO(
-              RC_FEEDBACK_GROUP_ID,
-              "name1",
-              "fname1",
-              "P",
-              USER_DTO_1,
-              true,
-              false,
-              new Date(),
-              ROOMS_LAST_MESSAGE_DTO_1,
-              new Date()),
-          new RoomsUpdateDTO(
-              RC_FEEDBACK_GROUP_ID_2,
-              "name2",
-              "fname2",
-              "P",
-              USER_DTO_2,
-              true,
-              false,
-              new Date(),
-              ROOMS_LAST_MESSAGE_DTO_2,
-              new Date()),
-          new RoomsUpdateDTO(
-              RC_FEEDBACK_GROUP_ID_3,
-              "name3",
-              "fname3",
-              "P",
-              USER_DTO_3,
-              true,
-              false,
-              new Date(),
-              ROOMS_LAST_MESSAGE_DTO_3,
-              new Date()),
-          new RoomsUpdateDTO(
               RC_GROUP_ID_4,
               "name4",
               "fname4",
@@ -1635,9 +1323,6 @@ public class TestConstants {
           put(RC_GROUP_ID_4, ROOMS_LAST_MESSAGE_DTO_4);
           put(RC_GROUP_ID_5, ROOMS_LAST_MESSAGE_DTO_5);
           put(RC_GROUP_ID_6, ROOMS_LAST_MESSAGE_DTO_6);
-          put(RC_FEEDBACK_GROUP_ID, ROOMS_LAST_MESSAGE_DTO_1);
-          put(RC_FEEDBACK_GROUP_ID_2, ROOMS_LAST_MESSAGE_DTO_2);
-          put(RC_FEEDBACK_GROUP_ID_3, ROOMS_LAST_MESSAGE_DTO_3);
         }
       };
   public static final RoomsLastMessageDTO ROOMS_LAST_MESSAGE_DTO_WITH_ATTACHMENT =
@@ -1726,15 +1411,6 @@ public class TestConstants {
       new ConsultantSessionResponseDTO()
           .session(SESSION_DTO_3)
           .latestMessage(new Date(NOW.getTime() + 8640000));
-  public static final ConsultantSessionResponseDTO CONSULTANT_SESSION_RESPONSE_DTO_WITH_FEEDBACK =
-      new ConsultantSessionResponseDTO()
-          .session(SESSION_DTO_WITH_FEEDBACK)
-          .latestMessage(new Date(NOW.getTime() + 8640000));
-  public static final ConsultantSessionResponseDTO
-      CONSULTANT_SESSION_RESPONSE_DTO_WITHOUT_FEEDBACK =
-          new ConsultantSessionResponseDTO()
-              .session(SESSION_DTO_WITHOUT_FEEDBACK)
-              .latestMessage(new Date(NOW.getTime() + 8640000));
   public static final List<ConsultantSessionResponseDTO> CONSULTANT_SESSION_RESPONSE_DTO_LIST =
       new ArrayList<>() {
         private static final long serialVersionUID = 1L;
@@ -1745,16 +1421,6 @@ public class TestConstants {
           add(CONSULTANT_SESSION_RESPONSE_DTO_3);
         }
       };
-  public static final List<ConsultantSessionResponseDTO>
-      CONSULTANT_SESSION_RESPONSE_DTO_LIST_WITH_ONE_FEEDBACK =
-          new ArrayList<>() {
-            private static final long serialVersionUID = 1L;
-
-            {
-              add(CONSULTANT_SESSION_RESPONSE_DTO_WITH_FEEDBACK);
-              add(CONSULTANT_SESSION_RESPONSE_DTO_WITHOUT_FEEDBACK);
-            }
-          };
   public static final List<ConsultantSessionResponseDTO> CONSULTANT_SESSION_CHAT_RESPONSE_DTO_LIST =
       new ArrayList<>() {
         private static final long serialVersionUID = 1L;
@@ -1766,21 +1432,6 @@ public class TestConstants {
           add(CONSULTANT_SESSION_RESPONSE_DTO_WITH_ENCRYPTED_CHAT_MESSAGE);
         }
       };
-  public static final SessionDTO SESSION_DTO_WITHOUT_FEEDBACK_CHAT =
-      new SessionDTO()
-          .id(SESSION_ID)
-          .agencyId(AGENCY_ID)
-          .consultingType(0)
-          .status(0)
-          .groupId(RC_GROUP_ID)
-          .askerRcId(RC_USER_ID)
-          .messageDate(Helper.getUnixTimestampFromDate(NOW))
-          .isTeamSession(IS_NO_TEAM_SESSION);
-  public static final ConsultantSessionResponseDTO
-      CONSULTANT_SESSION_RESPONSE_DTO_WITHOUT_FEEDBACK_CHAT =
-          new ConsultantSessionResponseDTO()
-              .session(SESSION_DTO_WITHOUT_FEEDBACK_CHAT)
-              .latestMessage(NOW);
 
   /** GroupMemberDTO */
   public static final GroupMemberDTO GROUP_MEMBER_DTO =
@@ -1788,10 +1439,8 @@ public class TestConstants {
 
   public static final GroupMemberDTO GROUP_MEMBER_DTO_2 =
       new GroupMemberDTO(RC_USER_ID_2, null, USERNAME, null, null);
-  public static final GroupMemberDTO GROUP_MEMBER_DTO_MAIN_CONSULTANT =
-      new GroupMemberDTO(RC_USER_ID_MAIN_CONSULTANT, null, USERNAME, null, null);
   public static final List<GroupMemberDTO> LIST_GROUP_MEMBER_DTO =
-      Arrays.asList(GROUP_MEMBER_DTO, GROUP_MEMBER_DTO_2, GROUP_MEMBER_DTO_MAIN_CONSULTANT);
+      Arrays.asList(GROUP_MEMBER_DTO, GROUP_MEMBER_DTO_2);
   /*
    * Passwords
    */
@@ -1828,14 +1477,12 @@ public class TestConstants {
       new ExtendedConsultingTypeResponseDTO()
           .id(CONSULTING_TYPE_ID_KREUZBUND)
           .slug("kb-sucht-selbsthilfe")
-          .excludeNonMainConsultantsFromTeamSessions(false)
           .groupChat(new GroupChatDTO().isGroupChat(true))
           .consultantBoundedToConsultingType(true)
           .welcomeMessage(
               new WelcomeMessageDTO().sendWelcomeMessage(false).welcomeMessageText(null))
           .sendFurtherStepsMessage(false)
           .sessionDataInitializing(null)
-          .initializeFeedbackChat(false)
           .notifications(null)
           .languageFormal(true)
           .roles(null)
@@ -1854,14 +1501,12 @@ public class TestConstants {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_U25)
               .slug("u25")
-              .excludeNonMainConsultantsFromTeamSessions(false)
               .groupChat(new GroupChatDTO().isGroupChat(true))
               .consultantBoundedToConsultingType(true)
               .welcomeMessage(
                   new WelcomeMessageDTO().sendWelcomeMessage(false).welcomeMessageText(null))
               .sendFurtherStepsMessage(false)
               .sessionDataInitializing(null)
-              .initializeFeedbackChat(false)
               .notifications(null)
               .languageFormal(false)
               .roles(null)
@@ -1871,14 +1516,12 @@ public class TestConstants {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_U25)
               .slug("u25")
-              .excludeNonMainConsultantsFromTeamSessions(false)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(true)
               .welcomeMessage(
                   new WelcomeMessageDTO().sendWelcomeMessage(false).welcomeMessageText(null))
               .sendFurtherStepsMessage(false)
               .sessionDataInitializing(null)
-              .initializeFeedbackChat(false)
               .notifications(null)
               .languageFormal(false)
               .roles(null)
@@ -1896,14 +1539,12 @@ public class TestConstants {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_U25)
               .slug("u25")
-              .excludeNonMainConsultantsFromTeamSessions(false)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(true)
               .welcomeMessage(
                   new WelcomeMessageDTO().sendWelcomeMessage(false).welcomeMessageText(null))
               .sendFurtherStepsMessage(false)
               .sessionDataInitializing(null)
-              .initializeFeedbackChat(false)
               .notifications(null)
               .languageFormal(false)
               .roles(null)
@@ -1913,14 +1554,12 @@ public class TestConstants {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_U25)
               .slug("u25")
-              .excludeNonMainConsultantsFromTeamSessions(false)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(true)
               .welcomeMessage(
                   new WelcomeMessageDTO().sendWelcomeMessage(false).welcomeMessageText(null))
               .sendFurtherStepsMessage(false)
               .sessionDataInitializing(null)
-              .initializeFeedbackChat(false)
               .notifications(null)
               .languageFormal(false)
               .roles(null)
@@ -1942,14 +1581,12 @@ public class TestConstants {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_SUCHT)
               .slug("suchtberatung")
-              .excludeNonMainConsultantsFromTeamSessions(false)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(false)
               .welcomeMessage(
                   new WelcomeMessageDTO().sendWelcomeMessage(true).welcomeMessageText("Hallo"))
               .sendFurtherStepsMessage(false)
               .sessionDataInitializing(SESSION_DATA_INITIALIZING)
-              .initializeFeedbackChat(false)
               .notifications(null)
               .languageFormal(false)
               .roles(null)
@@ -1959,14 +1596,12 @@ public class TestConstants {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_U25)
               .slug("u25")
-              .excludeNonMainConsultantsFromTeamSessions(true)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(true)
               .welcomeMessage(
                   new WelcomeMessageDTO().sendWelcomeMessage(true).welcomeMessageText("Hallo"))
               .sendFurtherStepsMessage(false)
               .sessionDataInitializing(SESSION_DATA_INITIALIZING)
-              .initializeFeedbackChat(false)
               .notifications(null)
               .languageFormal(false)
               .roles(null)
@@ -1975,14 +1610,12 @@ public class TestConstants {
       new ExtendedConsultingTypeResponseDTO()
           .id(CONSULTING_TYPE_ID_SUCHT)
           .slug("suchtberatung")
-          .excludeNonMainConsultantsFromTeamSessions(false)
           .groupChat(new GroupChatDTO().isGroupChat(false))
           .consultantBoundedToConsultingType(false)
           .welcomeMessage(
               new WelcomeMessageDTO().sendWelcomeMessage(false).welcomeMessageText(null))
           .sendFurtherStepsMessage(false)
           .sessionDataInitializing(SESSION_DATA_INITIALIZING)
-          .initializeFeedbackChat(false)
           .notifications(null)
           .languageFormal(false)
           .roles(null)
@@ -1991,14 +1624,12 @@ public class TestConstants {
       new ExtendedConsultingTypeResponseDTO()
           .id(CONSULTING_TYPE_ID_U25)
           .slug("u25")
-          .excludeNonMainConsultantsFromTeamSessions(true)
           .groupChat(new GroupChatDTO().isGroupChat(false))
           .consultantBoundedToConsultingType(true)
           .welcomeMessage(
               new WelcomeMessageDTO().sendWelcomeMessage(true).welcomeMessageText("Hallo"))
           .sendFurtherStepsMessage(false)
           .sessionDataInitializing(SESSION_DATA_INITIALIZING)
-          .initializeFeedbackChat(false)
           .notifications(null)
           .languageFormal(false)
           .roles(null)
@@ -2008,14 +1639,12 @@ public class TestConstants {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_U25)
               .slug("u25")
-              .excludeNonMainConsultantsFromTeamSessions(true)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(true)
               .welcomeMessage(
                   new WelcomeMessageDTO().sendWelcomeMessage(true).welcomeMessageText("Hallo"))
               .sendFurtherStepsMessage(false)
               .sessionDataInitializing(SESSION_DATA_INITIALIZING)
-              .initializeFeedbackChat(false)
               .notifications(null)
               .languageFormal(false)
               .roles(null)
@@ -2025,14 +1654,12 @@ public class TestConstants {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_U25)
               .slug("u25")
-              .excludeNonMainConsultantsFromTeamSessions(true)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(true)
               .welcomeMessage(
                   new WelcomeMessageDTO().sendWelcomeMessage(false).welcomeMessageText(null))
               .sendFurtherStepsMessage(false)
               .sessionDataInitializing(SESSION_DATA_INITIALIZING)
-              .initializeFeedbackChat(false)
               .notifications(null)
               .languageFormal(false)
               .roles(null)
@@ -2042,14 +1669,12 @@ public class TestConstants {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_U25)
               .slug("u25")
-              .excludeNonMainConsultantsFromTeamSessions(true)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(true)
               .welcomeMessage(
                   new WelcomeMessageDTO().sendWelcomeMessage(false).welcomeMessageText(null))
               .sendFurtherStepsMessage(false)
               .sessionDataInitializing(SESSION_DATA_INITIALIZING)
-              .initializeFeedbackChat(false)
               .notifications(null)
               .languageFormal(false)
               .roles(null)
@@ -2059,31 +1684,12 @@ public class TestConstants {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_SUCHT)
               .slug("suchtberatung")
-              .excludeNonMainConsultantsFromTeamSessions(false)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(false)
               .welcomeMessage(
                   new WelcomeMessageDTO().sendWelcomeMessage(false).welcomeMessageText(null))
               .sendFurtherStepsMessage(true)
               .sessionDataInitializing(SESSION_DATA_INITIALIZING)
-              .initializeFeedbackChat(false)
-              .notifications(null)
-              .languageFormal(false)
-              .roles(null)
-              .registration(null);
-  public static final ExtendedConsultingTypeResponseDTO
-      CONSULTING_TYPE_SETTINGS_WITH_UPDATE_SESSION_DATA_MESSAGE =
-          new ExtendedConsultingTypeResponseDTO()
-              .id(CONSULTING_TYPE_ID_SUCHT)
-              .slug("suchtberatung")
-              .excludeNonMainConsultantsFromTeamSessions(false)
-              .groupChat(new GroupChatDTO().isGroupChat(false))
-              .consultantBoundedToConsultingType(false)
-              .welcomeMessage(
-                  new WelcomeMessageDTO().sendWelcomeMessage(false).welcomeMessageText(null))
-              .sendFurtherStepsMessage(false)
-              .sessionDataInitializing(SESSION_DATA_INITIALIZING)
-              .initializeFeedbackChat(false)
               .notifications(null)
               .languageFormal(false)
               .roles(null)
@@ -2093,68 +1699,17 @@ public class TestConstants {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_U25)
               .slug("u25")
-              .excludeNonMainConsultantsFromTeamSessions(true)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(true)
               .welcomeMessage(
                   new WelcomeMessageDTO().sendWelcomeMessage(true).welcomeMessageText("Hallo"))
               .sendFurtherStepsMessage(false)
               .sessionDataInitializing(SESSION_DATA_INITIALIZING)
-              .initializeFeedbackChat(false)
               .notifications(null)
               .languageFormal(false)
               .roles(null)
               .registration(REGISTRATION_WITH_MANDATORY_FIELDS_NULL);
-  public static final ExtendedConsultingTypeResponseDTO CONSULTING_TYPE_SETTINGS_PREGNANCY =
-      new ExtendedConsultingTypeResponseDTO()
-          .id(CONSULTING_TYPE_ID_PREGNANCY)
-          .slug("schwangerschaftsberatung")
-          .excludeNonMainConsultantsFromTeamSessions(false)
-          .groupChat(new GroupChatDTO().isGroupChat(false))
-          .consultantBoundedToConsultingType(false)
-          .welcomeMessage(
-              new WelcomeMessageDTO().sendWelcomeMessage(false).welcomeMessageText(null))
-          .sendFurtherStepsMessage(false)
-          .sessionDataInitializing(SESSION_DATA_INITIALIZING)
-          .initializeFeedbackChat(false)
-          .notifications(null)
-          .languageFormal(false)
-          .roles(null)
-          .registration(REGISTRATION_WITH_MANDATORY_FIELDS_FALSE);
-  public static final ExtendedConsultingTypeResponseDTO CONSULTING_TYPE_SETTINGS_CHILDREN =
-      new ExtendedConsultingTypeResponseDTO()
-          .id(CONSULTING_TYPE_ID_CHILDREN)
-          .slug("kinder-jugendliche")
-          .excludeNonMainConsultantsFromTeamSessions(false)
-          .groupChat(new GroupChatDTO().isGroupChat(false))
-          .consultantBoundedToConsultingType(false)
-          .welcomeMessage(
-              new WelcomeMessageDTO().sendWelcomeMessage(false).welcomeMessageText(null))
-          .sendFurtherStepsMessage(false)
-          .sessionDataInitializing(SESSION_DATA_INITIALIZING)
-          .initializeFeedbackChat(false)
-          .notifications(null)
-          .languageFormal(false)
-          .roles(null)
-          .registration(REGISTRATION_WITH_MANDATORY_FIELDS_FALSE);
 
-  public static final ExtendedConsultingTypeResponseDTO
-      CONSULTING_TYPE_SETTINGS_WITHOUT_MONITORING =
-          new ExtendedConsultingTypeResponseDTO()
-              .id(CONSULTING_TYPE_ID_SUCHT)
-              .slug("suchtberatung")
-              .excludeNonMainConsultantsFromTeamSessions(false)
-              .groupChat(new GroupChatDTO().isGroupChat(false))
-              .consultantBoundedToConsultingType(false)
-              .welcomeMessage(
-                  new WelcomeMessageDTO().sendWelcomeMessage(false).welcomeMessageText(null))
-              .sendFurtherStepsMessage(false)
-              .sessionDataInitializing(null)
-              .initializeFeedbackChat(false)
-              .notifications(null)
-              .languageFormal(false)
-              .roles(null)
-              .registration(null);
   public static List<Long> AGENCY_ID_LIST = Arrays.asList(1L, 2L);
   public static AbsenceDTO ABSENCE_DTO_WITH_HTML_AND_JS =
       new AbsenceDTO().absent(true).message(TestConstants.MESSAGE_WITH_HTML_AND_JS);

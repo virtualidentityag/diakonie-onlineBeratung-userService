@@ -47,6 +47,50 @@ paths:
           description: INTERNAL SERVER ERROR - server encountered unexpected condition
       security:
         - Bearer: [ ]
+  /users/askers/session/new:
+    post:
+      tags:
+        - user-controller
+      summary: 'Register a new session for an existing asker [Authorization: Role: user]'
+      operationId: registerNewSession
+      parameters:
+        - name: RCToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: RCUserId
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/NewRegistrationDto'
+        required: true
+      responses:
+        201:
+          description: CREATED - session was registered successfully
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/NewRegistrationResponseDto'
+        400:
+          description: BAD REQUEST - invalid/incomplete request or body object
+        403:
+          description: FORBIDDEN - no/invalid role/authorization or CSRF token
+        409:
+          description: CONFLICT - user is already registered for provided topic
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/NewRegistrationResponseDto'
+        500:
+          description: INTERNAL SERVER ERROR - server encountered unexpected condition
+      security:
+        - Bearer: [ ]
   /users/askers/consultingType/new:
     post:
       tags:
@@ -249,9 +293,9 @@ paths:
     get:
       tags:
         - user-controller
-      summary: 'Returns sessions for given RocketChat group or feedback group IDs.
+      summary: 'Returns sessions for given RocketChat group IDs.
       [Authorization: Role: user, consultant]'
-      operationId: getSessionsForGroupOrFeedbackGroupIds
+      operationId: getSessionsForGroupIds
       parameters:
         - name: RCToken
           in: header
@@ -858,33 +902,6 @@ paths:
       summary: 'Sends a notification e-mail that a new message/answer has been written
         [Authorization: Role: user, consultant]'
       operationId: sendNewMessageNotification
-      requestBody:
-        content:
-          'application/json':
-            schema:
-              $ref: '#/components/schemas/NewMessageNotificationDTO'
-        required: true
-      responses:
-        200:
-          description: successful operation
-        400:
-          description: BAD REQUEST - invalid/incomplete request or body object
-        401:
-          description: UNAUTHORIZED - invalid token
-        409:
-          description: CONFLICT - no user e-mail address in db given
-        500:
-          description: INTERNAL SERVER ERROR - server encountered unexpected condition
-      security:
-        - Bearer: [ ]
-  /users/mails/messages/feedback/new:
-    post:
-      tags:
-        - user-controller
-      summary: 'Sends a notification e-mail that a new feedback message/answer has
-        been written [Authorization: Role: consultant with authority for feedback
-        chat]'
-      operationId: sendNewFeedbackMessageNotification
       requestBody:
         content:
           'application/json':
@@ -2058,13 +2075,6 @@ components:
           type: string
           example: xGklslk2JJKK
           description: Rocket.Chat room ID
-        feedbackGroupId:
-          type: string
-          example: 8ertjlasdKJA
-          description: Rocket.Chat feedback room ID
-        isPeerChat:
-          type: boolean
-          example: false
         askerRcId:
           type: string
           example: 8ertjlasdKJA
@@ -2082,9 +2092,6 @@ components:
         messagesRead:
           type: boolean
           example: false
-        feedbackRead:
-          type: boolean
-          example: true
         isTeamSession:
           type: boolean
           example: false
@@ -2137,44 +2144,12 @@ components:
     AliasMessageDTO:
       type: object
       properties:
-        forwardMessageDTO:
-          $ref: '#/components/schemas/ForwardMessageDTO'
         videoCallMessageDTO:
           $ref: '#/components/schemas/VideoCallMessageDTO'
         messageType:
           $ref: '#/components/schemas/MessageType'
         content:
           type: string
-
-    ForwardMessageDTO:
-      type: object
-      required:
-        - message
-        - timestamp
-        - username
-        - rcUserId
-      properties:
-        message:
-          type: string
-          example: "Lorem ipsum dolor sit amet, consetetur..."
-        timestamp:
-          type: string
-          description: "Full qualified timestamp"
-          example: "2018-11-15T09:33:00.057Z"
-        username:
-          type: string
-          example: "asker23"
-        displayName:
-          type: string
-        rcUserId:
-          type: string
-          example: "ag89h3tjkerg94t"
-        t:
-          type: string
-        org:
-          type: string
-          example: "Lorem ipsum dolor sit amet, consetetur..."
-          description: "Legacy fallback for stringified messages"
 
     VideoCallMessageDTO:
       type: object
@@ -2204,7 +2179,6 @@ components:
         - "APPOINTMENT_RESCHEDULED"
         - "FURTHER_STEPS"
         - "UPDATE_SESSION_DATA"
-        - "FORWARD"
         - "VIDEOCALL"
         - "FINISHED_CONVERSATION"
         - "USER_MUTED"
@@ -2248,10 +2222,6 @@ components:
           type: string
           example: xGklslk2JJKK
           description: Rocket.Chat room ID
-        feedbackGroupId:
-          type: string
-          example: 8ertjlasdKJA
-          description: Rocket.Chat feedback room ID
         consultantId:
           type: string
           example: 926b9777-4eef-443d-925a-4aa534797bd7
@@ -2933,6 +2903,9 @@ components:
             type: integer
             format: int64
           example: [ 12,15 ]
+        mainTopicId:
+          type: integer
+          example: 15
         counsellingRelation:
           type: string
           example: 'SELF_COUNSELLING'
@@ -3117,7 +3090,6 @@ components:
       enum:
         - DAILY_ENQUIRY
         - NEW_CHAT_MESSAGE_FROM_ADVICE_SEEKER
-        - NEW_FEEDBACK_MESSAGE_FROM_ADVICE_SEEKER
 
   securitySchemes:
     Bearer:
