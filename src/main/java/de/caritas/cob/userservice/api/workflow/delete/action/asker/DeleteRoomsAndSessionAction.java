@@ -78,7 +78,7 @@ abstract class DeleteRoomsAndSessionAction {
   }
 
   void performSessionDeletion(Session session, List<DeletionWorkflowError> workflowErrors) {
-    
+
     deleteSessionData(session, workflowErrors);
     deleteSession(session, workflowErrors);
     deleteRocketChatGroup(session.getGroupId(), workflowErrors);
