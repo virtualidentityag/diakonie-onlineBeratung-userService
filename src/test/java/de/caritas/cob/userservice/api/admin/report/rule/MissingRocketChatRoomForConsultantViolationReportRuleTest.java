@@ -1,6 +1,7 @@
 package de.caritas.cob.userservice.api.admin.report.rule;
 
 import static de.caritas.cob.userservice.api.adapters.web.dto.ViolationDTO.ViolationTypeEnum.CONSULTANT;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
@@ -22,14 +23,14 @@ import de.caritas.cob.userservice.api.port.out.SessionRepository;
 import de.caritas.cob.userservice.api.service.LogService;
 import java.util.List;
 import org.jeasy.random.EasyRandom;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.MockitoJUnitRunner;
 
-@ExtendWith(MockitoExtension.class)
-class MissingRocketChatRoomForConsultantViolationReportRuleTest {
+@RunWith(MockitoJUnitRunner.class)
+public class MissingRocketChatRoomForConsultantViolationReportRuleTest {
 
   @InjectMocks private MissingRocketChatRoomForConsultantViolationReportRule reportRule;
 
@@ -40,14 +41,14 @@ class MissingRocketChatRoomForConsultantViolationReportRuleTest {
   @Mock private RocketChatService rocketChatService;
 
   @Test
-  void generateViolations_Should_returnEmptyList_When_noViolationExists() {
+  public void generateViolations_Should_returnEmptyList_When_noViolationExists() {
     List<ViolationDTO> violations = this.reportRule.generateViolations();
 
     assertThat(violations, hasSize(0));
   }
 
   @Test
-  void generateViolations_Should_returnExpectedViolation_When_oneViolatedSessionExists() {
+  public void generateViolations_Should_returnExpectedViolation_When_oneViolatedSessionExists() {
     Consultant violatedConsultant = new EasyRandom().nextObject(Consultant.class);
     violatedConsultant.setSessions(null);
     Session violatedSession = new EasyRandom().nextObject(Session.class);
@@ -68,18 +69,56 @@ class MissingRocketChatRoomForConsultantViolationReportRuleTest {
     assertThat(resultViolation.getViolationType(), is(CONSULTANT));
     assertThat(
         resultViolation.getReason(),
-        is("Missing room with id " + violatedSession.getGroupId() + " in rocket chat"));
+        is(
+            "Missing room with id "
+                + violatedSession.getGroupId()
+                + " in rocket chat and Missing feedback room with id "
+                + violatedSession.getFeedbackGroupId()
+                + " in rocket chat"));
   }
 
   @Test
-  void
+  public void
+      generateViolations_Should_returnViolationMessageOfFeedbackRoom_When_oneViolatedFeedbackSessionExists() {
+    Consultant violatedConsultant = new EasyRandom().nextObject(Consultant.class);
+    Session violatedSession = new EasyRandom().nextObject(Session.class);
+    violatedConsultant.setSessions(singleton(violatedSession));
+    UserInfoResponseDTO userInfoResponseDTO =
+        new EasyRandom().nextObject(UserInfoResponseDTO.class);
+    userInfoResponseDTO
+        .getUser()
+        .setRooms(singletonList(new UserRoomDTO(violatedSession.getGroupId())));
+
+    when(this.consultantRepository.findAll()).thenReturn(singletonList(violatedConsultant));
+    when(this.sessionRepository.findByConsultantAndStatus(any(), any()))
+        .thenReturn(singletonList(violatedSession));
+    when(this.rocketChatService.getUserInfo(any())).thenReturn(userInfoResponseDTO);
+
+    List<ViolationDTO> violations = this.reportRule.generateViolations();
+
+    assertThat(violations, hasSize(1));
+    ViolationDTO resultViolation = violations.iterator().next();
+    assertThat(resultViolation.getIdentifier(), is(violatedSession.getConsultant().getId()));
+    assertThat(resultViolation.getViolationType(), is(CONSULTANT));
+    assertThat(
+        resultViolation.getReason(),
+        is(
+            "Missing feedback room with id "
+                + violatedSession.getFeedbackGroupId()
+                + " in rocket chat"));
+  }
+
+  @Test
+  public void
       generateViolations_Should_returnViolationMessageOfRoom_When_oneViolatedStandardSessionExists() {
     Consultant violatedConsultant = new EasyRandom().nextObject(Consultant.class);
     Session violatedSession = new EasyRandom().nextObject(Session.class);
     violatedConsultant.setSessions(singleton(violatedSession));
     UserInfoResponseDTO userInfoResponseDTO =
         new EasyRandom().nextObject(UserInfoResponseDTO.class);
-    userInfoResponseDTO.getUser().setRooms(singletonList(new UserRoomDTO("A")));
+    userInfoResponseDTO
+        .getUser()
+        .setRooms(singletonList(new UserRoomDTO(violatedSession.getFeedbackGroupId())));
 
     when(this.consultantRepository.findAll()).thenReturn(singletonList(violatedConsultant));
     when(this.sessionRepository.findByConsultantAndStatus(any(), any()))
@@ -98,13 +137,18 @@ class MissingRocketChatRoomForConsultantViolationReportRuleTest {
   }
 
   @Test
-  void generateViolations_Should_returnNoViolation_When_allRoomsExist() {
+  public void generateViolations_Should_returnNoViolation_When_allRoomsExist() {
     Consultant violatedConsultant = new EasyRandom().nextObject(Consultant.class);
     Session violatedSession = new EasyRandom().nextObject(Session.class);
     violatedConsultant.setSessions(singleton(violatedSession));
     UserInfoResponseDTO userInfoResponseDTO =
         new EasyRandom().nextObject(UserInfoResponseDTO.class);
-    userInfoResponseDTO.getUser().setRooms(List.of(new UserRoomDTO(violatedSession.getGroupId())));
+    userInfoResponseDTO
+        .getUser()
+        .setRooms(
+            asList(
+                new UserRoomDTO(violatedSession.getGroupId()),
+                new UserRoomDTO(violatedSession.getFeedbackGroupId())));
 
     when(this.consultantRepository.findAll()).thenReturn(singletonList(violatedConsultant));
     when(this.sessionRepository.findByConsultantAndStatus(any(), any()))
@@ -117,13 +161,18 @@ class MissingRocketChatRoomForConsultantViolationReportRuleTest {
   }
 
   @Test
-  void generateViolations_Should_returnViolation_When_userDoesNotExistInRocketChat() {
+  public void generateViolations_Should_returnViolation_When_userDoesNotExistInRocketChat() {
     Consultant violatedConsultant = new EasyRandom().nextObject(Consultant.class);
     Session violatedSession = new EasyRandom().nextObject(Session.class);
     violatedConsultant.setSessions(singleton(violatedSession));
     UserInfoResponseDTO userInfoResponseDTO =
         new EasyRandom().nextObject(UserInfoResponseDTO.class);
-    userInfoResponseDTO.getUser().setRooms(List.of(new UserRoomDTO(violatedSession.getGroupId())));
+    userInfoResponseDTO
+        .getUser()
+        .setRooms(
+            asList(
+                new UserRoomDTO(violatedSession.getGroupId()),
+                new UserRoomDTO(violatedSession.getFeedbackGroupId())));
 
     when(this.consultantRepository.findAll()).thenReturn(singletonList(violatedConsultant));
     when(this.sessionRepository.findByConsultantAndStatus(any(), any()))

@@ -29,7 +29,7 @@ public interface SessionRepository extends CrudRepository<Session, Long> {
    * Find a {@link Session} by a consultant id and a session statuses.
    *
    * @param consultant {@link Consultant}
-   * @param statuses {@link SessionStatus}
+   * @param sessionStatus {@link SessionStatus}
    * @return A list of {@link Session}s for the specific consultant id and status
    */
   List<Session> findByConsultantAndStatusIn(Consultant consultant, List<SessionStatus> statuses);
@@ -109,6 +109,14 @@ public interface SessionRepository extends CrudRepository<Session, Long> {
   Page<Session> findByUserUserId(String userId, Pageable pageable);
 
   /**
+   * Find the {@link Session} by Rocket.Chat feedback group id.
+   *
+   * @param feedbackGroupId the rocket chat feedback group id
+   * @return an {@link Optional} of the session
+   */
+  Optional<Session> findByFeedbackGroupId(String feedbackGroupId);
+
+  /**
    * Find the {@link Session} by Rocket.Chat group id.
    *
    * @param groupId the rocket chat group id
@@ -117,9 +125,12 @@ public interface SessionRepository extends CrudRepository<Session, Long> {
   Optional<Session> findByGroupId(String groupId);
 
   @Query(
-      value = "SELECT * " + "FROM session s " + "WHERE s.rc_group_id IN :group_ids",
+      value =
+          "SELECT * "
+              + "FROM session s "
+              + "WHERE s.rc_group_id IN :group_ids OR s.rc_feedback_group_id IN :group_ids",
       nativeQuery = true)
-  List<Session> findByGroupIds(@Param(value = "group_ids") Set<String> groupIds);
+  List<Session> findByGroupOrFeedbackGroupIds(@Param(value = "group_ids") Set<String> groupIds);
 
   /**
    * Find all {@link Session}s by an agency ID and SessionStatus where consultant is null.
@@ -223,6 +234,4 @@ public interface SessionRepository extends CrudRepository<Session, Long> {
    * @return an {@link List} of the result
    */
   List<Session> findByConsultantAndUser(Consultant consultant, User user);
-
-  List<Session> findByUserAndMainTopicId(User user, Long topicId);
 }

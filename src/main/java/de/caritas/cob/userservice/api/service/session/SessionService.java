@@ -5,6 +5,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
+import static org.apache.commons.lang3.BooleanUtils.isTrue;
 
 import com.google.api.client.util.Lists;
 import com.neovisionaries.i18n.LanguageCode;
@@ -16,7 +17,9 @@ import de.caritas.cob.userservice.api.adapters.web.dto.SessionTopicDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.UserDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.UserSessionResponseDTO;
 import de.caritas.cob.userservice.api.config.auth.UserRole;
+import de.caritas.cob.userservice.api.exception.UpdateFeedbackGroupIdException;
 import de.caritas.cob.userservice.api.exception.httpresponses.ForbiddenException;
+import de.caritas.cob.userservice.api.exception.httpresponses.InternalServerErrorException;
 import de.caritas.cob.userservice.api.exception.httpresponses.NotFoundException;
 import de.caritas.cob.userservice.api.manager.consultingtype.ConsultingTypeManager;
 import de.caritas.cob.userservice.api.model.Consultant;
@@ -96,10 +99,6 @@ public class SessionService {
     return sessionRepository.findByUserAndConsultingTypeId(user, consultingTypeId);
   }
 
-  public List<Session> getSessionsForUserByMainTopicId(User user, Long topicId) {
-    return sessionRepository.findByUserAndMainTopicId(user, topicId);
-  }
-
   /**
    * Updates the given session by assigning the provided consultant and {@link SessionStatus}.
    *
@@ -112,6 +111,27 @@ public class SessionService {
     session.setConsultant(consultant);
     session.setStatus(status);
     saveSession(session);
+  }
+
+  /**
+   * Updates the feedback group id of the given {@link Session}.
+   *
+   * @param session an optional session
+   * @param feedbackGroupId the ID of the feedback group
+   */
+  public void updateFeedbackGroupId(Session session, String feedbackGroupId)
+      throws UpdateFeedbackGroupIdException {
+    try {
+      session.setFeedbackGroupId(feedbackGroupId);
+      saveSession(session);
+
+    } catch (InternalServerErrorException serviceException) {
+      throw new UpdateFeedbackGroupIdException(
+          String.format(
+              "Could not update feedback group id %s for session %s",
+              feedbackGroupId, session.getId()),
+          serviceException);
+    }
   }
 
   /**
@@ -192,6 +212,7 @@ public class SessionService {
             .languageCode(LanguageCode.de)
             .status(sessionStatus)
             .teamSession(isTeamSession)
+            .isPeerChat(isTrue(extendedConsultingTypeResponseDTO.getIsPeerChat()))
             .createDate(nowInUtc())
             .updateDate(nowInUtc())
             .mainTopicId(userDto.getMainTopicId())
@@ -366,17 +387,17 @@ public class SessionService {
   }
 
   /**
-   * Retrieves user sessions by user ID and rocket chat group IDs
+   * Retrieves user sessions by user ID and rocket chat group, or feedback group IDs
    *
    * @param userId the user ID
-   * @param rcGroupIds rocket chat group IDs
+   * @param rcGroupIds rocket chat group or feedback group IDs
    * @param roles the roles of the given user
    * @return {@link UserSessionResponseDTO}
    */
-  public List<UserSessionResponseDTO> getSessionsByUserAndGroupIds(
+  public List<UserSessionResponseDTO> getSessionsByUserAndGroupOrFeedbackGroupIds(
       String userId, Set<String> rcGroupIds, Set<String> roles) {
     checkForAskerRoles(roles);
-    var sessions = sessionRepository.findByGroupIds(rcGroupIds);
+    var sessions = sessionRepository.findByGroupOrFeedbackGroupIds(rcGroupIds);
     sessions.forEach(session -> checkAskerPermissionForSession(session, userId, roles));
     List<AgencyDTO> agencies = fetchAgencies(sessions);
     return convertToUserSessionResponseDTO(sessions, agencies);
@@ -411,17 +432,18 @@ public class SessionService {
   }
 
   /**
-   * Retrieves consultant sessions by consultant ID and rocket chat group IDs
+   * Retrieves consultant sessions by consultant ID and rocket chat group, or feedback group IDs
    *
    * @param consultant the ID of the consultant
-   * @param rcGroupIds rocket chat group IDs
+   * @param rcGroupIds rocket chat group or feedback group IDs
    * @param roles the roles of the given consultant
    * @return {@link ConsultantSessionResponseDTO}
    */
-  public List<ConsultantSessionResponseDTO> getAllowedSessionsByConsultantAndGroupIds(
-      Consultant consultant, Set<String> rcGroupIds, Set<String> roles) {
+  public List<ConsultantSessionResponseDTO>
+      getAllowedSessionsByConsultantAndGroupOrFeedbackGroupIds(
+          Consultant consultant, Set<String> rcGroupIds, Set<String> roles) {
     checkForUserOrConsultantRole(roles);
-    var sessions = sessionRepository.findByGroupIds(rcGroupIds);
+    var sessions = sessionRepository.findByGroupOrFeedbackGroupIds(rcGroupIds);
 
     List<Session> allowedSessions =
         sessions.stream()
@@ -567,6 +589,16 @@ public class SessionService {
   }
 
   /**
+   * Returns the session for the Rocket.Chat feedback group id.
+   *
+   * @param feedbackGroupId the id of the feedback group
+   * @return the session
+   */
+  public Session getSessionByFeedbackGroupId(String feedbackGroupId) {
+    return sessionRepository.findByFeedbackGroupId(feedbackGroupId).orElse(null);
+  }
+
+  /**
    * Returns a {@link ConsultantSessionDTO} for a specific session.
    *
    * @param sessionId the session ID to fetch
@@ -609,6 +641,7 @@ public class SessionService {
             .askerId(session.getUser().getUserId())
             .askerRcId(session.getUser().getRcUserId())
             .askerUserName(session.getUser().getUsername())
+            .feedbackGroupId(session.getFeedbackGroupId())
             .groupId(session.getGroupId())
             .postcode(session.getPostcode())
             .consultantId(nonNull(session.getConsultant()) ? session.getConsultant().getId() : null)
@@ -742,5 +775,9 @@ public class SessionService {
     }
 
     return sessions.get(0).getGroupId();
+  }
+
+  public List<Session> findAllSessions() {
+    return Lists.newArrayList(sessionRepository.findAll());
   }
 }

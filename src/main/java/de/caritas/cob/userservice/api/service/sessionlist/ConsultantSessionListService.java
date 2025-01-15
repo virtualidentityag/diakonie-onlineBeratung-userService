@@ -1,7 +1,9 @@
 package de.caritas.cob.userservice.api.service.sessionlist;
 
 import static java.util.Collections.emptyList;
+import static java.util.Objects.nonNull;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
+import static org.apache.commons.lang3.BooleanUtils.isTrue;
 
 import de.caritas.cob.userservice.api.adapters.rocketchat.RocketChatCredentials;
 import de.caritas.cob.userservice.api.adapters.web.dto.ConsultantSessionListResponseDTO;
@@ -11,6 +13,7 @@ import de.caritas.cob.userservice.api.exception.httpresponses.BadRequestExceptio
 import de.caritas.cob.userservice.api.model.Consultant;
 import de.caritas.cob.userservice.api.model.Session.SessionStatus;
 import de.caritas.cob.userservice.api.service.ChatService;
+import de.caritas.cob.userservice.api.service.session.SessionFilter;
 import de.caritas.cob.userservice.api.service.session.SessionService;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -34,7 +37,7 @@ public class ConsultantSessionListService {
 
   /**
    * @param consultant {@link Consultant}
-   * @param rcGroupIds rocket chat group IDs
+   * @param rcGroupIds rocket chat group or feedback group IDs
    * @param roles roles of the consultant
    * @return List of {@link ConsultantSessionResponseDTO}
    */
@@ -42,7 +45,8 @@ public class ConsultantSessionListService {
       Consultant consultant, List<String> rcGroupIds, Set<String> roles) {
     var groupIds = new HashSet<>(rcGroupIds);
     var sessions =
-        sessionService.getAllowedSessionsByConsultantAndGroupIds(consultant, groupIds, roles);
+        sessionService.getAllowedSessionsByConsultantAndGroupOrFeedbackGroupIds(
+            consultant, groupIds, roles);
     var chats = chatService.getChatSessionsForConsultantByGroupIds(groupIds);
 
     return mergeConsultantSessionsAndChats(consultant, sessions, chats);
@@ -137,6 +141,10 @@ public class ConsultantSessionListService {
     updateConsultantSessionValues(teamSessions, rcAuthToken, consultant);
     sortSessionsByLastMessageDateDesc(teamSessions);
 
+    if (sessionListQueryParameter.getSessionFilter().equals(SessionFilter.FEEDBACK)) {
+      removeAllChatsAndSessionsWithoutUnreadFeedback(teamSessions);
+    }
+
     return teamSessions;
   }
 
@@ -159,6 +167,14 @@ public class ConsultantSessionListService {
 
   private void sortSessionsByLastMessageDateDesc(List<ConsultantSessionResponseDTO> sessions) {
     sessions.sort(Comparator.comparing(ConsultantSessionResponseDTO::getLatestMessage).reversed());
+  }
+
+  private void removeAllChatsAndSessionsWithoutUnreadFeedback(
+      List<ConsultantSessionResponseDTO> sessions) {
+    sessions.removeIf(
+        consultantSessionResponseDTO ->
+            nonNull(consultantSessionResponseDTO.getChat())
+                || isTrue(consultantSessionResponseDTO.getSession().getFeedbackRead()));
   }
 
   private List<ConsultantSessionResponseDTO> updateConsultantSessionValues(

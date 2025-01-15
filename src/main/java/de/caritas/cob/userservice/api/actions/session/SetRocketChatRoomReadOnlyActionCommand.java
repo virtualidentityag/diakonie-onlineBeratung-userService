@@ -28,6 +28,7 @@ public class SetRocketChatRoomReadOnlyActionCommand implements ActionCommand<Ses
   public void execute(Session session) {
     if (nonNull(session)) {
       setRoomReadOnly(session.getGroupId());
+      setRoomReadOnly(session.getFeedbackGroupId());
     }
   }
 

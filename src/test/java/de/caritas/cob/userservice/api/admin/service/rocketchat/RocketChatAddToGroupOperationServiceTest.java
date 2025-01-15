@@ -3,8 +3,7 @@ package de.caritas.cob.userservice.api.admin.service.rocketchat;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atLeastOnce;
@@ -23,13 +22,13 @@ import de.caritas.cob.userservice.api.model.Session;
 import de.caritas.cob.userservice.api.model.Session.SessionStatus;
 import java.util.function.Consumer;
 import org.jeasy.random.EasyRandom;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.MockitoJUnitRunner;
 
-@ExtendWith(MockitoExtension.class)
-class RocketChatAddToGroupOperationServiceTest {
+@RunWith(MockitoJUnitRunner.class)
+public class RocketChatAddToGroupOperationServiceTest {
 
   private final EasyRandom easyRandom = new EasyRandom();
 
@@ -42,7 +41,8 @@ class RocketChatAddToGroupOperationServiceTest {
   @Mock private ConsultingTypeManager consultingTypeManager;
 
   @Test
-  void addToGroupsOrRollbackOnFailure_Should_performRocketChatGroupActions_When_paramsAreValid() {
+  public void
+      addToGroupsOrRollbackOnFailure_Should_performRocketChatGroupActions_When_paramsAreValid() {
 
     Session session = easyRandom.nextObject(Session.class);
     session.setStatus(SessionStatus.NEW);
@@ -56,11 +56,14 @@ class RocketChatAddToGroupOperationServiceTest {
 
     verify(this.rocketChatFacade, times(1))
         .addUserToRocketChatGroup(eq(consultant.getRocketChatId()), eq(session.getGroupId()));
-    verify(logMethod, times(1)).accept(anyString());
+    verify(this.rocketChatFacade, times(1))
+        .addUserToRocketChatGroup(
+            eq(consultant.getRocketChatId()), eq(session.getFeedbackGroupId()));
+    verify(logMethod, times(2)).accept(anyString());
   }
 
   @Test
-  void
+  public void
       addToGroupsOrRollbackOnFailure_Should_throwInternalErrorAndPerformRollback_When_addUserToRocketChatGroupFails() {
 
     Session session = easyRandom.nextObject(Session.class);
@@ -84,33 +87,33 @@ class RocketChatAddToGroupOperationServiceTest {
     } catch (InternalServerErrorException e) {
       verify(this.rocketChatFacade, times(1))
           .removeUserFromGroup(eq(consultant.getRocketChatId()), eq(session.getGroupId()));
+      verify(this.rocketChatFacade, times(1))
+          .removeUserFromGroup(eq(consultant.getRocketChatId()), eq(session.getFeedbackGroupId()));
     }
   }
 
-  @Test
-  void addToGroupsOrRollbackOnFailure_Should_logErrorMessage_When_removeOfTechnicalUserFailes() {
-    assertThrows(
-        InternalServerErrorException.class,
-        () -> {
-          Session session = easyRandom.nextObject(Session.class);
-          session.setStatus(SessionStatus.NEW);
-          Consultant consultant = easyRandom.nextObject(Consultant.class);
-          doThrow(new RuntimeException(""))
-              .when(this.rocketChatFacade)
-              .addUserToRocketChatGroup(anyString(), anyString());
+  @Test(expected = InternalServerErrorException.class)
+  public void
+      addToGroupsOrRollbackOnFailure_Should_logErrorMessage_When_removeOfTechnicalUserFailes() {
 
-          RocketChatAddToGroupOperationService.getInstance(
-                  this.rocketChatFacade, this.keycloakService, logMethod, consultingTypeManager)
-              .onSessions(singletonList(session))
-              .withConsultant(consultant)
-              .addToGroupsOrRollbackOnFailure();
+    Session session = easyRandom.nextObject(Session.class);
+    session.setStatus(SessionStatus.NEW);
+    Consultant consultant = easyRandom.nextObject(Consultant.class);
+    doThrow(new RuntimeException(""))
+        .when(this.rocketChatFacade)
+        .addUserToRocketChatGroup(anyString(), anyString());
 
-          verify(logMethod, atLeastOnce()).accept(anyString());
-        });
+    RocketChatAddToGroupOperationService.getInstance(
+            this.rocketChatFacade, this.keycloakService, logMethod, consultingTypeManager)
+        .onSessions(singletonList(session))
+        .withConsultant(consultant)
+        .addToGroupsOrRollbackOnFailure();
+
+    verify(logMethod, atLeastOnce()).accept(anyString());
   }
 
   @Test
-  void addToGroupsOrRollbackOnFailure_Should_throwInternalError_When_rollbackFails() {
+  public void addToGroupsOrRollbackOnFailure_Should_throwInternalError_When_rollbackFails() {
 
     Session session = easyRandom.nextObject(Session.class);
     session.setStatus(SessionStatus.NEW);

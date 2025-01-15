@@ -80,6 +80,9 @@ public class UserServiceMapper {
     map.put(
         "notifyNewChatMessageFromAdviceSeeker",
         consultant.getNotifyNewChatMessageFromAdviceSeeker());
+    map.put(
+        "notifyNewFeedbackMessageFromAdviceSeeker",
+        consultant.getNotifyNewFeedbackMessageFromAdviceSeeker());
     map.put("walkThroughEnabled", consultant.getWalkThroughEnabled());
     map.put("chatUserId", consultant.getRocketChatId());
     map.put("preferredLanguage", consultant.getLanguageCode().toString());
@@ -376,6 +379,10 @@ public class UserServiceMapper {
     if (patchMap.containsKey("notifyNewChatMessageFromAdviceSeeker")) {
       var notify = (Boolean) patchMap.get("notifyNewChatMessageFromAdviceSeeker");
       consultant.setNotifyNewChatMessageFromAdviceSeeker(notify);
+    }
+    if (patchMap.containsKey("notifyNewFeedbackMessageFromAdviceSeeker")) {
+      var notify = (Boolean) patchMap.get("notifyNewFeedbackMessageFromAdviceSeeker");
+      consultant.setNotifyNewFeedbackMessageFromAdviceSeeker(notify);
     }
     if (patchMap.containsKey("termsAndConditionsConfirmation")
         && (patchMap.get("termsAndConditionsConfirmation") instanceof Boolean)) {

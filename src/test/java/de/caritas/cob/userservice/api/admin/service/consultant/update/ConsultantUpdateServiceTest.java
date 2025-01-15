@@ -1,7 +1,6 @@
 package de.caritas.cob.userservice.api.admin.service.consultant.update;
 
-import static org.junit.Assert.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -21,15 +20,15 @@ import de.caritas.cob.userservice.api.service.ConsultantService;
 import de.caritas.cob.userservice.api.service.appointment.AppointmentService;
 import java.util.Optional;
 import org.jeasy.random.EasyRandom;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.MockitoJUnitRunner;
 
-@ExtendWith(MockitoExtension.class)
+@RunWith(MockitoJUnitRunner.class)
 public class ConsultantUpdateServiceTest {
 
   @InjectMocks private ConsultantUpdateService consultantUpdateService;
@@ -44,16 +43,12 @@ public class ConsultantUpdateServiceTest {
 
   @Mock private AppointmentService appointmentService;
 
-  @Test
+  @Test(expected = BadRequestException.class)
   public void
       updateConsultant_Should_throwBadRequestException_When_givenConsultantIdDoesNotExist() {
-    assertThrows(
-        BadRequestException.class,
-        () -> {
-          when(this.consultantService.getConsultant(any())).thenReturn(Optional.empty());
+    when(this.consultantService.getConsultant(any())).thenReturn(Optional.empty());
 
-          this.consultantUpdateService.updateConsultant("", mock(UpdateAdminConsultantDTO.class));
-        });
+    this.consultantUpdateService.updateConsultant("", mock(UpdateAdminConsultantDTO.class));
   }
 
   @Test
@@ -77,7 +72,7 @@ public class ConsultantUpdateServiceTest {
             userDTOArgumentCaptor.capture(),
             eq(updateConsultant.getFirstname()),
             eq(updateConsultant.getLastname()));
-    assertEquals(userDTOArgumentCaptor.getValue().getTenantId(), consultant.getTenantId());
+    assertThat(userDTOArgumentCaptor.getValue().getTenantId()).isEqualTo(consultant.getTenantId());
     verify(this.consultantService, times(1)).saveConsultant(any());
     verify(this.appointmentService, times(1)).syncConsultantData(any());
   }

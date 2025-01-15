@@ -41,7 +41,7 @@ public class CreateUserFacade {
   private final @NonNull RollbackFacade rollbackFacade;
   private final @NonNull ConsultingTypeManager consultingTypeManager;
   private final @NonNull AgencyVerifier agencyVerifier;
-  private final @NonNull CreateNewSessionFacade createNewSessionFacade;
+  private final @NonNull CreateNewConsultingTypeFacade createNewConsultingTypeFacade;
   private final @NonNull StatisticsService statisticsService;
   private final @NonNull TopicService topicService;
 
@@ -65,7 +65,8 @@ public class CreateUserFacade {
     var user = updateIdentityAndCreateAccount(response.getUserId(), userDTO, UserRole.USER);
     var consultingTypeSettings = obtainConsultingTypeSettings(userDTO);
     var registration =
-        createNewSessionFacade.initializeNewSession(userDTO, user, consultingTypeSettings);
+        createNewConsultingTypeFacade.initializeNewConsultingType(
+            userDTO, user, consultingTypeSettings);
 
     try {
       RegistrationStatisticsEvent registrationEvent =

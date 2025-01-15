@@ -1,7 +1,5 @@
 package de.caritas.cob.userservice.api.adapters.web.controller;
 
-import static de.caritas.cob.userservice.api.model.NewSessionValidationConstraint.ONE_SESSION_PER_CONSULTING_TYPE;
-import static de.caritas.cob.userservice.api.model.NewSessionValidationConstraint.ONE_SESSION_PER_TOPIC_ID_AND_AGENCY_ID;
 import static java.util.Collections.singletonList;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -59,7 +57,7 @@ import de.caritas.cob.userservice.api.exception.httpresponses.NotFoundException;
 import de.caritas.cob.userservice.api.facade.AssignChatFacade;
 import de.caritas.cob.userservice.api.facade.CreateChatFacade;
 import de.caritas.cob.userservice.api.facade.CreateEnquiryMessageFacade;
-import de.caritas.cob.userservice.api.facade.CreateNewSessionFacade;
+import de.caritas.cob.userservice.api.facade.CreateNewConsultingTypeFacade;
 import de.caritas.cob.userservice.api.facade.CreateUserFacade;
 import de.caritas.cob.userservice.api.facade.EmailNotificationFacade;
 import de.caritas.cob.userservice.api.facade.GetChatFacade;
@@ -73,6 +71,7 @@ import de.caritas.cob.userservice.api.facade.sessionlist.SessionListFacade;
 import de.caritas.cob.userservice.api.facade.userdata.AskerDataProvider;
 import de.caritas.cob.userservice.api.facade.userdata.ConsultantDataFacade;
 import de.caritas.cob.userservice.api.facade.userdata.ConsultantDataProvider;
+import de.caritas.cob.userservice.api.facade.userdata.EmailNotificationMapper;
 import de.caritas.cob.userservice.api.facade.userdata.KeycloakUserDataProvider;
 import de.caritas.cob.userservice.api.helper.AuthenticatedUser;
 import de.caritas.cob.userservice.api.model.Chat;
@@ -155,7 +154,7 @@ public class UserController implements UsersApi {
   private final @NotNull StopChatFacade stopChatFacade;
   private final @NotNull GetChatMembersFacade getChatMembersFacade;
   private final @NotNull CreateUserFacade createUserFacade;
-  private final @NotNull CreateNewSessionFacade createNewSessionFacade;
+  private final @NotNull CreateNewConsultingTypeFacade createNewConsultingTypeFacade;
   private final @NotNull ConsultantDataFacade consultantDataFacade;
   private final @NotNull SessionDataService sessionDataService;
   private final @NotNull SessionArchiveService sessionArchiveService;
@@ -174,6 +173,8 @@ public class UserController implements UsersApi {
   private final @NotNull IdentityClient identityClient;
 
   private final @NotNull AdminUserFacade adminUserFacade;
+
+  private final @NonNull EmailNotificationMapper emailNotificationMapper;
 
   @Value("${feature.topics.enabled}")
   private boolean featureTopicsEnabled;
@@ -237,40 +238,10 @@ public class UserController implements UsersApi {
         RocketChatCredentials.builder().rocketChatToken(rcToken).rocketChatUserId(rcUserId).build();
 
     var registrationResponse =
-        createNewSessionFacade.initializeNewSession(
-            newRegistrationDto,
-            user,
-            rocketChatCredentials,
-            Lists.newArrayList(ONE_SESSION_PER_CONSULTING_TYPE));
+        createNewConsultingTypeFacade.initializeNewConsultingType(
+            newRegistrationDto, user, rocketChatCredentials);
 
     return new ResponseEntity<>(registrationResponse, registrationResponse.getStatus());
-  }
-
-  /**
-   * Creates a new session or chat-agency relation depending on the provided topic.
-   *
-   * @param rcToken Rocket.Chat token (required)
-   * @param rcUserId Rocket.Chat user ID (required)
-   * @param newRegistrationDto {@link NewRegistrationDto}
-   * @return {@link ResponseEntity} containing {@link NewRegistrationResponseDto}
-   */
-  @Override
-  public ResponseEntity<NewRegistrationResponseDto> registerNewSession(
-      @RequestHeader String rcToken,
-      @RequestHeader(value = "RCUserId", required = true) String rcUserId,
-      de.caritas.cob.userservice.api.adapters.web.dto.NewRegistrationDto newRegistrationDto) {
-    var user = this.userAccountProvider.retrieveValidatedUser();
-    var rocketChatCredentials =
-        RocketChatCredentials.builder().rocketChatToken(rcToken).rocketChatUserId(rcUserId).build();
-
-    var response =
-        createNewSessionFacade.initializeNewSession(
-            newRegistrationDto,
-            user,
-            rocketChatCredentials,
-            Lists.newArrayList(ONE_SESSION_PER_TOPIC_ID_AND_AGENCY_ID));
-
-    return new ResponseEntity<>(response, response.getStatus());
   }
 
   /**
@@ -369,14 +340,14 @@ public class UserController implements UsersApi {
 
   /**
    * Returns a list of sessions for the currently authenticated/logged in user and given RocketChat
-   * group IDs.
+   * group, or feedback group IDs.
    *
    * @param rcToken Rocket.Chat token (required)
    * @return {@link ResponseEntity} of {@link UserSessionListResponseDTO}
    */
   @Override
-  public ResponseEntity<GroupSessionListResponseDTO> getSessionsForGroupIds(
-      @RequestHeader String rcToken, @RequestParam List<String> rcGroupIds) {
+  public ResponseEntity<GroupSessionListResponseDTO> getSessionsForGroupOrFeedbackGroupIds(
+      @RequestHeader String rcToken, @RequestParam(value = "rcGroupIds") List<String> rcGroupIds) {
     GroupSessionListResponseDTO groupSessionList;
     if (authenticatedUser.isConsultant()) {
       var consultant = userAccountProvider.retrieveValidatedConsultant();
@@ -740,6 +711,26 @@ public class UserController implements UsersApi {
     emailNotificationFacade.sendNewMessageNotification(
         newMessageNotificationDTO.getRcGroupId(),
         authenticatedUser.getRoles(),
+        authenticatedUser.getUserId(),
+        TenantContext.getCurrentTenantData());
+
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  /**
+   * Sends email notifications to the user(s) if there has been a new feedback answer. Uses the
+   * provided Keycloak authorization token for user verification (user role). This means that the
+   * user that wrote the answer should also call this method.
+   *
+   * @param newMessageNotificationDTO (required)
+   * @return {@link ResponseEntity} containing {@link HttpStatus}
+   */
+  @Override
+  public ResponseEntity<Void> sendNewFeedbackMessageNotification(
+      @RequestBody NewMessageNotificationDTO newMessageNotificationDTO) {
+
+    emailNotificationFacade.sendNewFeedbackMessageNotification(
+        newMessageNotificationDTO.getRcGroupId(),
         authenticatedUser.getUserId(),
         TenantContext.getCurrentTenantData());
 
