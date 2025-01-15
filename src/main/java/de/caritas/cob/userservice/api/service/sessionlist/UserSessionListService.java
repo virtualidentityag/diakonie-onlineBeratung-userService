@@ -11,7 +11,6 @@ import de.caritas.cob.userservice.api.facade.sessionlist.RocketChatRoomInformati
 import de.caritas.cob.userservice.api.helper.SessionListAnalyser;
 import de.caritas.cob.userservice.api.service.ChatService;
 import de.caritas.cob.userservice.api.service.session.SessionService;
-import de.caritas.cob.userservice.api.service.session.SessionTopicEnrichmentService;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,8 +18,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -31,12 +28,6 @@ public class UserSessionListService {
   private final @NonNull ChatService chatService;
   private final @NonNull RocketChatRoomInformationProvider rocketChatRoomInformationProvider;
   private final @NonNull SessionListAnalyser sessionListAnalyser;
-
-  @Value("${feature.topics.enabled}")
-  private boolean featureTopicsEnabled;
-
-  @Autowired(required = false)
-  private SessionTopicEnrichmentService sessionTopicEnrichmentService;
 
   /**
    * Returns a list of {@link UserSessionResponseDTO} for the specified user ID.
@@ -51,24 +42,15 @@ public class UserSessionListService {
     List<UserSessionResponseDTO> sessions = sessionService.getSessionsForUserId(userId);
     List<UserSessionResponseDTO> chats = chatService.getChatsForUserId(userId);
 
-    var mergedSessions = mergeUserSessionsAndChats(sessions, chats, rocketChatCredentials);
-    if (featureTopicsEnabled) {
-      enrichSessionsWithTopics(mergedSessions);
-    }
-    return mergedSessions;
-  }
-
-  private void enrichSessionsWithTopics(List<UserSessionResponseDTO> mergedSessions) {
-    mergedSessions.stream()
-        .map(UserSessionResponseDTO::getSession)
-        .forEach(sessionTopicEnrichmentService::enrichSessionWithTopicData);
+    return mergeUserSessionsAndChats(sessions, chats, rocketChatCredentials);
   }
 
   /**
-   * Returns a list of {@link UserSessionResponseDTO} for given user ID and rocket chat group IDs
+   * Returns a list of {@link UserSessionResponseDTO} for given user ID and rocket chat group or
+   * feedback group IDs.
    *
    * @param userId the ID of an user
-   * @param rcGroupIds the rocket chat group IDs
+   * @param rcGroupIds the rocket chat group or feedback group IDs
    * @param rocketChatCredentials the credentials for accessing rocket chat
    * @param roles the roles of given user
    * @return {@link UserSessionResponseDTO}
@@ -80,7 +62,8 @@ public class UserSessionListService {
       Set<String> roles) {
 
     var groupIds = new HashSet<>(rcGroupIds);
-    var sessions = sessionService.getSessionsByUserAndGroupIds(userId, groupIds, roles);
+    var sessions =
+        sessionService.getSessionsByUserAndGroupOrFeedbackGroupIds(userId, groupIds, roles);
     var chats = chatService.getChatSessionsByGroupIds(groupIds);
 
     return mergeUserSessionsAndChats(sessions, chats, rocketChatCredentials);
@@ -211,10 +194,5 @@ public class UserSessionListService {
 
   private boolean isRocketChatRoomSubscribedByUser(List<String> userRoomsList, String groupId) {
     return nonNull(userRoomsList) && userRoomsList.contains(groupId);
-  }
-
-  void setSessionTopicEnrichmentService(
-      SessionTopicEnrichmentService sessionTopicEnrichmentService) {
-    this.sessionTopicEnrichmentService = sessionTopicEnrichmentService;
   }
 }

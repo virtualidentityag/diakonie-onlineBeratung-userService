@@ -6,23 +6,23 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import de.caritas.cob.userservice.api.adapters.keycloak.KeycloakService;
 import de.caritas.cob.userservice.api.adapters.rocketchat.dto.group.GroupMemberDTO;
 import de.caritas.cob.userservice.api.facade.RocketChatFacade;
 import de.caritas.cob.userservice.api.manager.consultingtype.ConsultingTypeManager;
 import de.caritas.cob.userservice.api.model.Consultant;
 import de.caritas.cob.userservice.api.model.Session;
 import de.caritas.cob.userservice.api.port.out.ConsultantRepository;
-import de.caritas.cob.userservice.api.port.out.IdentityClient;
 import java.util.Optional;
 import org.jeasy.random.EasyRandom;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.MockitoJUnitRunner;
 
-@ExtendWith(MockitoExtension.class)
-class RemoveConsultantFromRocketChatServiceTest {
+@RunWith(MockitoJUnitRunner.class)
+public class RemoveConsultantFromRocketChatServiceTest {
 
   @InjectMocks private RemoveConsultantFromRocketChatService removeConsultantFromRocketChatService;
 
@@ -30,12 +30,12 @@ class RemoveConsultantFromRocketChatServiceTest {
 
   @Mock private ConsultantRepository consultantRepository;
 
-  @Mock private IdentityClient identityClient;
+  @Mock private KeycloakService keycloakService;
 
   @Mock private ConsultingTypeManager consultingTypeManager;
 
   @Test
-  void
+  public void
       removeConsultantFromSessions_Should_removeConsultant_When_consultantIsNotUserAndNotDirectlyAssigned() {
     Session session = new EasyRandom().nextObject(Session.class);
     session.getConsultant().setRocketChatId("consultant");
@@ -56,5 +56,7 @@ class RemoveConsultantFromRocketChatServiceTest {
 
     verify(this.rocketChatFacade, times(1))
         .removeUserFromGroup(consultant.getRocketChatId(), session.getGroupId());
+    verify(this.rocketChatFacade, times(1))
+        .removeUserFromGroup(consultant.getRocketChatId(), session.getFeedbackGroupId());
   }
 }

@@ -96,7 +96,11 @@ public class ConsultantDataProvider {
     newChatToggle.setName(EmailType.NEW_CHAT_MESSAGE_FROM_ADVICE_SEEKER);
     newChatToggle.setState(consultant.getNotifyNewChatMessageFromAdviceSeeker());
 
-    return Set.of(enquiryToggle, newChatToggle);
+    var newFeedbackToggle = new EmailToggle();
+    newFeedbackToggle.setName(EmailType.NEW_FEEDBACK_MESSAGE_FROM_ADVICE_SEEKER);
+    newFeedbackToggle.setState(consultant.getNotifyNewFeedbackMessageFromAdviceSeeker());
+
+    return Set.of(enquiryToggle, newChatToggle, newFeedbackToggle);
   }
 
   private List<AgencyDTO> agencyDTOsOf(Consultant consultant) {

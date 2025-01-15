@@ -4,8 +4,9 @@ import static de.caritas.cob.userservice.api.adapters.web.dto.VideoCallMessageDT
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -14,19 +15,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.caritas.cob.userservice.api.adapters.web.dto.AliasMessageDTO;
+import de.caritas.cob.userservice.api.adapters.web.dto.ForwardMessageDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.VideoCallMessageDTO;
 import de.caritas.cob.userservice.api.helper.UsernameTranscoder;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.util.ClassUtils;
 
-@ExtendWith(MockitoExtension.class)
-class AliasJsonDeserializerTest {
+@RunWith(MockitoJUnitRunner.class)
+public class AliasJsonDeserializerTest {
 
   private static final String DECODED_USERNAME = "username";
   private static final String ENCODE_USERNAME =
@@ -44,18 +46,36 @@ class AliasJsonDeserializerTest {
   private final AliasJsonDeserializer aliasJsonDeserializer = new AliasJsonDeserializer();
 
   @Test
-  void aliasJsonDeserializer_Should_haveNoArgsConstructor() {
+  public void aliasJsonDeserializer_Should_haveNoArgsConstructor() {
     assertTrue(ClassUtils.hasConstructor(AliasJsonDeserializer.class));
   }
 
   @Test
-  void deserialize_Should_ReturnNull_IfAliasIsEmpty() throws IOException {
+  public void deserialize_Should_convertAliasWithEncodedUsernameToForwardMessageDTO()
+      throws IOException {
+    ForwardMessageDTO result =
+        deserializeOldAliasJson(MESSAGE_FORWARD_ALIAS_JSON_WITH_ENCODED_USERNAME)
+            .getForwardMessageDTO();
+    assertThat(result.getUsername(), is(DECODED_USERNAME));
+  }
+
+  @Test
+  public void deserialize_Should_convertAliasWithDecodedUsernameToForwardMessageDTO()
+      throws IOException {
+    ForwardMessageDTO result =
+        deserializeOldAliasJson(MESSAGE_FORWARD_ALIAS_JSON_WITH_DECODED_USERNAME)
+            .getForwardMessageDTO();
+    assertThat(result.getUsername(), is(DECODED_USERNAME));
+  }
+
+  @Test
+  public void deserialize_Should_ReturnNull_IfAliasIsEmpty() throws IOException {
     AliasMessageDTO result = deserializeOldAliasJson("");
     assertNull(result);
   }
 
   @Test
-  void deserialize_Should_returnAliasDTOWithDecodedUsername_When_usernameIsEncoded()
+  public void deserialize_Should_returnAliasDTOWithDecodedUsername_When_usernameIsEncoded()
       throws Exception {
     String aliasMessageDTO =
         asJsonString(
@@ -68,13 +88,14 @@ class AliasJsonDeserializerTest {
 
     AliasMessageDTO result = deserializeNewAliasJson(aliasMessageDTO);
 
+    assertThat(result.getForwardMessageDTO(), nullValue());
     assertThat(result.getVideoCallMessageDTO(), notNullValue());
     assertThat(result.getVideoCallMessageDTO().getEventType(), is(IGNORED_CALL));
     assertThat(result.getVideoCallMessageDTO().getInitiatorUserName(), is(DECODED_USERNAME));
   }
 
   @Test
-  void deserialize_Should_returnAliasDTOWithDecodedUsername_When_usernameIsDecoded()
+  public void deserialize_Should_returnAliasDTOWithDecodedUsername_When_usernameIsDecoded()
       throws Exception {
     String aliasMessageDTO =
         asJsonString(
@@ -87,17 +108,24 @@ class AliasJsonDeserializerTest {
 
     AliasMessageDTO result = deserializeNewAliasJson(aliasMessageDTO);
 
+    assertThat(result.getForwardMessageDTO(), nullValue());
     assertThat(result.getVideoCallMessageDTO(), notNullValue());
     assertThat(result.getVideoCallMessageDTO().getEventType(), is(IGNORED_CALL));
     assertThat(result.getVideoCallMessageDTO().getInitiatorUserName(), is(DECODED_USERNAME));
   }
 
   @Test
-  void deserialize_Should_returnAliasDTOWithDecodedUsernames_When_usernamesAreEncoded()
+  public void deserialize_Should_returnAliasDTOWithDecodedUsernames_When_usernamesAreEncoded()
       throws Exception {
     String aliasMessageDTO =
         asJsonString(
             new AliasMessageDTO()
+                .forwardMessageDTO(
+                    new ForwardMessageDTO()
+                        .message("message")
+                        .rcUserId("rcUserId")
+                        .timestamp("timestamp")
+                        .username(ENCODE_USERNAME))
                 .videoCallMessageDTO(
                     new VideoCallMessageDTO()
                         .eventType(IGNORED_CALL)
@@ -106,6 +134,11 @@ class AliasJsonDeserializerTest {
 
     AliasMessageDTO result = deserializeNewAliasJson(aliasMessageDTO);
 
+    assertThat(result.getForwardMessageDTO(), notNullValue());
+    assertThat(result.getForwardMessageDTO().getMessage(), is("message"));
+    assertThat(result.getForwardMessageDTO().getRcUserId(), is("rcUserId"));
+    assertThat(result.getForwardMessageDTO().getTimestamp(), is("timestamp"));
+    assertThat(result.getForwardMessageDTO().getUsername(), is(DECODED_USERNAME));
     assertThat(result.getVideoCallMessageDTO(), notNullValue());
     assertThat(result.getVideoCallMessageDTO().getEventType(), is(IGNORED_CALL));
     assertThat(result.getVideoCallMessageDTO().getInitiatorUserName(), is(DECODED_USERNAME));

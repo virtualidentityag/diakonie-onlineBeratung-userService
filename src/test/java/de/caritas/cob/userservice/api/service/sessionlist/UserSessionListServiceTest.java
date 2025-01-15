@@ -23,8 +23,10 @@ import static de.caritas.cob.userservice.api.testHelper.TestConstants.USER_SESSI
 import static java.util.Collections.emptyMap;
 import static java.util.Objects.nonNull;
 import static org.jsoup.helper.Validate.fail;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import de.caritas.cob.userservice.api.adapters.web.dto.UserSessionResponseDTO;
@@ -34,20 +36,17 @@ import de.caritas.cob.userservice.api.helper.Helper;
 import de.caritas.cob.userservice.api.helper.SessionListAnalyser;
 import de.caritas.cob.userservice.api.service.ChatService;
 import de.caritas.cob.userservice.api.service.session.SessionService;
-import de.caritas.cob.userservice.api.service.session.SessionTopicEnrichmentService;
 import java.util.Collections;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.mockito.junit.MockitoJUnitRunner;
 
-@ExtendWith(MockitoExtension.class)
-class UserSessionListServiceTest {
+@RunWith(MockitoJUnitRunner.class)
+public class UserSessionListServiceTest {
 
   @InjectMocks private UserSessionListService userSessionListService;
   @Mock private SessionService sessionService;
@@ -55,19 +54,10 @@ class UserSessionListServiceTest {
   @Mock private RocketChatRoomInformationProvider rocketChatRoomInformationProvider;
   @Mock private SessionListAnalyser sessionListAnalyser;
 
-  @Mock private SessionTopicEnrichmentService sessionTopicEnrichmentService;
-
-  @BeforeEach
-  public void setUp() {
-    ReflectionTestUtils.setField(userSessionListService, "featureTopicsEnabled", false);
-  }
-
   @Test
-  void
+  public void
       retrieveSessionsForAuthenticatedUser_Should_ReturnValidSessionListWithSessionMessagesReadTrue_WhenThereAreNoUnreadMessages() {
 
-    ReflectionTestUtils.setField(userSessionListService, "featureTopicsEnabled", true);
-    userSessionListService.setSessionTopicEnrichmentService(sessionTopicEnrichmentService);
     when(sessionService.getSessionsForUserId(USER_ID)).thenReturn(USER_SESSION_RESPONSE_DTO_LIST);
     RocketChatRoomInformation rocketChatRoomInformation =
         RocketChatRoomInformation.builder()
@@ -93,13 +83,10 @@ class UserSessionListServiceTest {
             .get(0)
             .getSession()
             .getMessagesRead());
-
-    verify(sessionTopicEnrichmentService, Mockito.times(USER_SESSION_RESPONSE_DTO_LIST.size()))
-        .enrichSessionWithTopicData(Mockito.any());
   }
 
   @Test
-  void
+  public void
       retrieveSessionsForAuthenticatedUser_Should_ReturnValidSessionListWithChatMessagesReadTrue_WhenThereAreNoUnreadMessages() {
 
     when(chatService.getChatsForUserId(USER_ID)).thenReturn(USER_CHAT_RESPONSE_DTO_LIST);
@@ -126,7 +113,7 @@ class UserSessionListServiceTest {
   }
 
   @Test
-  void
+  public void
       retrieveSessionsForAuthenticatedUser_Should_ReturnValidSessionListWithSessionMessagesReadFalse_WhenThereAreUnreadMessages() {
 
     when(sessionService.getSessionsForUserId(USER_ID)).thenReturn(USER_SESSION_RESPONSE_DTO_LIST);
@@ -157,7 +144,7 @@ class UserSessionListServiceTest {
   }
 
   @Test
-  void
+  public void
       retrieveSessionsForAuthenticatedUser_Should_ReturnValidSessionListWithChatMessagesReadFalse_WhenThereAreUnreadMessages() {
 
     when(chatService.getChatsForUserId(USER_ID)).thenReturn(USER_CHAT_RESPONSE_DTO_LIST);
@@ -184,7 +171,7 @@ class UserSessionListServiceTest {
   }
 
   @Test
-  void retrieveSessionsForAuthenticatedUser_Should_SetCorrectChatMessageDate() {
+  public void retrieveSessionsForAuthenticatedUser_Should_SetCorrectChatMessageDate() {
 
     when(chatService.getChatsForUserId(USER_ID)).thenReturn(USER_CHAT_RESPONSE_DTO_LIST);
     when(sessionService.getSessionsForUserId(USER_ID)).thenReturn(Collections.emptyList());
@@ -206,7 +193,7 @@ class UserSessionListServiceTest {
   }
 
   @Test
-  void retrieveSessionsForAuthenticatedUser_Should_SetCorrectSessionMessageDate() {
+  public void retrieveSessionsForAuthenticatedUser_Should_SetCorrectSessionMessageDate() {
 
     when(chatService.getChatsForUserId(USER_ID)).thenReturn(Collections.emptyList());
     when(sessionService.getSessionsForUserId(USER_ID)).thenReturn(USER_SESSION_RESPONSE_DTO_LIST);
@@ -227,7 +214,7 @@ class UserSessionListServiceTest {
   }
 
   @Test
-  void
+  public void
       retrieveSessionsForAuthenticatedUser_Should_ReturnCorrectFileTypeAndImagePreviewForSession() {
 
     when(chatService.getChatsForUserId(USER_ID)).thenReturn(Collections.emptyList());
@@ -253,7 +240,8 @@ class UserSessionListServiceTest {
   }
 
   @Test
-  void retrieveSessionsForAuthenticatedUser_Should_ReturnCorrectFileTypeAndImagePreviewForChat() {
+  public void
+      retrieveSessionsForAuthenticatedUser_Should_ReturnCorrectFileTypeAndImagePreviewForChat() {
 
     when(chatService.getChatsForUserId(USER_ID)).thenReturn(USER_CHAT_RESPONSE_DTO_LIST);
     when(sessionService.getSessionsForUserId(USER_ID)).thenReturn(Collections.emptyList());
@@ -279,7 +267,7 @@ class UserSessionListServiceTest {
   }
 
   @Test
-  void
+  public void
       retrieveSessionsForAuthenticatedUser_Should_ReturnEmptyList_WhenSessionAndChatListAreEmpty() {
 
     when(chatService.getChatsForUserId(USER_ID)).thenReturn(Collections.emptyList());
@@ -293,7 +281,7 @@ class UserSessionListServiceTest {
   }
 
   @Test
-  void retrieveSessionsForAuthenticatedUser_Should_MergeSessionsAndChats() {
+  public void retrieveSessionsForAuthenticatedUser_Should_MergeSessionsAndChats() {
 
     when(chatService.getChatsForUserId(USER_ID)).thenReturn(USER_CHAT_RESPONSE_DTO_LIST);
     when(sessionService.getSessionsForUserId(USER_ID)).thenReturn(USER_SESSION_RESPONSE_DTO_LIST);
@@ -342,7 +330,7 @@ class UserSessionListServiceTest {
   }
 
   @Test
-  void
+  public void
       retrieveSessionsForAuthenticatedUser_Should_SetSubscribedFlagToTrue_WhenUserIsAttendeeOfAChat() {
 
     when(chatService.getChatsForUserId(USER_ID)).thenReturn(USER_CHAT_RESPONSE_DTO_LIST);
@@ -366,7 +354,7 @@ class UserSessionListServiceTest {
   }
 
   @Test
-  void
+  public void
       retrieveSessionsForAuthenticatedUser_Should_SetSubscribedFlagToFalse_WhenUserIsNotAttendeeOfAChat() {
 
     when(chatService.getChatsForUserId(USER_ID)).thenReturn(USER_CHAT_RESPONSE_DTO_LIST);

@@ -7,8 +7,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -41,8 +40,9 @@ import de.caritas.cob.userservice.api.service.session.SessionService;
 import de.caritas.cob.userservice.tenantadminservice.generated.web.model.Settings;
 import de.caritas.cob.userservice.tenantadminservice.generated.web.model.TenantDTO;
 import org.jeasy.random.EasyRandom;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -50,8 +50,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
+@RunWith(SpringRunner.class)
 @SpringBootTest(classes = UserServiceApplication.class)
 @TestPropertySource(properties = "spring.profiles.active=testing")
 @AutoConfigureTestDatabase(replace = Replace.ANY)
@@ -78,7 +80,7 @@ public class CreateConsultantSagaIT {
 
   private final EasyRandom easyRandom = new EasyRandom();
 
-  @BeforeEach
+  @Before
   public void setup() {
     ReflectionTestUtils.setField(createConsultantSaga, "appointmentFeatureEnabled", false);
   }
@@ -304,47 +306,37 @@ public class CreateConsultantSagaIT {
     assertThat(consultant.getFullName(), notNullValue());
   }
 
-  @Test
+  @Test(expected = DistributedTransactionException.class)
   public void
       createNewConsultant_Should_throwCustomValidationHttpStatusException_When_userCanNotBeCreatedInRocketChat()
           throws RocketChatLoginException {
-    assertThrows(
-        DistributedTransactionException.class,
-        () -> {
-          when(rocketChatService.getUserID(anyString(), anyString(), anyBoolean()))
-              .thenThrow(new RocketChatLoginException(""));
-          KeycloakCreateUserResponseDTO validKeycloakResponse =
-              easyRandom.nextObject(KeycloakCreateUserResponseDTO.class);
-          when(keycloakService.createKeycloakUser(any(), anyString(), any()))
-              .thenReturn(validKeycloakResponse);
-          CreateConsultantDTO createConsultantDTO =
-              this.easyRandom.nextObject(CreateConsultantDTO.class);
-          createConsultantDTO.setUsername(VALID_USERNAME);
-          createConsultantDTO.setEmail(VALID_EMAILADDRESS);
+    when(rocketChatService.getUserID(anyString(), anyString(), anyBoolean()))
+        .thenThrow(new RocketChatLoginException(""));
+    KeycloakCreateUserResponseDTO validKeycloakResponse =
+        easyRandom.nextObject(KeycloakCreateUserResponseDTO.class);
+    when(keycloakService.createKeycloakUser(any(), anyString(), any()))
+        .thenReturn(validKeycloakResponse);
+    CreateConsultantDTO createConsultantDTO = this.easyRandom.nextObject(CreateConsultantDTO.class);
+    createConsultantDTO.setUsername(VALID_USERNAME);
+    createConsultantDTO.setEmail(VALID_EMAILADDRESS);
 
-          this.createConsultantSaga.createNewConsultant(createConsultantDTO);
-        });
+    this.createConsultantSaga.createNewConsultant(createConsultantDTO);
   }
 
-  @Test
+  @Test(expected = CustomValidationHttpStatusException.class)
   public void
       createNewConsultant_Should_throwCustomValidationHttpStatusException_When_keycloakIdIsMissing()
           throws RocketChatLoginException {
-    assertThrows(
-        CustomValidationHttpStatusException.class,
-        () -> {
-          when(rocketChatService.getUserID(anyString(), anyString(), anyBoolean()))
-              .thenReturn(DUMMY_RC_ID);
-          KeycloakCreateUserResponseDTO keycloakResponse =
-              easyRandom.nextObject(KeycloakCreateUserResponseDTO.class);
-          keycloakResponse.setUserId(null);
-          when(keycloakService.createKeycloakUser(any(), anyString(), any()))
-              .thenReturn(keycloakResponse);
-          CreateConsultantDTO createConsultantDTO =
-              this.easyRandom.nextObject(CreateConsultantDTO.class);
+    when(rocketChatService.getUserID(anyString(), anyString(), anyBoolean()))
+        .thenReturn(DUMMY_RC_ID);
+    KeycloakCreateUserResponseDTO keycloakResponse =
+        easyRandom.nextObject(KeycloakCreateUserResponseDTO.class);
+    keycloakResponse.setUserId(null);
+    when(keycloakService.createKeycloakUser(any(), anyString(), any()))
+        .thenReturn(keycloakResponse);
+    CreateConsultantDTO createConsultantDTO = this.easyRandom.nextObject(CreateConsultantDTO.class);
 
-          this.createConsultantSaga.createNewConsultant(createConsultantDTO);
-        });
+    this.createConsultantSaga.createNewConsultant(createConsultantDTO);
   }
 
   @Test

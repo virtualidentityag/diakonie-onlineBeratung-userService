@@ -386,6 +386,7 @@ public class CreateConsultantSaga {
         .encourage2fa(true)
         .notifyEnquiriesRepeating(true)
         .notifyNewChatMessageFromAdviceSeeker(true)
+        .notifyNewFeedbackMessageFromAdviceSeeker(true)
         .languageFormal(consultantCreationInput.isLanguageFormal())
         .languages(Set.of())
         .createDate(consultantCreationInput.getCreateDate())

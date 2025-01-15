@@ -259,6 +259,7 @@ class UserControllerE2EIT {
           consultantToReset.setLanguages(null);
           consultantToReset.setNotifyEnquiriesRepeating(true);
           consultantToReset.setNotifyNewChatMessageFromAdviceSeeker(true);
+          consultantToReset.setNotifyNewFeedbackMessageFromAdviceSeeker(true);
           consultantRepository.save(consultantToReset);
         });
     consultantsToReset = new HashSet<>();
@@ -356,13 +357,17 @@ class UserControllerE2EIT {
         .andExpect(jsonPath("available", is(false)))
         .andExpect(jsonPath("formalLanguage", is(consultant.isLanguageFormal())))
         .andExpect(jsonPath("e2eEncryptionEnabled", is(false)))
-        .andExpect(jsonPath("emailToggles", hasSize(2)))
+        .andExpect(jsonPath("emailToggles", hasSize(3)))
         .andExpect(
             jsonPath(
                 "emailToggles[*].name",
-                containsInAnyOrder("DAILY_ENQUIRY", "NEW_CHAT_MESSAGE_FROM_ADVICE_SEEKER")))
+                containsInAnyOrder(
+                    "DAILY_ENQUIRY",
+                    "NEW_CHAT_MESSAGE_FROM_ADVICE_SEEKER",
+                    "NEW_FEEDBACK_MESSAGE_FROM_ADVICE_SEEKER")))
         .andExpect(jsonPath("emailToggles[0].state", is(true)))
         .andExpect(jsonPath("emailToggles[1].state", is(true)))
+        .andExpect(jsonPath("emailToggles[2].state", is(true)))
         .andExpect(jsonPath("inTeamAgency", is(consultant.isTeamConsultant())));
   }
 
@@ -474,13 +479,17 @@ class UserControllerE2EIT {
         .andExpect(jsonPath("available", is(true)))
         .andExpect(jsonPath("formalLanguage", is(consultant.isLanguageFormal())))
         .andExpect(jsonPath("e2eEncryptionEnabled", is(false)))
-        .andExpect(jsonPath("emailToggles", hasSize(2)))
+        .andExpect(jsonPath("emailToggles", hasSize(3)))
         .andExpect(
             jsonPath(
                 "emailToggles[*].name",
-                containsInAnyOrder("DAILY_ENQUIRY", "NEW_CHAT_MESSAGE_FROM_ADVICE_SEEKER")))
+                containsInAnyOrder(
+                    "DAILY_ENQUIRY",
+                    "NEW_CHAT_MESSAGE_FROM_ADVICE_SEEKER",
+                    "NEW_FEEDBACK_MESSAGE_FROM_ADVICE_SEEKER")))
         .andExpect(jsonPath("emailToggles[0].state", is(true)))
         .andExpect(jsonPath("emailToggles[1].state", is(true)))
+        .andExpect(jsonPath("emailToggles[2].state", is(true)))
         .andExpect(jsonPath("inTeamAgency", is(consultant.isTeamConsultant())));
   }
 
@@ -745,13 +754,17 @@ class UserControllerE2EIT {
         .andExpect(jsonPath("formalLanguage", is(consultant.isLanguageFormal())))
         .andExpect(jsonPath("preferredLanguage", is(consultant.getLanguageCode().toString())))
         .andExpect(jsonPath("e2eEncryptionEnabled", is(false)))
-        .andExpect(jsonPath("emailToggles", hasSize(2)))
+        .andExpect(jsonPath("emailToggles", hasSize(3)))
         .andExpect(
             jsonPath(
                 "emailToggles[*].name",
-                containsInAnyOrder("DAILY_ENQUIRY", "NEW_CHAT_MESSAGE_FROM_ADVICE_SEEKER")))
+                containsInAnyOrder(
+                    "DAILY_ENQUIRY",
+                    "NEW_CHAT_MESSAGE_FROM_ADVICE_SEEKER",
+                    "NEW_FEEDBACK_MESSAGE_FROM_ADVICE_SEEKER")))
         .andExpect(jsonPath("emailToggles[0].state", is(true)))
         .andExpect(jsonPath("emailToggles[1].state", is(true)))
+        .andExpect(jsonPath("emailToggles[2].state", is(true)))
         .andExpect(jsonPath("inTeamAgency", is(consultant.isTeamConsultant())))
         .andExpect(jsonPath("emailNotifications.emailNotificationsEnabled", is(true)))
         .andExpect(jsonPath("emailNotifications.settings", is(notNullValue())))
@@ -844,12 +857,12 @@ class UserControllerE2EIT {
                 .header(CSRF_HEADER, CSRF_VALUE)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("emailToggles", hasSize(2)))
+        .andExpect(jsonPath("emailToggles", hasSize(3)))
         .andExpect(jsonPath("emailToggles[?(@.name =~ /DAILY_ENQUIRY/)].state", is(List.of(false))))
         .andExpect(
             jsonPath(
                 "emailToggles[?(@.name =~ /NEW_.*_MESSAGE_FROM_ADVICE_SEEKER/)].state",
-                is(List.of(true))))
+                is(List.of(true, true))))
         .andExpect(jsonPath("e2eEncryptionEnabled", is(true)))
         .andExpect(jsonPath("isDisplayNameEditable", is(true)));
   }
@@ -875,12 +888,12 @@ class UserControllerE2EIT {
                 .header(CSRF_HEADER, CSRF_VALUE)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("emailToggles", hasSize(2)))
+        .andExpect(jsonPath("emailToggles", hasSize(3)))
         .andExpect(jsonPath("emailToggles[?(@.name =~ /DAILY_ENQUIRY/)].state", is(List.of(true))))
         .andExpect(
             jsonPath(
                 "emailToggles[?(@.name =~ /NEW_.*_MESSAGE_FROM_ADVICE_SEEKER/)].state",
-                is(List.of(false))));
+                is(List.of(false, false))));
   }
 
   @Test
@@ -1188,6 +1201,7 @@ class UserControllerE2EIT {
     var dbConsultant = consultantRepository.findById(consultant.getId()).orElseThrow();
     assertFalse(dbConsultant.getNotifyEnquiriesRepeating());
     assertFalse(dbConsultant.getNotifyNewChatMessageFromAdviceSeeker());
+    assertFalse(dbConsultant.getNotifyNewFeedbackMessageFromAdviceSeeker());
   }
 
   @Test
@@ -1652,28 +1666,6 @@ class UserControllerE2EIT {
   }
 
   @Test
-  @WithMockUser(authorities = {AuthorityValue.USER_DEFAULT})
-  void registerNewSession_Should_ReturnCreated_When_ProvidedWithValidRequestBody()
-      throws Exception {
-    givenAValidUser();
-    givenAValidTopicServiceResponse();
-    givenConsultingTypeServiceResponse(2);
-    givenARealmResource();
-    givenAUserDTOWithMainTopic();
-
-    mockMvc
-        .perform(
-            post("/users/askers/session/new")
-                .cookie(CSRF_COOKIE)
-                .header(CSRF_HEADER, CSRF_VALUE)
-                .header("RCToken", "token")
-                .header("RCUserId", "userId")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userDTO)))
-        .andExpect(status().isCreated());
-  }
-
-  @Test
   @WithMockUser(authorities = {AuthorityValue.CONSULTANT_DEFAULT, AuthorityValue.USER_DEFAULT})
   void sendReassignmentNotificationShouldSendEmailAndRespondWithOk() throws Exception {
     var apiClientMock = mock(de.caritas.cob.userservice.mailservice.generated.ApiClient.class);
@@ -2091,8 +2083,13 @@ class UserControllerE2EIT {
     newChatMessageToggle.setName(EmailType.NEW_CHAT_MESSAGE_FROM_ADVICE_SEEKER);
     newChatMessageToggle.setState(state);
 
+    var newFeedbackMessageToggle = new EmailToggle();
+    newFeedbackMessageToggle.setName(EmailType.NEW_FEEDBACK_MESSAGE_FROM_ADVICE_SEEKER);
+    newFeedbackMessageToggle.setState(state);
+
     var patchDtoAsMap = new HashMap<String, Object>(3);
-    patchDtoAsMap.put("emailToggles", Set.of(dailyEnquiryToggle, newChatMessageToggle));
+    patchDtoAsMap.put(
+        "emailToggles", Set.of(dailyEnquiryToggle, newChatMessageToggle, newFeedbackMessageToggle));
 
     if (!state) {
       consultantsToReset.add(consultant);
@@ -2109,6 +2106,7 @@ class UserControllerE2EIT {
 
   private void givenConsultantIsNotToNotifyAboutNewFollowUps() {
     consultant.setNotifyNewChatMessageFromAdviceSeeker(false);
+    consultant.setNotifyNewFeedbackMessageFromAdviceSeeker(false);
     consultantRepository.save(consultant);
     consultantsToReset.add(consultant);
   }
@@ -2138,7 +2136,11 @@ class UserControllerE2EIT {
     newChat.setName(EmailType.NEW_CHAT_MESSAGE_FROM_ADVICE_SEEKER);
     newChat.setState(true);
 
-    patchUserDTO.setEmailToggles(Set.of(dailyEnquiries, newChat));
+    var newFeedback = new EmailToggle();
+    newFeedback.setName(EmailType.NEW_FEEDBACK_MESSAGE_FROM_ADVICE_SEEKER);
+    newFeedback.setState(true);
+
+    patchUserDTO.setEmailToggles(Set.of(dailyEnquiries, newChat, newFeedback));
 
     patchUserDTO.setEmailNotifications(activeEmailNotifications());
   }

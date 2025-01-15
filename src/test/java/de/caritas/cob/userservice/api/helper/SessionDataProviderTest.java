@@ -18,7 +18,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 import com.neovisionaries.i18n.LanguageCode;
@@ -40,14 +44,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import org.jeasy.random.EasyRandom;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.MockitoJUnitRunner;
 
-@ExtendWith(MockitoExtension.class)
-class SessionDataProviderTest {
+@RunWith(MockitoJUnitRunner.class)
+public class SessionDataProviderTest {
 
   private SessionDataProvider sessionDataProvider;
   private ConsultingTypeManager consultingTypeManager;
@@ -74,6 +78,7 @@ class SessionDataProviderTest {
           null,
           null,
           null,
+          true,
           true,
           true,
           true,
@@ -149,12 +154,14 @@ class SessionDataProviderTest {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_SUCHT)
               .slug(null)
+              .excludeNonMainConsultantsFromTeamSessions(false)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(false)
               .welcomeMessage(
                   new WelcomeMessageDTO().sendWelcomeMessage(false).welcomeMessageText(null))
               .sendFurtherStepsMessage(false)
               .sessionDataInitializing(SESSION_DATA_INITIALIZING_WITH_ALL_SESSION_DATA_ITEMS)
+              .initializeFeedbackChat(false)
               .notifications(null)
               .languageFormal(false)
               .roles(null)
@@ -166,25 +173,27 @@ class SessionDataProviderTest {
           new ExtendedConsultingTypeResponseDTO()
               .id(CONSULTING_TYPE_ID_U25)
               .slug(null)
+              .excludeNonMainConsultantsFromTeamSessions(false)
               .groupChat(new GroupChatDTO().isGroupChat(false))
               .consultantBoundedToConsultingType(false)
               .welcomeMessage(
                   new WelcomeMessageDTO().sendWelcomeMessage(false).welcomeMessageText(null))
               .sendFurtherStepsMessage(false)
               .sessionDataInitializing(SESSION_DATA_INITIALIZING_WITH_NO_SESSION_DATA_ITEMS)
+              .initializeFeedbackChat(false)
               .notifications(null)
               .languageFormal(false)
               .roles(null)
               .registration(null);
 
-  @BeforeEach
-  void setup() {
+  @Before
+  public void setup() {
     consultingTypeManager = Mockito.mock(ConsultingTypeManager.class);
     sessionDataProvider = new SessionDataProvider(consultingTypeManager);
   }
 
   @Test
-  void createSessionDataList_Should_ReturnCorrectListOfSessionDataItems() {
+  public void createSessionDataList_Should_ReturnCorrectListOfSessionDataItems() {
     Session sessionWithInitializedItem = easyRandom.nextObject(Session.class);
     sessionWithInitializedItem.setConsultingTypeId(CONSULTING_TYPE_ID_SUCHT);
     SessionData data = easyRandom.nextObject(SessionData.class);
@@ -223,7 +232,7 @@ class SessionDataProviderTest {
   }
 
   @Test
-  void createSessionDataList_Should_ReturnEmptyListOfSessionDataItems() {
+  public void createSessionDataList_Should_ReturnEmptyListOfSessionDataItems() {
 
     when(consultingTypeManager.getConsultingTypeSettings(CONSULTING_TYPE_ID_U25))
         .thenReturn(CONSULTING_TYPE_SETTINGS_WITH_NO_SESSION_DATA_ITEMS);
@@ -235,7 +244,7 @@ class SessionDataProviderTest {
   }
 
   @Test
-  void
+  public void
       createSessionDataList_Should_ReturnCorrectListOfSessionDataItems_WhenSessionDataValuesAreNull() {
     when(consultingTypeManager.getConsultingTypeSettings(CONSULTING_TYPE_ID_SUCHT))
         .thenReturn(CONSULTING_TYPE_SETTINGS_WITH_ALL_SESSION_DATA_ITEMS);
@@ -249,7 +258,7 @@ class SessionDataProviderTest {
   }
 
   @Test
-  void
+  public void
       createSessionDataList_Should_ReturnCorrectListOfSessionDataItems_WhenSessionDataValuesAreEmpty() {
     when(consultingTypeManager.getConsultingTypeSettings(CONSULTING_TYPE_ID_SUCHT))
         .thenReturn(CONSULTING_TYPE_SETTINGS_WITH_ALL_SESSION_DATA_ITEMS);
@@ -264,7 +273,7 @@ class SessionDataProviderTest {
   }
 
   @Test
-  void getValueOfKey_Should_ReturnCorrectValueToGivenKey() {
+  public void getValueOfKey_Should_ReturnCorrectValueToGivenKey() {
 
     when(consultingTypeManager.getConsultingTypeSettings(CONSULTING_TYPE_ID_SUCHT))
         .thenReturn(CONSULTING_TYPE_SETTINGS_WITH_ALL_SESSION_DATA_ITEMS);
@@ -276,7 +285,7 @@ class SessionDataProviderTest {
   }
 
   @Test
-  void getValueOfKey_Should_ReturnNullWhenSessionDataValueIsNull() {
+  public void getValueOfKey_Should_ReturnNullWhenSessionDataValueIsNull() {
 
     when(consultingTypeManager.getConsultingTypeSettings(CONSULTING_TYPE_ID_SUCHT))
         .thenReturn(CONSULTING_TYPE_SETTINGS_WITH_ALL_SESSION_DATA_ITEMS);
@@ -288,13 +297,13 @@ class SessionDataProviderTest {
   }
 
   @Test
-  void getValueOfKey_Should_ReturnNullWhenSessionDataListIsNull() {
+  public void getValueOfKey_Should_ReturnNullWhenSessionDataListIsNull() {
 
     assertNull(getValueOfKey(null, AGE));
   }
 
   @Test
-  void getSessionDataMapFromSession_Should_ReturnCorrectMapOfSessionDataItems() {
+  public void getSessionDataMapFromSession_Should_ReturnCorrectMapOfSessionDataItems() {
 
     Map<String, Object> result =
         sessionDataProvider.getSessionDataMapFromSession(INITIALIZED_SESSION_WITH_SESSION_DATA);
