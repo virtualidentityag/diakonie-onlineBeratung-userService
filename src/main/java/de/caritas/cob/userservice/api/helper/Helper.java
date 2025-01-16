@@ -14,8 +14,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class Helper {
 
-  private static final String PERCENT = "__PERCENT__";
-  private static final String PLUS = "__PLUS__";
   public static final long ONE_DAY_IN_HOURS = 24L;
   public static final Date UNIXTIME_0 = new Date(0);
 
@@ -57,16 +55,7 @@ public class Helper {
    */
   public String urlDecodeString(String stringToDecode) {
     try {
-      if (stringToDecode == null) {
-        return null;
-      }
-      String tempPassword = stringToDecode.replace("%", PERCENT);
-      tempPassword = tempPassword.replace("+", PLUS);
-      String decodedPassword =
-          java.net.URLDecoder.decode(tempPassword, StandardCharsets.UTF_8.name());
-      decodedPassword = decodedPassword.replace(PERCENT, "%"); // Restore the original percent signs
-      return decodedPassword.replace(PLUS, "+"); // Restore the original percent signs
-
+      return java.net.URLDecoder.decode(stringToDecode, StandardCharsets.UTF_8.name());
     } catch (UnsupportedEncodingException ex) {
       return null;
     }
