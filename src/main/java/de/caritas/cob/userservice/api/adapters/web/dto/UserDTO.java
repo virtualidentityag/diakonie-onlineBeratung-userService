@@ -70,7 +70,6 @@ public class UserDTO implements UserRegistrationDTO {
 
   @NotBlank(message = "{user.password.notBlank}")
   @ApiModelProperty(required = true, example = "pass@w0rd", position = 3)
-  @JsonDeserialize(using = UrlDecodePasswordJsonDeserializer.class)
   @JsonProperty("password")
   private String password;
 
