@@ -81,6 +81,16 @@ class SessionTopicEnrichmentServiceTest {
     assertThat(session.getTopic().getId()).isNull();
   }
 
+  @Test
+  void enrichSessionWithTopicData_Should_NotEnrichNullSession() {
+
+    // when
+    sessionTopicEnrichmentService.enrichSessionWithTopicData(null);
+
+    // then
+    Mockito.verify(topicService, Mockito.never()).getAllTopics();
+  }
+
   private void givenAllTopicsMap() {
     Map<Long, TopicDTO> availableTopicsMap =
         Maps.newHashMap(1L, new TopicDTO().id(1L).name("first topic").description("first desc"));
