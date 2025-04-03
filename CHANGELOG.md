@@ -2,6 +2,69 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.2.0](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/compare/v3.1.2...v3.2.0) (2025-04-03)
+
+
+### Features
+
+* add new endpoint to register new session ([746c92a](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/746c92a6d857664d62bacae2d2e0ced80b1bd6dc))
+* add zipkin dependency ([13b3500](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/13b3500c5d270fd80872ef8c0529e3e1d8dbc12a))
+* add zipkin dependency ([cd3f6cb](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/cd3f6cb72e0c0f7a2e65c58df8c3e109745db5aa))
+* debugging spring sleuth ([1e63216](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/1e63216e644fd20717a7877313b4b9715dd98c00))
+* debugging spring sleuth ([0260bf4](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/0260bf4f073ec273c35ceab8cd318d29fcfc2a3e))
+* debugging spring sleuth ([76b31a0](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/76b31a0ee277ad5cf8c086b67675995bd293531c))
+* enable logging in case message is not sent ([f133535](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/f133535878f98c304de965c8d684a07e2c64193e))
+* include application name ([06b7632](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/06b76327cdef31af44f59e5cfff709471d863288))
+* integrate with spring sleuth ([feef6ce](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/feef6cefd14da6308b072e4a1d7904143f3bba36))
+
+
+### Bug Fixes
+
+* added actuator endpoint to enable logs in runtime ([5dac09e](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/5dac09e444c43efc73f98f3c453573932ee2073b))
+* added actuator endpoint to enable logs in runtime ([0ef38b8](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/0ef38b8eb3d268f9372d37a98538c2b5127d24ad))
+* added actuator endpoint to enable logs in runtime ([1f52f9b](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/1f52f9bf44f5be6e142eff539648ee162037bd4a))
+* added actuator endpoint to enable logs in runtime ([1365160](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/1365160bc8074cc75178d4c7ab251c108ea69a84))
+* added actuator endpoint to enable logs in runtime ([6c2b049](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/6c2b0497e6e573d38ee31ebc3ef84b11f49103b5))
+* added actuator endpoint to enable logs in runtime ([875be5b](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/875be5b49541f512a0870984e44a0e3aa35dc7f9))
+* adjust assertion messages ([874829d](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/874829d34a4fa849f94db0881bd38ac27d8a424d))
+* adjust logic for x-reason headers ([a094d44](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/a094d44b39f8bc61521291570ff7bc958442b887))
+* adjust logic for x-reason headers ([1c248e5](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/1c248e5d3188e404acddf0265ed9cd7fbc441d5e))
+* adjust logic for x-reason headers ([d443585](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/d4435850ff596b117596c9df6494bccf5da0b085))
+* adjust logic for x-reason headers ([9b76405](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/9b7640539a106866538d1ec2737064a4740b44c7))
+* adjust logic for x-reason headers ([f434e4c](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/f434e4cb7c893b3f70a853c7e58706703c5d7485))
+* adjust logic to validate constraints ([5cebe1c](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/5cebe1ce1dcb642ad976df703c52ea26ca330512))
+* adjust logic to validate constraints ([19ec0de](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/19ec0de9842cb46e3f5f700bc6447c1a2a1f522e))
+* adjust logic to validate constraints ([f14c601](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/f14c601f4ec792b7d6084e50d599e10f01e81ebb))
+* adjust logic to validate constraints ([25b04f7](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/25b04f754e62824ec400f0606a91c8e4111eb277))
+* adjust logic to validate constraints ([520447a](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/520447a99ee64ad26b024784beb772bfbfde2e3d))
+* adjust logic to validate constraints ([bc1db27](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/bc1db278ba47535848e35ed45229e039bf6976c1))
+* adjust logic to validate constraints ([51d67c4](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/51d67c471ac00c08c1549c459c6398a770b3fee9))
+* adjust tests after session topic enrichment ([5e8ebee](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/5e8ebee104e8e489fbdc7a6cdb7c8799cb880a55))
+* adjust tests after session topic enrichment ([0f3b9b7](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/0f3b9b740996aaef91a2a7a1fe94fba87843be95))
+* adjust tests after session topic enrichment ([73c62cb](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/73c62cb988c871d4d2ddabe4c7d787f93eba6a96))
+* adjust tests after session topic enrichment ([431743c](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/431743cfac8644866611e6f93cdc7170e5a6672f))
+* cache ([8974a6a](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/8974a6ae9cb62176156cbe9207bfc44338348011))
+* cache ([76fdb31](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/76fdb3197040276a3aa5cad3e360fc682f9e0fdd))
+* CARITAS-243 ([daf08f1](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/daf08f1f871794153ee861ef994a2d1193352c7d))
+* CARITAS-243 - fix test name ([31d38e4](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/31d38e46a298e916b53184d98a82f4e6241f431a))
+* CARITAS-243 - fixed the changeSet id ([165f7b9](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/165f7b9436500b5505965bf638128d18909c70d5))
+* CARITAS-243 - remove forwardMessage logic ([6f77fec](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/6f77fec2cfccec18f9a83b9727a5f03199187519))
+* CARITAS-243 - remove forwardMessageDTO ([01f0109](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/01f0109f6a3b8dc7ff44ac57eb4f0a2ccaa7fc5b))
+* CARITAS-243 - remove unhelpfull rollback procedures ([dfa28aa](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/dfa28aae60d2f2814b69aa669fd127ab4a007892))
+* CARITAS-372 ([5cb16fc](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/5cb16fc5f183ff011e73d20f8f9b37b2790cb7c9))
+* deserialization ([b73ad2c](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/b73ad2c0233f966db25ac17b8f35514c476efa32))
+* DIAKONIE-482 update cache ([1d642e9](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/1d642e9b20a39c9a414514112a1ce46340b64cce))
+* encoding ([effb84e](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/effb84eec9c31b4eca16780c1171e7416174e9be))
+* re-added spring boot plugin ([6294ace](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/6294ace86d19d869d7178603ee5eccdc94c82951))
+* upgrade spring boot to 2.4.X ([414b3df](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/414b3dfaf361adab7f31d847e0a6011363514510))
+* upgrade spring boot to 2.4.X ([d1155ab](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/d1155abc6058b9673b78b2b858006e62aa94615a))
+* upgrade spring boot to 2.4.X ([e8b46f2](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/e8b46f23ee10dde649073b59741c1b922c1559d5))
+* upgrade spring boot to 2.6.X, fix tests ([882070e](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/882070ee21d5bac298b1e4417e9e7e4fdae2389f))
+* upgrade spring boot to 2.6.X, fix tests ([53fb5fa](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/53fb5fa6c2a9312144e74dc2b240d0a1a8817abe))
+* upgrade spring boot to 2.6.X, fix tests ([1cc0a5f](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/1cc0a5f7cd688d3042ce33efbc3c6f334a099813))
+* upgrade spring boot to 2.6.X, fix tests ([5388fa1](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/5388fa1f8170f0149a63cf932383e6a3c40261dc))
+* upgrade spring boot to 2.6.X, partial commit ([ba803fd](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/ba803fd20a751bedaed933089e0aa991a5d47948))
+
 ### [3.1.2](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/compare/v3.1.1...v3.1.2) (2024-12-19)
 
 ### [3.1.1](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/compare/v3.1.0...v3.1.1) (2024-12-04)
