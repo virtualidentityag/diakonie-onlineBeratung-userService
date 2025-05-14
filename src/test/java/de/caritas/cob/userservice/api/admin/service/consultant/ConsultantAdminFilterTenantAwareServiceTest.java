@@ -62,7 +62,7 @@ class ConsultantAdminFilterTenantAwareServiceTest {
     ArgumentCaptor<Query> captor = ArgumentCaptor.forClass(Query.class);
     verify(fullTextEntityManager)
         .createFullTextQuery(captor.capture(), Mockito.eq(Consultant.class));
-    verify(booleanJunction).must(Mockito.any(Query.class));
+    verify(booleanJunction, Mockito.times(2)).must(Mockito.any(Query.class));
     verify(mustJunction, Mockito.never()).must(Mockito.any(Query.class));
     TenantContext.clear();
   }
@@ -90,7 +90,7 @@ class ConsultantAdminFilterTenantAwareServiceTest {
     ArgumentCaptor<Query> captor = ArgumentCaptor.forClass(Query.class);
     verify(fullTextEntityManager)
         .createFullTextQuery(captor.capture(), Mockito.eq(Consultant.class));
-    verify(booleanJunction, Mockito.times(2)).must(Mockito.any(Query.class));
+    verify(booleanJunction, Mockito.times(3)).must(Mockito.any(Query.class));
     verify(mustJunction).must(Mockito.any());
     TenantContext.clear();
   }
