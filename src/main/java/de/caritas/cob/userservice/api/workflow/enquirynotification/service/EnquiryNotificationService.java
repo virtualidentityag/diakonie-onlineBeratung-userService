@@ -9,6 +9,7 @@ import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 import com.neovisionaries.i18n.LanguageCode;
 import de.caritas.cob.userservice.api.adapters.web.dto.AgencyDTO;
+import de.caritas.cob.userservice.api.admin.service.tenant.TenantService;
 import de.caritas.cob.userservice.api.model.Consultant;
 import de.caritas.cob.userservice.api.model.ConsultantAgency;
 import de.caritas.cob.userservice.api.model.Session;
@@ -23,11 +24,15 @@ import de.caritas.cob.userservice.api.workflow.enquirynotification.model.Enquiri
 import de.caritas.cob.userservice.mailservice.generated.web.model.MailDTO;
 import de.caritas.cob.userservice.mailservice.generated.web.model.MailsDTO;
 import de.caritas.cob.userservice.mailservice.generated.web.model.TemplateDataDTO;
+import de.caritas.cob.userservice.tenantservice.generated.web.model.RestrictedTenantDTO;
+import de.caritas.cob.userservice.tenantservice.generated.web.model.Content;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.NonNull;
@@ -42,11 +47,13 @@ public class EnquiryNotificationService {
 
   private static final String MAIL_SUBJECT = "Online-Beratung | Unbeantwortete Erstanfragen";
   private static final String UNKNOWN_AGENCY = "Unbekannte Beratungsstelle";
+  private static final String UNKNOWN_TENANT = "Unbekannter Mandant";
 
   private final @NonNull MailService mailService;
   private final @NonNull SessionRepository sessionRepository;
   private final @NonNull ConsultantAgencyService consultantAgencyService;
   private final @NonNull AgencyService agencyService;
+  private final @NonNull TenantService tenantService;
 
   private final @NonNull ReleaseToggleService releaseToggleService;
 
@@ -64,10 +71,32 @@ public class EnquiryNotificationService {
     var agencyIdToAgency =
         agenciesWithOpenEnquiries.stream()
             .collect(Collectors.toMap(AgencyDTO::getId, Function.identity()));
+    var tenantIdToTenant = getAgenciesTenantInformation(
+        agenciesWithOpenEnquiries);
+
     var mailsContentForAgencies =
-        createMailsContentForAgencies(agencyIdsWithOpenEnquiries, agencyIdToAgency);
+        createMailsContentForAgencies(agencyIdsWithOpenEnquiries, agencyIdToAgency, tenantIdToTenant);
 
     mailsContentForAgencies.forEach(this::buildAndSendEnquiryNotificationMails);
+  }
+
+  private Map<Long, RestrictedTenantDTO> getAgenciesTenantInformation(
+      List<AgencyDTO> agenciesWithOpenEnquiries) {
+    var tenantIds = agenciesWithOpenEnquiries.stream()
+        .map(AgencyDTO::getTenantId)
+        .filter(Objects::nonNull)
+        .distinct()
+        .collect(Collectors.toList());
+
+    return fetchTenantsByIds(tenantIds);
+  }
+
+  private Map<Long, RestrictedTenantDTO> fetchTenantsByIds(List<Long> tenantIds) {
+    return tenantIds.stream()
+        .collect(Collectors.toMap(
+            id -> id,
+            tenantService::getRestrictedTenantData
+        ));
   }
 
   private Map<Long, Long> findAgencyIdsWithOpenEnquiries() {
@@ -88,25 +117,42 @@ public class EnquiryNotificationService {
   }
 
   private Collection<EnquiriesNotificationMailContent> createMailsContentForAgencies(
-      Map<Long, Long> agencyIdsWithOpenEnquiries, Map<Long, AgencyDTO> agencyIdToAgency) {
+      Map<Long, Long> agencyIdsWithOpenEnquiries, Map<Long, AgencyDTO> agencyIdToAgency,
+      Map<Long, RestrictedTenantDTO> tenantIdToTenant) {
     return agencyIdsWithOpenEnquiries.entrySet().stream()
-        .map(toMailContent(agencyIdToAgency))
+        .map(toMailContent(agencyIdToAgency,tenantIdToTenant))
         .collect(Collectors.toSet());
   }
 
   private Function<Entry<Long, Long>, EnquiriesNotificationMailContent> toMailContent(
-      Map<Long, AgencyDTO> agencyIdToAgency) {
-    return agencyIdEnquiriesEntry -> {
-      var agencyId = agencyIdEnquiriesEntry.getKey();
-      var openEnquiries = agencyIdEnquiriesEntry.getValue();
-      AgencyDTO agency = agencyIdToAgency.get(agencyId);
-      var agencyName = agency == null ? UNKNOWN_AGENCY : agency.getName();
+      Map<Long, AgencyDTO> agencyIdToAgency, Map<Long, RestrictedTenantDTO> tenantIdToTenant) {
+    return entry -> {
+      var agencyId = entry.getKey();
+      var openEnquiries = entry.getValue();
+      var agency = agencyIdToAgency.get(agencyId);
+      var tenant = resolveTenant(agency, tenantIdToTenant);
+
       return EnquiriesNotificationMailContent.builder()
           .agencyId(agencyId)
           .amountOfOpenEnquiries(openEnquiries)
-          .agencyName(agencyName)
+          .agencyName(resolveAgencyName(agency))
+          .tenantName(Optional.ofNullable(tenant).map(RestrictedTenantDTO::getName).orElse(UNKNOWN_TENANT))
+          .tenantClaim(Optional.ofNullable(tenant).map(RestrictedTenantDTO::getContent).map(Content::getClaim).orElse(null))
           .build();
     };
+  }
+
+  private String resolveAgencyName(AgencyDTO agency) {
+    return Optional.ofNullable(agency)
+        .map(AgencyDTO::getName)
+        .orElse(UNKNOWN_AGENCY);
+  }
+
+  private RestrictedTenantDTO resolveTenant(AgencyDTO agency, Map<Long, RestrictedTenantDTO> tenantIdToTenant) {
+    return Optional.ofNullable(agency)
+        .map(AgencyDTO::getTenantId)
+        .map(tenantIdToTenant::get)
+        .orElse(null);
   }
 
   private void buildAndSendEnquiryNotificationMails(
@@ -139,6 +185,8 @@ public class EnquiryNotificationService {
         .language(languageOf(consultant.getLanguageCode()))
         .templateData(
             asList(
+                new TemplateDataDTO().key("tenant_name").value(enquiryNotificationContent.getTenantName()),
+                new TemplateDataDTO().key("tenant_claim").value(enquiryNotificationContent.getTenantClaim()),
                 new TemplateDataDTO().key("subject").value(MAIL_SUBJECT),
                 new TemplateDataDTO().key("consultant_name").value(consultant.getFullName()),
                 new TemplateDataDTO().key("url").value(applicationBaseUrl),

@@ -10,4 +10,6 @@ public class EnquiriesNotificationMailContent {
   private Long amountOfOpenEnquiries;
   private Long agencyId;
   private String agencyName;
+  private String tenantName;
+  private String tenantClaim;
 }
