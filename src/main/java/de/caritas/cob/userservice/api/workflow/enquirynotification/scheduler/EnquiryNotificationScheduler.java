@@ -19,6 +19,7 @@ public class EnquiryNotificationScheduler {
 
   @Value("${enquiry.open.notification.enabled}")
   private Boolean enquiryNotificationsEnabled;
+
   private final @NonNull TenantContextProvider tenantContextProvider;
 
   /** Entry method to build and send email notifications. */

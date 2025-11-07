@@ -32,6 +32,4 @@ public class TenantService {
         .createControllerApi()
         .getRestrictedTenantDataByTenantId(tenantId);
   }
-
-
 }

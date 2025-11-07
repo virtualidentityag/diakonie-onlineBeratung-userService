@@ -24,8 +24,8 @@ import de.caritas.cob.userservice.api.workflow.enquirynotification.model.Enquiri
 import de.caritas.cob.userservice.mailservice.generated.web.model.MailDTO;
 import de.caritas.cob.userservice.mailservice.generated.web.model.MailsDTO;
 import de.caritas.cob.userservice.mailservice.generated.web.model.TemplateDataDTO;
-import de.caritas.cob.userservice.tenantservice.generated.web.model.RestrictedTenantDTO;
 import de.caritas.cob.userservice.tenantservice.generated.web.model.Content;
+import de.caritas.cob.userservice.tenantservice.generated.web.model.RestrictedTenantDTO;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -71,32 +71,30 @@ public class EnquiryNotificationService {
     var agencyIdToAgency =
         agenciesWithOpenEnquiries.stream()
             .collect(Collectors.toMap(AgencyDTO::getId, Function.identity()));
-    var tenantIdToTenant = getAgenciesTenantInformation(
-        agenciesWithOpenEnquiries);
+    var tenantIdToTenant = getAgenciesTenantInformation(agenciesWithOpenEnquiries);
 
     var mailsContentForAgencies =
-        createMailsContentForAgencies(agencyIdsWithOpenEnquiries, agencyIdToAgency, tenantIdToTenant);
+        createMailsContentForAgencies(
+            agencyIdsWithOpenEnquiries, agencyIdToAgency, tenantIdToTenant);
 
     mailsContentForAgencies.forEach(this::buildAndSendEnquiryNotificationMails);
   }
 
   private Map<Long, RestrictedTenantDTO> getAgenciesTenantInformation(
       List<AgencyDTO> agenciesWithOpenEnquiries) {
-    var tenantIds = agenciesWithOpenEnquiries.stream()
-        .map(AgencyDTO::getTenantId)
-        .filter(Objects::nonNull)
-        .distinct()
-        .collect(Collectors.toList());
+    var tenantIds =
+        agenciesWithOpenEnquiries.stream()
+            .map(AgencyDTO::getTenantId)
+            .filter(Objects::nonNull)
+            .distinct()
+            .collect(Collectors.toList());
 
     return fetchTenantsByIds(tenantIds);
   }
 
   private Map<Long, RestrictedTenantDTO> fetchTenantsByIds(List<Long> tenantIds) {
     return tenantIds.stream()
-        .collect(Collectors.toMap(
-            id -> id,
-            tenantService::getRestrictedTenantData
-        ));
+        .collect(Collectors.toMap(id -> id, tenantService::getRestrictedTenantData));
   }
 
   private Map<Long, Long> findAgencyIdsWithOpenEnquiries() {
@@ -117,10 +115,11 @@ public class EnquiryNotificationService {
   }
 
   private Collection<EnquiriesNotificationMailContent> createMailsContentForAgencies(
-      Map<Long, Long> agencyIdsWithOpenEnquiries, Map<Long, AgencyDTO> agencyIdToAgency,
+      Map<Long, Long> agencyIdsWithOpenEnquiries,
+      Map<Long, AgencyDTO> agencyIdToAgency,
       Map<Long, RestrictedTenantDTO> tenantIdToTenant) {
     return agencyIdsWithOpenEnquiries.entrySet().stream()
-        .map(toMailContent(agencyIdToAgency,tenantIdToTenant))
+        .map(toMailContent(agencyIdToAgency, tenantIdToTenant))
         .collect(Collectors.toSet());
   }
 
@@ -136,19 +135,23 @@ public class EnquiryNotificationService {
           .agencyId(agencyId)
           .amountOfOpenEnquiries(openEnquiries)
           .agencyName(resolveAgencyName(agency))
-          .tenantName(Optional.ofNullable(tenant).map(RestrictedTenantDTO::getName).orElse(UNKNOWN_TENANT))
-          .tenantClaim(Optional.ofNullable(tenant).map(RestrictedTenantDTO::getContent).map(Content::getClaim).orElse(null))
+          .tenantName(
+              Optional.ofNullable(tenant).map(RestrictedTenantDTO::getName).orElse(UNKNOWN_TENANT))
+          .tenantClaim(
+              Optional.ofNullable(tenant)
+                  .map(RestrictedTenantDTO::getContent)
+                  .map(Content::getClaim)
+                  .orElse(null))
           .build();
     };
   }
 
   private String resolveAgencyName(AgencyDTO agency) {
-    return Optional.ofNullable(agency)
-        .map(AgencyDTO::getName)
-        .orElse(UNKNOWN_AGENCY);
+    return Optional.ofNullable(agency).map(AgencyDTO::getName).orElse(UNKNOWN_AGENCY);
   }
 
-  private RestrictedTenantDTO resolveTenant(AgencyDTO agency, Map<Long, RestrictedTenantDTO> tenantIdToTenant) {
+  private RestrictedTenantDTO resolveTenant(
+      AgencyDTO agency, Map<Long, RestrictedTenantDTO> tenantIdToTenant) {
     return Optional.ofNullable(agency)
         .map(AgencyDTO::getTenantId)
         .map(tenantIdToTenant::get)
@@ -185,8 +188,12 @@ public class EnquiryNotificationService {
         .language(languageOf(consultant.getLanguageCode()))
         .templateData(
             asList(
-                new TemplateDataDTO().key("tenant_name").value(enquiryNotificationContent.getTenantName()),
-                new TemplateDataDTO().key("tenant_claim").value(enquiryNotificationContent.getTenantClaim()),
+                new TemplateDataDTO()
+                    .key("tenant_name")
+                    .value(enquiryNotificationContent.getTenantName()),
+                new TemplateDataDTO()
+                    .key("tenant_claim")
+                    .value(enquiryNotificationContent.getTenantClaim()),
                 new TemplateDataDTO().key("subject").value(MAIL_SUBJECT),
                 new TemplateDataDTO().key("consultant_name").value(consultant.getFullName()),
                 new TemplateDataDTO().key("url").value(applicationBaseUrl),
