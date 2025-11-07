@@ -13,6 +13,7 @@ import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 import com.neovisionaries.i18n.LanguageCode;
 import de.caritas.cob.userservice.api.adapters.web.dto.AgencyDTO;
+import de.caritas.cob.userservice.api.admin.service.tenant.TenantService;
 import de.caritas.cob.userservice.api.model.Consultant;
 import de.caritas.cob.userservice.api.model.ConsultantAgency;
 import de.caritas.cob.userservice.api.model.Session;
@@ -25,6 +26,8 @@ import de.caritas.cob.userservice.api.service.helper.MailService;
 import de.caritas.cob.userservice.mailservice.generated.web.model.MailDTO;
 import de.caritas.cob.userservice.mailservice.generated.web.model.MailsDTO;
 import de.caritas.cob.userservice.mailservice.generated.web.model.TemplateDataDTO;
+import de.caritas.cob.userservice.tenantservice.generated.web.model.Content;
+import de.caritas.cob.userservice.tenantservice.generated.web.model.RestrictedTenantDTO;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,6 +55,8 @@ class EnquiryNotificationServiceTest {
   @Mock private AgencyService agencyService;
 
   @Mock private ReleaseToggleService releaseToggleService;
+
+  @Mock private TenantService tenantService;
 
   @BeforeEach
   public void setup() {
@@ -86,19 +91,24 @@ class EnquiryNotificationServiceTest {
                     "consultant4", "firstname4 lastname4")));
     var agencies =
         asList(
-            createAgency(1L, "Blue Agency"),
-            createAgency(2L, "Red Agency"),
-            createAgency(3L, "Yellow Agency"));
+            createAgency(1L, "Blue Agency", 1L),
+            createAgency(2L, "Red Agency", 1L),
+            createAgency(3L, "Yellow Agency", 2L));
     when(agencyService.getAgencies(asList(1L, 2L, 3L))).thenReturn(agencies);
+
+    var tenant1 = createTenant(1L, "tenant1", "tenant1Claim");
+    var tenant2 = createTenant(2L, "tenant2", "tenant2Claim");
+    when(tenantService.getRestrictedTenantData(1L)).thenReturn(tenant1);
+    when(tenantService.getRestrictedTenantData(2L)).thenReturn(tenant2);
 
     enquiryNotificationService.sendEmailNotificationsForOpenEnquiries();
 
     var expectedMailsDTO =
         List.of(
-            buildExpectedMail("consultant1", "firstname1 lastname1", "Blue Agency", 3L),
-            buildExpectedMail("consultant2", "firstname2 lastname2", "Blue Agency", 3L),
-            buildExpectedMail("consultant3", "firstname3 lastname3", "Red Agency", 2L),
-            buildExpectedMail("consultant4", "firstname4 lastname4", "Yellow Agency", 1L));
+            buildExpectedMail("consultant1", "firstname1 lastname1", "Blue Agency", 3L, tenant1),
+            buildExpectedMail("consultant2", "firstname2 lastname2", "Blue Agency", 3L, tenant1),
+            buildExpectedMail("consultant3", "firstname3 lastname3", "Red Agency", 2L, tenant1),
+            buildExpectedMail("consultant4", "firstname4 lastname4", "Yellow Agency", 1L, tenant2));
     var argumentCaptor = ArgumentCaptor.forClass(MailsDTO.class);
     verify(mailService, times(3)).sendEmailNotification(argumentCaptor.capture());
     var resultMailsDTO =
@@ -199,21 +209,38 @@ class EnquiryNotificationServiceTest {
     return consultantAgency;
   }
 
-  private AgencyDTO createAgency(long id, String name) {
+  private AgencyDTO createAgency(long id, String name, Long tenantId) {
     AgencyDTO agency = new AgencyDTO();
     agency.setId(id);
     agency.setName(name);
+    agency.setTenantId(tenantId);
     return agency;
   }
 
+  private RestrictedTenantDTO createTenant(long id, String name, String claim) {
+    RestrictedTenantDTO tenant = new RestrictedTenantDTO();
+    Content content = new Content();
+    content.setClaim(claim);
+    tenant.setId(id);
+    tenant.setName(name);
+    tenant.setContent(content);
+    return tenant;
+  }
+
   private MailDTO buildExpectedMail(
-      String email, String consultantName, String agencyName, Long amountOfOpenEnquiries) {
+      String email,
+      String consultantName,
+      String agencyName,
+      Long amountOfOpenEnquiries,
+      RestrictedTenantDTO tenant) {
     return new MailDTO()
         .template(TEMPLATE_DAILY_ENQUIRY_NOTIFICATION)
         .email(email)
         .language(de.caritas.cob.userservice.mailservice.generated.web.model.LanguageCode.DE)
         .templateData(
             asList(
+                new TemplateDataDTO().key("tenant_name").value(tenant.getName()),
+                new TemplateDataDTO().key("tenant_claim").value(tenant.getContent().getClaim()),
                 new TemplateDataDTO()
                     .key("subject")
                     .value("Online-Beratung | Unbeantwortete Erstanfragen"),

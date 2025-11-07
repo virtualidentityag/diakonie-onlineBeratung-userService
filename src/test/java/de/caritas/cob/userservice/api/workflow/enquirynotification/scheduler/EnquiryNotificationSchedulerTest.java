@@ -4,6 +4,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
+import de.caritas.cob.userservice.api.tenant.TenantContextProvider;
 import de.caritas.cob.userservice.api.workflow.enquirynotification.service.EnquiryNotificationService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +21,8 @@ class EnquiryNotificationSchedulerTest {
   @InjectMocks private EnquiryNotificationScheduler enquiryNotificationScheduler;
 
   @Mock private EnquiryNotificationService enquiryNotificationService;
+
+  @Mock private TenantContextProvider tenantContextProvider;
 
   @Test
   void
