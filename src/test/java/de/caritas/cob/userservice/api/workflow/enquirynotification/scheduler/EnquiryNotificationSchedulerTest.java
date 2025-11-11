@@ -31,6 +31,7 @@ class EnquiryNotificationSchedulerTest {
 
     enquiryNotificationScheduler.sendEmailNotificationsForOpenEnquiries();
 
+    verify(tenantContextProvider).setTechnicalContextIfMultiTenancyIsEnabled();
     verify(enquiryNotificationService).sendEmailNotificationsForOpenEnquiries();
   }
 
