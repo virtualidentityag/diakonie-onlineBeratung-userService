@@ -64,14 +64,7 @@ public class ConsultantFilterQueryBuilder extends FilterQueryBuilder {
     addStringFilterCondition(this.consultantFilter.getEmail(), FIELD_EMAIL, junction);
     addObjectFilterCondition(this.consultantFilter.getAbsent(), FIELD_ABSENT, junction);
     addObjectFilterCondition(this.consultantFilter.getAgencyId(), FIELD_AGENCY_IDS, junction);
-    if (this.consultantFilter.getAgencyId() != null) {
-      junction.must(
-          this.queryBuilder
-              .keyword()
-              .onField("consultantAgencies.deleteDate")
-              .matching(null)
-              .createQuery());
-    }
+
     return junction.isEmpty() ? this.queryBuilder.all().createQuery() : junction.createQuery();
   }
 }
