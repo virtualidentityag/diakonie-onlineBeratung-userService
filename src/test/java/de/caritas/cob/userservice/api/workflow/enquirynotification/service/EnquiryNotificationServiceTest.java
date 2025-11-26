@@ -218,10 +218,8 @@ class EnquiryNotificationServiceTest {
                     .key("subject")
                     .value("Online-Beratung | Unbeantwortete Erstanfragen"),
                 new TemplateDataDTO().key("consultant_name").value(consultantName),
-                new TemplateDataDTO().key("url").value("base/url"),
                 new TemplateDataDTO().key("agency_name").value(agencyName),
-                new TemplateDataDTO()
-                    .key("enquiries")
-                    .value(String.valueOf(amountOfOpenEnquiries))));
+                new TemplateDataDTO().key("enquiries").value(String.valueOf(amountOfOpenEnquiries)),
+                new TemplateDataDTO().key("url").value("base/url")));
   }
 }
