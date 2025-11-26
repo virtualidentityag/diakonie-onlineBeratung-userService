@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.3.0](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/compare/v3.2.0...v3.3.0) (2025-11-26)
+
+
+### Features
+
+* DIAKONIE-554 ([a3617e9](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/a3617e903729b4d112fe10c3244b0caf35506489))
+
+
+### Bug Fixes
+
+* consultant filter for consultants unassigned from the agency ([5d3d5ae](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/5d3d5ae06274ace868bb69206b0bf9f3ececbb96))
+* DIAKONIE-554 ([e151dad](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/e151dad9779bd227d743576a1efdff0216881bc7))
+* DIAKONIE-554 ([f568a34](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/f568a34d68bcd0fb944a3f005afc2b876fa7e103))
+* DIAKONIE-554 ([33a050f](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/33a050fb2554052ef325eda6ce4bf5892f6bb721))
+* DIAKONIE-554 ([f3bdba7](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/f3bdba7c9b8ce81696c47837502332b13bcccba9))
+* DIAKONIE-554 ([1244b52](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/1244b527cb8d18c19b249d7d4f21715b41eb7f3a))
+* DIAKONIE-554 ([69a29a9](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/69a29a99c71b96149d28bf5a7a74f1721b87faeb))
+* DIAKONIE-554 ([ad64e05](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/commit/ad64e056b5d09ea2ae6f1310e2d031d16cc23aeb))
+
 ## [3.2.0](https://github.com/CaritasDeutschland/caritas-onlineBeratung-userService/compare/v3.1.2...v3.2.0) (2025-04-03)
 
 
