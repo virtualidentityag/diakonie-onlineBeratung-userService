@@ -20,6 +20,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.reflect.Whitebox.setInternalState;
 
+import de.caritas.cob.userservice.api.adapters.rocketchat.RocketChatService;
 import de.caritas.cob.userservice.api.config.auth.UserRole;
 import de.caritas.cob.userservice.api.exception.httpresponses.InternalServerErrorException;
 import de.caritas.cob.userservice.api.manager.consultingtype.ConsultingTypeManager;
@@ -42,6 +43,7 @@ import de.caritas.cob.userservice.mailservice.generated.web.model.MailDTO;
 import de.caritas.cob.userservice.mailservice.generated.web.model.TemplateDataDTO;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
@@ -64,6 +66,8 @@ public class NewMessageEmailSupplierTest {
   @Mock private Set<String> roles;
 
   @Mock private ConsultantAgencyService consultantAgencyService;
+
+  @Mock private RocketChatService rocketChatService;
 
   @Mock private ConsultingTypeManager consultingTypeManager;
 
@@ -88,6 +92,7 @@ public class NewMessageEmailSupplierTest {
             .consultantAgencyService(consultantAgencyService)
             .consultingTypeManager(consultingTypeManager)
             .consultantService(consultantService)
+            .rocketChatService(rocketChatService)
             .applicationBaseUrl("app baseurl")
             .emailDummySuffix("dummySuffix")
             .messageClient(messageClient)
@@ -101,6 +106,70 @@ public class NewMessageEmailSupplierTest {
     List<MailDTO> generatedMails = this.newMessageEmailSupplier.generateEmails();
 
     assertThat(generatedMails, hasSize(0));
+  }
+
+  @Test
+  public void
+      generateEmails_Should_UseRocketChatDisplayName_When_ConsultantHasDisplayNameInRocketChat() {
+    when(roles.contains(UserRole.CONSULTANT.getValue())).thenReturn(true);
+    Consultant consultant = mock(Consultant.class);
+    when(consultant.getRocketChatId()).thenReturn("rcUserId");
+    when(session.getConsultant()).thenReturn(consultant);
+    when(consultant.getId()).thenReturn(USER.getUserId());
+    when(session.getUser()).thenReturn(USER);
+    when(rocketChatService.findUserAndAddToCache("rcUserId"))
+        .thenReturn(Optional.of(Map.of("displayName", "MaditaU25HH")));
+
+    List<MailDTO> generatedMails = this.newMessageEmailSupplier.generateEmails();
+
+    assertThat(generatedMails, hasSize(1));
+    MailDTO generatedMail = generatedMails.get(0);
+    List<TemplateDataDTO> templateData = generatedMail.getTemplateData();
+    assertThat(templateData.get(0).getKey(), is("consultantName"));
+    assertThat(templateData.get(0).getValue(), is("MaditaU25HH"));
+  }
+
+  @Test
+  public void
+      generateEmails_Should_FallBackToUsername_When_ConsultantHasNoDisplayNameInRocketChat() {
+    when(roles.contains(UserRole.CONSULTANT.getValue())).thenReturn(true);
+    Consultant consultant = mock(Consultant.class);
+    when(consultant.getUsername()).thenReturn(USERNAME_ENCODED);
+    when(consultant.getRocketChatId()).thenReturn("rcUserId");
+    when(session.getConsultant()).thenReturn(consultant);
+    when(consultant.getId()).thenReturn(USER.getUserId());
+    when(session.getUser()).thenReturn(USER);
+    // Rocket.Chat user found, but without a "name" set -> mapper doesn't add "displayName" key
+    when(rocketChatService.findUserAndAddToCache("rcUserId"))
+        .thenReturn(Optional.of(Map.of("id", "rcUserId")));
+
+    List<MailDTO> generatedMails = this.newMessageEmailSupplier.generateEmails();
+
+    assertThat(generatedMails, hasSize(1));
+    MailDTO generatedMail = generatedMails.get(0);
+    List<TemplateDataDTO> templateData = generatedMail.getTemplateData();
+    assertThat(templateData.get(0).getKey(), is("consultantName"));
+    assertThat(templateData.get(0).getValue(), is("Username!#123"));
+  }
+
+  @Test
+  public void generateEmails_Should_FallBackToUsername_When_RocketChatUserCannotBeFound() {
+    when(roles.contains(UserRole.CONSULTANT.getValue())).thenReturn(true);
+    Consultant consultant = mock(Consultant.class);
+    when(consultant.getUsername()).thenReturn(USERNAME_ENCODED);
+    when(consultant.getRocketChatId()).thenReturn("rcUserId");
+    when(session.getConsultant()).thenReturn(consultant);
+    when(consultant.getId()).thenReturn(USER.getUserId());
+    when(session.getUser()).thenReturn(USER);
+    when(rocketChatService.findUserAndAddToCache("rcUserId")).thenReturn(Optional.empty());
+
+    List<MailDTO> generatedMails = this.newMessageEmailSupplier.generateEmails();
+
+    assertThat(generatedMails, hasSize(1));
+    MailDTO generatedMail = generatedMails.get(0);
+    List<TemplateDataDTO> templateData = generatedMail.getTemplateData();
+    assertThat(templateData.get(0).getKey(), is("consultantName"));
+    assertThat(templateData.get(0).getValue(), is("Username!#123"));
   }
 
   @Test
