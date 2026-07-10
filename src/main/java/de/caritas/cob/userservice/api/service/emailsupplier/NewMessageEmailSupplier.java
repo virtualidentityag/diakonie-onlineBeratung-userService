@@ -12,6 +12,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import com.google.common.collect.Lists;
 import com.neovisionaries.i18n.LanguageCode;
+import de.caritas.cob.userservice.api.adapters.rocketchat.RocketChatService;
 import de.caritas.cob.userservice.api.config.auth.UserRole;
 import de.caritas.cob.userservice.api.exception.httpresponses.InternalServerErrorException;
 import de.caritas.cob.userservice.api.helper.UsernameTranscoder;
@@ -39,6 +40,7 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 /** Supplier to provide mails to be sent when a new message has been written. */
 @Slf4j
@@ -53,6 +55,7 @@ public class NewMessageEmailSupplier implements EmailSupplier {
   private final ConsultantAgencyService consultantAgencyService;
   private final ConsultingTypeManager consultingTypeManager;
   private final ConsultantService consultantService;
+  private final RocketChatService rocketChatService;
   private final String applicationBaseUrl;
   private final String emailDummySuffix;
   private boolean multiTenancyEnabled;
@@ -228,29 +231,37 @@ public class NewMessageEmailSupplier implements EmailSupplier {
     }
 
     var usernameTranscoder = new UsernameTranscoder();
-    var consultantUsername = obtainConsultantUsername();
+    var consultantDisplayName = obtainConsultantDisplayName();
     var mailDTO =
         buildMailDtoForNewMessageNotificationAsker(
             asker.getEmail(),
             asker.getLanguageCode(),
-            usernameTranscoder.decodeUsername(consultantUsername),
+            usernameTranscoder.decodeUsername(consultantDisplayName),
             usernameTranscoder.decodeUsername(asker.getUsername()),
             asker.getDialect());
 
     return singletonList(mailDTO);
   }
 
-  private String obtainConsultantUsername() {
+  private String obtainConsultantDisplayName() {
+    var consultant = resolveConsultant();
+    return rocketChatService
+        .findUserAndAddToCache(consultant.getRocketChatId())
+        .map(userMap -> (String) userMap.get("displayName"))
+        .filter(StringUtils::isNotBlank)
+        .orElseGet(consultant::getUsername);
+  }
+
+  private Consultant resolveConsultant() {
     if (isSessionBelongsToConsultant()) {
-      return session.getConsultant().getUsername();
+      return session.getConsultant();
     } else {
       return consultantService
           .getConsultant(userId)
           .orElseThrow(
               () ->
                   new InternalServerErrorException(
-                      String.format("Consultant with id %s not found.", userId)))
-          .getUsername();
+                      String.format("Consultant with id %s not found.", userId)));
     }
   }
 
