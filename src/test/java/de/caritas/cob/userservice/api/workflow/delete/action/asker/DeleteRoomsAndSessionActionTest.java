@@ -35,7 +35,6 @@ public class DeleteRoomsAndSessionActionTest {
     // given
     Session session = new Session();
     session.setGroupId("group-id");
-    session.setFeedbackGroupId("feedback-group-id");
 
     // when
     deleteRoomsAndSessionAction.performSessionDeletion(session, new ArrayList<>());
@@ -47,7 +46,6 @@ public class DeleteRoomsAndSessionActionTest {
     inOrder.verify(sessionDataRepository).deleteAll(anyList());
     inOrder.verify(sessionRepository).delete(eq(session));
     inOrder.verify(rocketChatService).deleteGroupAsTechnicalUser(eq("group-id"));
-    inOrder.verify(rocketChatService).deleteGroupAsTechnicalUser(eq("feedback-group-id"));
 
     inOrder.verifyNoMoreInteractions();
   }
