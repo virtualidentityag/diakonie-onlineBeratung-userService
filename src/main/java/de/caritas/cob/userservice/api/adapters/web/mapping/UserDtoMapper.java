@@ -100,7 +100,8 @@ public class UserDtoMapper {
         && isNull(patchUserDTO.getDataPrivacyConfirmation())
         && isNull(patchUserDTO.getTermsAndConditionsConfirmation())
         && isNull(patchUserDTO.getAvailable())
-        && isNull(patchUserDTO.getEmailNotifications())) {
+        && isNull(patchUserDTO.getEmailNotifications())
+        && isNull(patchUserDTO.getRegistrationUrl())) {
       return Optional.empty();
     }
 
@@ -136,6 +137,11 @@ public class UserDtoMapper {
     }
     if (nonNull(patchUserDTO.getEmailNotifications())) {
       map.put("emailNotifications", patchUserDTO.getEmailNotifications());
+    }
+    // an empty string is a valid value here (removes the override), so it must be
+    // forwarded; only a missing/null property means "leave unchanged".
+    if (nonNull(patchUserDTO.getRegistrationUrl())) {
+      map.put("registrationUrl", patchUserDTO.getRegistrationUrl());
     }
     return Optional.of(map);
   }

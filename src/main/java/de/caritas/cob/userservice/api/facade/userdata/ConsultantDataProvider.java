@@ -84,6 +84,7 @@ public class ConsultantDataProvider {
         .dataPrivacyConfirmation(consultant.getDataPrivacyConfirmation())
         .termsAndConditionsConfirmation(consultant.getTermsAndConditionsConfirmation())
         .emailNotifications(emailNotificationMapper.toEmailNotificationsDTO(consultant))
+        .registrationUrl(consultant.getRegistrationUrl())
         .build();
   }
 

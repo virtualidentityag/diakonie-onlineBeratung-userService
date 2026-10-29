@@ -55,7 +55,12 @@ public class ConsultantDtoMapper implements DtoMapperUtils {
         agencies.stream().map(this::agencyResponseDtoOf).collect(Collectors.toList());
 
     var consultantResponseDto =
-        new ConsultantResponseDTO().consultantId(consultant.getId()).agencies(agencyDtoList);
+        new ConsultantResponseDTO()
+            .consultantId(consultant.getId())
+            .agencies(agencyDtoList)
+            // expose the personal redirect override so the public registration page
+            // can redirect visitors of the deep link.
+            .registrationUrl(consultant.getRegistrationUrl());
 
     if (mapNames) {
       consultantResponseDto.firstName(consultant.getFirstName()).lastName(consultant.getLastName());

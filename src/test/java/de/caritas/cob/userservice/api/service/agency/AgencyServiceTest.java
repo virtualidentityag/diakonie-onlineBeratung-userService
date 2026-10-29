@@ -1,11 +1,13 @@
 package de.caritas.cob.userservice.api.service.agency;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.Lists;
 import de.caritas.cob.userservice.agencyserivce.generated.ApiClient;
 import de.caritas.cob.userservice.agencyserivce.generated.web.AgencyControllerApi;
+import de.caritas.cob.userservice.agencyserivce.generated.web.model.RegistrationUrlDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.AgencyDTO;
 import de.caritas.cob.userservice.api.config.apiclient.AgencyServiceApiControllerFactory;
 import de.caritas.cob.userservice.api.service.httpheader.HttpHeadersResolver;
@@ -66,5 +68,37 @@ class AgencyServiceTest {
 
     assertThat(headers.get("tenantId").get(0)).isEqualTo("1");
     TenantContext.clear();
+  }
+
+  @Test
+  void setAgencyRegistrationUrl_Should_callApiWithUrlAndAddedBy() {
+    when(securityHeaderSupplier.getCsrfHttpHeaders()).thenReturn(new HttpHeaders());
+    when(this.agencyControllerApi.getApiClient()).thenReturn(apiClient);
+    when(agencyServiceApiControllerFactory.createControllerApi()).thenReturn(agencyControllerApi);
+
+    this.agencyService.setAgencyRegistrationUrl(
+        98L, "https://www.diakonie.de/registration/agency", "consultant-uuid");
+
+    var captor = org.mockito.ArgumentCaptor.forClass(RegistrationUrlDTO.class);
+    verify(agencyControllerApi)
+        .setAgencyRegistrationUrl(org.mockito.ArgumentMatchers.eq(98L), captor.capture());
+    assertThat(captor.getValue().getRegistrationUrl())
+        .isEqualTo("https://www.diakonie.de/registration/agency");
+    assertThat(captor.getValue().getAddedBy()).isEqualTo("consultant-uuid");
+  }
+
+  @Test
+  void setAgencyRegistrationUrl_Should_callApiWithNullUrl_When_removing() {
+    when(securityHeaderSupplier.getCsrfHttpHeaders()).thenReturn(new HttpHeaders());
+    when(this.agencyControllerApi.getApiClient()).thenReturn(apiClient);
+    when(agencyServiceApiControllerFactory.createControllerApi()).thenReturn(agencyControllerApi);
+
+    this.agencyService.setAgencyRegistrationUrl(98L, null, "consultant-uuid");
+
+    var captor = org.mockito.ArgumentCaptor.forClass(RegistrationUrlDTO.class);
+    verify(agencyControllerApi)
+        .setAgencyRegistrationUrl(org.mockito.ArgumentMatchers.eq(98L), captor.capture());
+    assertThat(captor.getValue().getRegistrationUrl()).isNull();
+    assertThat(captor.getValue().getAddedBy()).isEqualTo("consultant-uuid");
   }
 }

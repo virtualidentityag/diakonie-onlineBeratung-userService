@@ -9,6 +9,8 @@ import com.neovisionaries.i18n.LanguageCode;
 import de.caritas.cob.userservice.api.adapters.web.dto.AgencyDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.EmailNotificationsDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.NotificationsSettingsDTO;
+import de.caritas.cob.userservice.api.helper.CustomLocalDateTime;
+import de.caritas.cob.userservice.api.helper.RegistrationUrlValidator;
 import de.caritas.cob.userservice.api.helper.UsernameTranscoder;
 import de.caritas.cob.userservice.api.helper.json.JsonSerializationUtils;
 import de.caritas.cob.userservice.api.model.Admin;
@@ -397,7 +399,38 @@ public class UserServiceMapper {
       patchEmailNotificationSettings(consultant, patchMap);
     }
 
+    if (patchMap.containsKey("registrationUrl")) {
+      applyRegistrationUrl(consultant, (String) patchMap.get("registrationUrl"));
+    }
+
     return consultant;
+  }
+
+  /**
+   * Applies the consultant's personal registration redirect URL from a PATCH /users/data request. A
+   * blank value removes the override but - so it stays visible that a URL was once set and later
+   * removed - the {@code registration_url_added_date} is updated to the removal date instead of
+   * being nulled. Setting or removing only touches the added-date when the value actually changes,
+   * so re-saving the profile without changing the link is a no-op.
+   */
+  private void applyRegistrationUrl(Consultant consultant, String newUrl) {
+    var trimmed = isNull(newUrl) ? null : newUrl.trim();
+    var current = consultant.getRegistrationUrl();
+
+    if (isNull(trimmed) || trimmed.isBlank()) {
+      if (nonNull(current)) {
+        consultant.setRegistrationUrl(null);
+        consultant.setRegistrationUrlAddedDate(CustomLocalDateTime.nowInUtc());
+      }
+      return;
+    }
+
+    RegistrationUrlValidator.validate(trimmed);
+
+    if (!trimmed.equals(current)) {
+      consultant.setRegistrationUrl(trimmed);
+      consultant.setRegistrationUrlAddedDate(CustomLocalDateTime.nowInUtc());
+    }
   }
 
   public Optional<String> encodedDisplayNameOf(Map<String, Object> patchMap) {
