@@ -53,6 +53,7 @@ import de.caritas.cob.userservice.api.port.out.IdentityClientConfig;
 import de.caritas.cob.userservice.api.service.*;
 import de.caritas.cob.userservice.api.service.archive.SessionArchiveService;
 import de.caritas.cob.userservice.api.service.archive.SessionDeleteService;
+import de.caritas.cob.userservice.api.service.consultant.RegistrationUrlService;
 import de.caritas.cob.userservice.api.service.session.SessionService;
 import de.caritas.cob.userservice.api.service.user.UserAccountService;
 import de.caritas.cob.userservice.api.tenant.TenantContext;
@@ -125,6 +126,8 @@ public class UserControllerIT {
           null,
           null,
           false,
+          null,
+          null,
           null);
   private final Set<String> ROLES_WITH_USER =
       new HashSet<>(Arrays.asList("dummyRoleA", UserRole.USER.getValue(), "dummyRoleB"));
@@ -316,6 +319,8 @@ public class UserControllerIT {
   private Messaging messenger;
 
   @MockBean private ConsultantUpdateService consultantUpdateService;
+
+  @MockBean private RegistrationUrlService registrationUrlService;
 
   @SpyBean
   @SuppressWarnings("unused")

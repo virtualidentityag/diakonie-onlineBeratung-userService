@@ -90,5 +90,8 @@ public class UserDataResponseDTO {
 
   private EmailNotificationsDTO emailNotifications;
 
+  /** personal registration redirect override of the consultant. */
+  private String registrationUrl;
+
   private Set<SessionDTO> sessions;
 }
