@@ -134,7 +134,6 @@ class AgencyServiceTest {
     when(identityClient.loginUser("technical", "technical-password")).thenReturn(login);
     var headers = new HttpHeaders();
     headers.add("Authorization", "Bearer " + TECHNICAL_TOKEN);
-    when(securityHeaderSupplier.getKeycloakAndCsrfHttpHeaders(TECHNICAL_TOKEN))
-        .thenReturn(headers);
+    when(securityHeaderSupplier.getKeycloakAndCsrfHttpHeaders(TECHNICAL_TOKEN)).thenReturn(headers);
   }
 }
