@@ -14,6 +14,8 @@ import de.caritas.cob.userservice.agencyserivce.generated.web.AgencyControllerAp
 import de.caritas.cob.userservice.agencyserivce.generated.web.model.AgencyResponseDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.AgencyDTO;
 import de.caritas.cob.userservice.api.config.apiclient.AgencyServiceApiControllerFactory;
+import de.caritas.cob.userservice.api.port.out.IdentityClient;
+import de.caritas.cob.userservice.api.port.out.IdentityClientConfig;
 import de.caritas.cob.userservice.api.service.agency.AgencyService;
 import de.caritas.cob.userservice.api.service.httpheader.SecurityHeaderSupplier;
 import de.caritas.cob.userservice.api.service.httpheader.TenantHeaderSupplier;
@@ -51,6 +53,10 @@ public class AgencySecurityHeaderSupplierTest {
   @Mock private TenantHeaderSupplier tenantHeaderSupplier;
 
   @Mock private AgencyServiceApiControllerFactory agencyServiceApiControllerFactory;
+
+  @Mock private IdentityClient identityClient;
+
+  @Mock private IdentityClientConfig identityClientConfig;
 
   @Before
   public void setup() throws NoSuchFieldException, SecurityException {
@@ -90,7 +96,9 @@ public class AgencySecurityHeaderSupplierTest {
         new AgencyService(
             mock(SecurityHeaderSupplier.class),
             mock(TenantHeaderSupplier.class),
-            mock(AgencyServiceApiControllerFactory.class));
+            mock(AgencyServiceApiControllerFactory.class),
+            mock(IdentityClient.class),
+            mock(IdentityClientConfig.class));
     Class classToTest = agencyService.getClass();
     Method methodToTest =
         classToTest.getMethod(GET_AGENCIES_METHOD_NAME, GET_AGENCIES_METHOD_PARAMS);
@@ -118,7 +126,9 @@ public class AgencySecurityHeaderSupplierTest {
         new AgencyService(
             mock(SecurityHeaderSupplier.class),
             mock(TenantHeaderSupplier.class),
-            mock(AgencyServiceApiControllerFactory.class));
+            mock(AgencyServiceApiControllerFactory.class),
+            mock(IdentityClient.class),
+            mock(IdentityClientConfig.class));
     Class classToTest = agencyService.getClass();
     Method methodToTest = classToTest.getMethod(GET_AGENCY_METHOD_NAME, GET_AGENCY_METHOD_PARAMS);
     Cacheable annotation = methodToTest.getAnnotation(Cacheable.class);

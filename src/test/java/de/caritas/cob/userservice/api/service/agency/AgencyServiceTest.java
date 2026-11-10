@@ -8,8 +8,12 @@ import com.google.common.collect.Lists;
 import de.caritas.cob.userservice.agencyserivce.generated.ApiClient;
 import de.caritas.cob.userservice.agencyserivce.generated.web.AgencyControllerApi;
 import de.caritas.cob.userservice.agencyserivce.generated.web.model.RegistrationUrlDTO;
+import de.caritas.cob.userservice.api.adapters.keycloak.dto.KeycloakLoginResponseDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.AgencyDTO;
 import de.caritas.cob.userservice.api.config.apiclient.AgencyServiceApiControllerFactory;
+import de.caritas.cob.userservice.api.config.auth.TechnicalUserConfig;
+import de.caritas.cob.userservice.api.port.out.IdentityClient;
+import de.caritas.cob.userservice.api.port.out.IdentityClientConfig;
 import de.caritas.cob.userservice.api.service.httpheader.HttpHeadersResolver;
 import de.caritas.cob.userservice.api.service.httpheader.SecurityHeaderSupplier;
 import de.caritas.cob.userservice.api.service.httpheader.TenantHeaderSupplier;
@@ -42,6 +46,12 @@ class AgencyServiceTest {
 
   @Mock ApiClient apiClient;
 
+  @Mock IdentityClient identityClient;
+
+  @Mock IdentityClientConfig identityClientConfig;
+
+  private static final String TECHNICAL_TOKEN = "technical-access-token";
+
   @ParameterizedTest
   @NullAndEmptySource
   void getAgenciesFromAgencyService_Should_returnEmptyList_When_nullPassed(List<Long> emptyIds) {
@@ -72,7 +82,7 @@ class AgencyServiceTest {
 
   @Test
   void setAgencyRegistrationUrl_Should_callApiWithUrlAndAddedBy() {
-    when(securityHeaderSupplier.getCsrfHttpHeaders()).thenReturn(new HttpHeaders());
+    givenTechnicalUserLogin();
     when(this.agencyControllerApi.getApiClient()).thenReturn(apiClient);
     when(agencyServiceApiControllerFactory.createControllerApi()).thenReturn(agencyControllerApi);
 
@@ -89,7 +99,7 @@ class AgencyServiceTest {
 
   @Test
   void setAgencyRegistrationUrl_Should_callApiWithNullUrl_When_removing() {
-    when(securityHeaderSupplier.getCsrfHttpHeaders()).thenReturn(new HttpHeaders());
+    givenTechnicalUserLogin();
     when(this.agencyControllerApi.getApiClient()).thenReturn(apiClient);
     when(agencyServiceApiControllerFactory.createControllerApi()).thenReturn(agencyControllerApi);
 
@@ -100,5 +110,31 @@ class AgencyServiceTest {
         .setAgencyRegistrationUrl(org.mockito.ArgumentMatchers.eq(98L), captor.capture());
     assertThat(captor.getValue().getRegistrationUrl()).isNull();
     assertThat(captor.getValue().getAddedBy()).isEqualTo("consultant-uuid");
+  }
+
+  @Test
+  void setAgencyRegistrationUrl_Should_sendTechnicalUserBearerToken() {
+    givenTechnicalUserLogin();
+    when(this.agencyControllerApi.getApiClient()).thenReturn(apiClient);
+    when(agencyServiceApiControllerFactory.createControllerApi()).thenReturn(agencyControllerApi);
+
+    this.agencyService.setAgencyRegistrationUrl(98L, null, "consultant-uuid");
+
+    verify(identityClient).loginUser("technical", "technical-password");
+    verify(apiClient).addDefaultHeader("Authorization", "Bearer " + TECHNICAL_TOKEN);
+  }
+
+  private void givenTechnicalUserLogin() {
+    var techUser = new TechnicalUserConfig();
+    techUser.setUsername("technical");
+    techUser.setPassword("technical-password");
+    when(identityClientConfig.getTechnicalUser()).thenReturn(techUser);
+    var login = new KeycloakLoginResponseDTO();
+    login.setAccessToken(TECHNICAL_TOKEN);
+    when(identityClient.loginUser("technical", "technical-password")).thenReturn(login);
+    var headers = new HttpHeaders();
+    headers.add("Authorization", "Bearer " + TECHNICAL_TOKEN);
+    when(securityHeaderSupplier.getKeycloakAndCsrfHttpHeaders(TECHNICAL_TOKEN))
+        .thenReturn(headers);
   }
 }
