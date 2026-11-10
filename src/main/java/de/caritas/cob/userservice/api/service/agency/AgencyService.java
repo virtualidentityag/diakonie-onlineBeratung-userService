@@ -8,10 +8,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.caritas.cob.userservice.agencyserivce.generated.ApiClient;
 import de.caritas.cob.userservice.agencyserivce.generated.web.AgencyControllerApi;
 import de.caritas.cob.userservice.agencyserivce.generated.web.model.AgencyResponseDTO;
+import de.caritas.cob.userservice.agencyserivce.generated.web.model.RegistrationUrlDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.AgencyDTO;
 import de.caritas.cob.userservice.api.config.CacheManagerConfig;
 import de.caritas.cob.userservice.api.config.apiclient.AgencyServiceApiControllerFactory;
 import de.caritas.cob.userservice.api.exception.httpresponses.InternalServerErrorException;
+import de.caritas.cob.userservice.api.port.out.IdentityClient;
+import de.caritas.cob.userservice.api.port.out.IdentityClientConfig;
 import de.caritas.cob.userservice.api.service.httpheader.SecurityHeaderSupplier;
 import de.caritas.cob.userservice.api.service.httpheader.TenantHeaderSupplier;
 import java.util.Collections;
@@ -19,6 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +34,9 @@ public class AgencyService {
   private final @NonNull SecurityHeaderSupplier securityHeaderSupplier;
   private final @NonNull TenantHeaderSupplier tenantHeaderSupplier;
   private final @NonNull AgencyServiceApiControllerFactory agencyServiceApiControllerFactory;
+  private final @NonNull IdentityClient identityClient;
+  private final @NonNull IdentityClientConfig identityClientConfig;
+
   /**
    * Returns the {@link AgencyDTO} for the provided agencyId. Agency will be cached for further
    * requests.
@@ -130,5 +137,37 @@ public class AgencyService {
    */
   public List<AgencyDTO> getAgenciesWithoutCaching(List<Long> agencyIds) {
     return getAgenciesFromAgencyService(agencyIds);
+  }
+
+  /**
+   * Sets, updates or removes (null/blank url) the shared registration redirect URL of an agency in
+   * the agencyService. Caller must have verified the requesting consultant's agency membership.
+   *
+   * <p>The agency cache is fully evicted so the updated URL becomes immediately visible in {@code
+   * GET /users/data} for every consultant of the agency (the cache is keyed by agency id and by id
+   * list, so a targeted eviction is not possible).
+   *
+   * <p>The agencyService only accepts this call from the technical user, so the request is
+   * authorized with a technical user token instead of the CSRF-only default headers.
+   *
+   * @param agencyId the agency to update
+   * @param registrationUrl the new URL (null/blank removes the override)
+   * @param addedBy the consultant id (UUID) that set/removed the URL
+   */
+  @CacheEvict(value = CacheManagerConfig.AGENCY_CACHE, allEntries = true)
+  public void setAgencyRegistrationUrl(Long agencyId, String registrationUrl, String addedBy) {
+    var agencyControllerApi = getAgencyControllerApi();
+    addTechnicalUserHeaders(agencyControllerApi.getApiClient());
+    agencyControllerApi.setAgencyRegistrationUrl(
+        agencyId, new RegistrationUrlDTO().registrationUrl(registrationUrl).addedBy(addedBy));
+  }
+
+  private void addTechnicalUserHeaders(ApiClient apiClient) {
+    var techUser = identityClientConfig.getTechnicalUser();
+    var keycloakLogin = identityClient.loginUser(techUser.getUsername(), techUser.getPassword());
+    var headers =
+        securityHeaderSupplier.getKeycloakAndCsrfHttpHeaders(keycloakLogin.getAccessToken());
+    tenantHeaderSupplier.addTenantHeader(headers);
+    headers.forEach((key, value) -> apiClient.addDefaultHeader(key, value.iterator().next()));
   }
 }

@@ -208,6 +208,13 @@ public class Consultant implements TenantAware, NotificationsAware {
   @Column(name = "notifications_settings")
   private String notificationsSettings;
 
+  @Column(name = "registration_url")
+  @Size(max = 500)
+  private String registrationUrl;
+
+  @Column(name = "registration_url_added_date")
+  private LocalDateTime registrationUrlAddedDate;
+
   @JsonIgnore
   public String getFullName() {
     return (this.firstName + " " + this.lastName).trim();

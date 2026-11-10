@@ -78,6 +78,8 @@ public class ConsultantAgencyServiceTest {
           null,
           null,
           false,
+          null,
+          null,
           null);
   private final ConsultantAgency CONSULTANT_AGENCY =
       new ConsultantAgency(

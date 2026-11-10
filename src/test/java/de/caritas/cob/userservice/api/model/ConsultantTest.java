@@ -47,6 +47,8 @@ public class ConsultantTest {
           null,
           null,
           false,
+          null,
+          null,
           null);
 
   @Test
